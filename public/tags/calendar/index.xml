@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Calendar on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/calendar/</link>
+    <description>Recent content in Calendar on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 17 Nov 2015 23:59:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/calendar/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>【phina.js】ゲーム以外の作成サンプル（カレンダー）</title>
+      <link>https://alkn203.github.io/blog/2015/11/17/phina-calendar</link>
+      <pubDate>Tue, 17 Nov 2015 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2015/11/17/phina-calendar</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/5f9b227bf13b395eb7e0&#34;&gt;tmlib.jsで作ってみた⑨＝カレンダー＝&lt;/a&gt;を投稿しましたが、今回、これを&lt;a href=&#34;https://github.com/phi-jp/phina.js&#34;&gt;phina.js&lt;/a&gt;でリファクタンリングしてみました。&lt;/p&gt;
+
+&lt;h3 id=&#34;作成したサンプルプログラム&#34;&gt;作成したサンプルプログラム&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Windowsのカレンダーを参考に作りました。&lt;/li&gt;
+&lt;li&gt;日付の配置に&lt;strong&gt;Grid&lt;/strong&gt;を使い、スライド処理に&lt;strong&gt;tweener&lt;/strong&gt;を使っています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/odsvmZ&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;を使ってゲーム以外のプログラムを作成してみました。&lt;strong&gt;Electron&lt;/strong&gt;などと組み合わせるといわゆるガジェット系のデスクトップアプリも作ることができると思います。他にも電卓などを作ってみたいと思っていますので、その時はまたこのブログで紹介したいと思います。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;2015-11-21　一部の環境で時刻ラベルが画面からはみ出さないように修正（&lt;a href=&#34;https://twitter.com/phi_jp&#34;&gt;@phi-jp&lt;/a&gt;さんありがとうございました。）&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;月ボタンをもう少し押しやすいように変更&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

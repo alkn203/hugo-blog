@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Frameanimation on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/frameanimation/</link>
+    <description>Recent content in Frameanimation on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sat, 11 Jun 2016 23:59:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/frameanimation/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>フレームアニメーション関係Tips</title>
+      <link>https://alkn203.github.io/blog/2016/06/11/frameanimation-tips</link>
+      <pubDate>Sat, 11 Jun 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/06/11/frameanimation-tips</guid>
+      <description>
+
+&lt;h3 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h3&gt;
+
+&lt;p&gt;以前にも紹介したように、phina.jsには&lt;strong&gt;FrameAnimation&lt;/strong&gt;という便利な機能があります。
+今回はより便利に使うための2つのTipsを紹介します。&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトのサイズがスプライトシートに定義されたサイズにフィットしないようにする&#34;&gt;スプライトのサイズがスプライトシートに定義されたサイズにフィットしないようにする&lt;/h3&gt;
+
+&lt;p&gt;フレームアニメーションを使うためには、&lt;strong&gt;SpriteSheet&lt;/strong&gt;を定義する必要がありますが
+デフォルトだと実際のコード中でスプライトのサイズを変えてもスプライトシート(json)に書かれた&lt;strong&gt;width&lt;/strong&gt;と&lt;strong&gt;height&lt;/strong&gt;に
+戻ってしまい、スプライトを拡大して表示したい時に意図した結果になりません。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// スプライトシート
+spritesheet: {
+  &#39;explosion_ss&#39;:
+  {
+    &amp;quot;frame&amp;quot;: {
+      &amp;quot;width&amp;quot;: 20, // ←この値にフィットされる
+      &amp;quot;height&amp;quot;: 20,// ←この値にフィットされる
+      &amp;quot;cols&amp;quot;: 16,
+      &amp;quot;rows&amp;quot;: 1,
+    },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これを回避するためには、&lt;strong&gt;FrameAnimation&lt;/strong&gt;クラスのプロパティ&lt;strong&gt;fit&lt;/strong&gt;を&lt;strong&gt;false&lt;/strong&gt;にします。
+これで実際に変更したサイズで正しく表示されるようになります。
+サンプルでは20X20で切り出した画像を5倍で表示しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 親クラスの初期化
+this.superInit(&#39;explosion&#39;, 20, 20); // ←実際の画像の切り取りサイズ
+// SpriteSheetをスプライトにアタッチ
+var anim = FrameAnimation(&#39;explosion_ss&#39;).attachTo(this);
+// スプライトシートのサイズにフィットさせない
+anim.fit = false; // ←ここ
+//アニメーションを再生する
+anim.gotoAndPlay(&#39;start&#39;);
+// サイズ変更
+this.setSize(20*5, 20*5); // ←サイズ変更
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;フレームアニメーションの終了を検知する&#34;&gt;フレームアニメーションの終了を検知する&lt;/h3&gt;
+
+&lt;p&gt;ゲーム作成において、フレームアニメーションが終了した後に何か処理をしたい時があるかと思いまます。
+この場合、&lt;strong&gt;FrameAnimation&lt;/strong&gt;クラスの&lt;strong&gt;finished&lt;/strong&gt;プロパティの値が&lt;strong&gt;true&lt;/strong&gt;かどうかを調べると便利です。
+サンプルでは爆発アニメーションが終了したら、自身を消去するようにしています。（consoleに結果表示）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム処理
+update: function() {
+  // アニメーションが終わったら自身を消去
+  if (this.anim.finished) { // ←ここで判定
+    this.remove();
+    console.log(&#39;removed&#39;);
+  }
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;サンプル-runstant上&#34;&gt;サンプル(runstant上)&lt;/h4&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/e18e94bb&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>フレームアニメーションのスプライトシートをコード内で定義する方法</title>
+      <link>https://alkn203.github.io/blog/2015/12/20/frameanimation</link>
+      <pubDate>Sun, 20 Dec 2015 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2015/12/20/frameanimation</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;現在、Qiitaで&lt;a href=&#34;http://qiita.com/advent-calendar/2015/phinajs&#34;&gt;phina.js Advent Calendar 2015&lt;/a&gt;が盛り上がってます。（私も微力ながら3つ登録しました。）
+そこで、個人的に側面からも盛り上げるべく、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;に関するTipsなどをこの時期に合わせて紹介したいと思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回のネタ&#34;&gt;今回のネタ&lt;/h3&gt;
+
+&lt;p&gt;今回は、画像を使ったゲーム作りには欠かせないフレームアニメーションの小ネタを紹介します。
+フレームアニメーションについては、以下のエントリーがとても参考になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://qiita.com/minimo/items/0aad94d94478845d3ce2&#34;&gt;[phina.js]SpriteSheetを使ってみよう！&lt;/a&gt; by &lt;a href=&#34;https://twitter.com/minimo&#34;&gt;minimo&lt;/a&gt;氏&lt;/p&gt;
+
+&lt;p&gt;上の記事に書いてあるように、フレームアニメーションで使用するスプライトシートは、基本的には外部のファイルに&lt;strong&gt;JSON&lt;/strong&gt;形式で定義して、&lt;strong&gt;phina.js&lt;/strong&gt;から&lt;strong&gt;ASSET&lt;/strong&gt;として読み込みます。これは、複数のキャラ毎にフレームアニメーションを設定する際には必須と言えます。&lt;/p&gt;
+
+&lt;p&gt;一方、&lt;strong&gt;phina.js&lt;/strong&gt;のソースを読むと分かりますが、スプライトシートの定義は&lt;strong&gt;js&lt;/strong&gt;のコード内に直接書くこともできます。
+方法は、以下のように&lt;strong&gt;ASSET&lt;/strong&gt;のスプライトシートの該当箇所に&lt;strong&gt;JSON&lt;/strong&gt;ファイルの中身を書くだけです。
+この手法は、取り急ぎ１キャラずつフレームアニメーションの確認や調整をしたい場合に便利かと思います。また、&lt;strong&gt;js&lt;/strong&gt;のコード内なので、コメントを付すこともできます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var ASSETS = {
+  image: {
+    &#39;explosion&#39;: &#39;https://rawgit.com/alkn203/radar_touch/gh-pages/assets/explosion.png&#39;,
+  },
+  spritesheet: {
+    &#39;explosion_ss&#39;:
+    {
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 80,
+        &amp;quot;height&amp;quot;: 80,
+        &amp;quot;cols&amp;quot;: 8,
+        &amp;quot;rows&amp;quot;: 1,
+      },
+      // アニメーション
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;start&amp;quot;: {
+          &amp;quot;frames&amp;quot;: [0,1,2,3,4,5,6,7],
+          &amp;quot;next&amp;quot;: &amp;quot;end&amp;quot;,
+          &amp;quot;frequency&amp;quot;: 2,
+        },
+        &amp;quot;end&amp;quot;: {
+          &amp;quot;frames&amp;quot;: [5,6,7],
+          &amp;quot;next&amp;quot;: &amp;quot;end&amp;quot;,
+          &amp;quot;frequency&amp;quot;: 5,
+        }
+      }
+    },
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;動作サンプル&#34;&gt;動作サンプル&lt;/h3&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/c8NG6s&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://goo.gl/c8NG6s&#34;&gt;[runstantで開く]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+
+&lt;p&gt;今回は、フレームアニメーションの小ネタについて書かせて頂きました。使い勝手が良いかは微妙なところですが、こういう手法もあるということで参考程度に受け止めて頂ければ幸いです。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

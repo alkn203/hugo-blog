@@ -1,0 +1,1915 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tutorials on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tutorials/</link>
+    <description>Recent content in Tutorials on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 03 Aug 2016 23:59:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（最終回）【マーク機能の追加】</title>
+      <link>https://alkn203.github.io/blog/2016/08/03/minesweeper-tut-06</link>
+      <pubDate>Wed, 03 Aug 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/08/03/minesweeper-tut-06</guid>
+      <description>
+
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/11/minesweeper-tut-05/&#34;&gt;前回&lt;/a&gt;ではゲームオーバーとクリア処理を追加しました。
+今回は最終回で、マーク機能を追加します。
+マーク機能とは、自分で爆弾と判断したパネルをマークして開けないようにする機能です。
+完成版は以下のとおりです。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/a76987b1/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h4 id=&#34;マーク機能の追加&#34;&gt;マーク機能の追加&lt;/h4&gt;
+
+&lt;h4 id=&#34;mainsceneの変更点&#34;&gt;MainSceneの変更点&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // メインシーン
+  phina.define(&#39;MainScene&#39;, {
+    superClass: &#39;DisplayScene&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      （略）
+      // ピース配置
+      PANEL_NUM_XY.times(function(spanX) {
+        PANEL_NUM_XY.times(function(spanY) {
+          // パネル作成
+          （略）
+          // パネルタッチ時
+          panel.onpointstart = function() {
+            // マークモードなら
+            if (self.mode === &#39;mark&#39;) {
+              if (!panel.isOpen &amp;amp;&amp;amp; !panel.isMark) {
+                // マーク追加
+                if (self.markCount &amp;lt; BOMB_NUM) {
+                  Mark().addChildTo(panel);
+                  panel.isMark = true;
+                  self.markCount++;
+                }
+              }
+              else {
+                if (self.markCount &amp;gt; 0) {
+                  // マーク削除
+                  panel.children[0].remove();
+                  panel.isMark = false;
+                  self.markCount--;
+                }
+              }
+            }
+            else {
+              // パネルを開く
+              self.openPanel(panel);
+              // クリア判定
+              self.checkClear();
+            }
+          };
+        });
+      });
+      // モード
+      this.mode = &#39;normal&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;this.mode&lt;/strong&gt;という変数でモードを管理します。&lt;/li&gt;
+&lt;li&gt;マークモードであれば、パネルがタッチされた時にそのパネルがまだ開かれていなくて、かつ、マークされていなければマークを追加します。&lt;/li&gt;
+&lt;li&gt;逆にマークがあれば、マークを削除します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;this.markCount&lt;/strong&gt;という変数で、マーク数が爆弾の数を超えないようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;      // マークモードボタン
+      Button({
+        width: 120,
+        height: 64,
+        text: &#39;Mark&#39;,
+        fill: &#39;silver&#39;,
+      }).addChildTo(this)
+        .setPosition(this.gridX.span(14), this.gridY.span(14.5))
+        .onpush = function() {
+          // モード変更
+          if (self.mode === &#39;normal&#39;) {
+            this.fill = &#39;hsl(160, 80%, 50%)&#39;;
+            self.mode = &#39;mark&#39;;
+          }
+          else {
+            this.fill = &#39;silver&#39;;
+            self.mode = &#39;normal&#39;;
+          }
+        };
+      // 参照用
+      （略）
+      // マークの数
+      this.markCount = 0;
+    },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;マークモードの切り替えには&lt;strong&gt;Button&lt;/strong&gt;を使用します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;onpush&lt;/strong&gt; 関数にボタンを押したときの処理を記述します。&lt;/li&gt;
+&lt;li&gt;今回は現在のモードが分かるように切り替えでボタンの色が変わるようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// パネルを開く処理
+openPanel: function(panel) {
+  // マークされていた何もしない
+  if (panel.isMark) return;
+  （略）
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;マークされたパネルが連鎖で開かれないようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;6回に渡ってチュートリアルを書いてきましたが、本エントリーが&lt;strong&gt;phina.js&lt;/strong&gt;を使ったゲーム作りの参考になれば幸いです。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a76987b1&#34;&gt;http://runstant.com/alkn203/projects/a76987b1&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その５）【ゲームオーバーとクリア処理】</title>
+      <link>https://alkn203.github.io/blog/2016/07/11/minesweeper-tut-05</link>
+      <pubDate>Mon, 11 Jul 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/07/11/minesweeper-tut-05</guid>
+      <description>
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03/&#34;&gt;前回&lt;/a&gt;はパネルが連鎖で開かれるようにしました。
+今回は、ゲームオーバーとクリア処理を追加します。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/825d660c/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;ゲームオーバー処理&#34;&gt;ゲームオーバー処理&lt;/h4&gt;
+
+&lt;h4 id=&#34;openpanel関数&#34;&gt;openPanel関数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // パネルを開く処理
+  openPanel: function(panel) {
+    // 爆弾ならゲームオーバー
+    if (panel.isBomb) {
+      Explosion().addChildTo(panel);
+      this.showAllBombs();
+      return;
+    }
+    // 既に開かれていた何もしない
+    （略）
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;開いたパネルが爆弾だった場合、爆発を表示して、全ての爆弾を表示します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Explosion&lt;/strong&gt;クラスと&lt;strong&gt;showAllBombs&lt;/strong&gt;関数については後述します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;explosionクラス&#34;&gt;Explosionクラス&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 爆発クラス
+  phina.define(&#39;Explosion&#39;, {
+    // StarShapeを継承
+    superClass: &#39;StarShape&#39;,
+      // コンストラクタ
+      init: function() {
+        // 親クラス初期化
+        this.superInit({
+          radius: (PANEL_SIZE + 5) / 2,
+          sides: 10,
+          sideIndent: 0.75,
+          rotation: 15,
+          fill: &amp;quot;red&amp;quot;,
+          stroke: &amp;quot;yellow&amp;quot;,
+        });
+      },
+  });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;StarShape&lt;/strong&gt;のパラメータを変えて爆発のように見せています。&lt;/li&gt;
+&lt;li&gt;パラメータを変えることで、このような一風違った表現も可能です。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;showallbombs関数&#34;&gt;showAllBombs関数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 爆弾を全て表示する
+  showAllBombs: function() {
+    var self = this;
+    
+    this.panelGroup.children.each(function(panel) {
+      panel.setInteractive(false);
+      
+      if (panel.isBomb) {
+        Bomb().addChildTo(panel);
+        panel.tweener.clear().scaleTo(1.2, 100)
+                     .scaleTo(1.0, 100)
+                     .call(function() {
+                       // ラベル表示
+                       Label({
+                        text: &#39;TOUCH TO RESTART&#39;,
+                        fill: &#39;white&#39;,
+                       }).addChildTo(self).setPosition(320, 700);
+                       // 画面をタッチ可能に
+                       self.setInteractive(true);
+                     });
+      }
+    });
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Panel&lt;/strong&gt;をループで調べて、&lt;strong&gt;isBomb&lt;/strong&gt;が&lt;strong&gt;true&lt;/strong&gt;なら爆弾を表示します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;tweener&lt;/strong&gt;で拡大・縮小のアニメーションをつけています。&lt;/li&gt;
+&lt;li&gt;アニメーションした後は、ラベルを表示して画面のタッチを有効にしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;リスタート処理&#34;&gt;リスタート処理&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 画面タッチ可能な場合
+ onpointstart: function() {
+   // 再スタート
+   this.exit({
+     nextLabel: &#39;main&#39;,  
+   });  
+ },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;先に出た&lt;strong&gt;showAllBombs&lt;/strong&gt;で画面がタッチ有効になっている場合、画面をタッチするとこの関数が呼び出されます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;exit&lt;/strong&gt;関数で&lt;strong&gt;nextLabel&lt;/strong&gt;に&lt;strong&gt;main&lt;/strong&gt;を指定することで、メインシーンが呼び直されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;クリア処理&#34;&gt;クリア処理&lt;/h4&gt;
+
+&lt;p&gt;マインスイーパーのクリアとは、爆弾以外のパネルが全部開かれた時です。
+結果的には、「全体のパネル数から開かれたパネル数を引いた値が爆弾数と一致」すればよいということになります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    （略）
+    // 参照用
+    this.panelGroup = panelGroup;
+    // クリア判定用
+    this.oCount = 0;
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;開かれたパネル数をカウントするための変数&lt;strong&gt;oCount&lt;/strong&gt;を用意します。&lt;/li&gt;
+&lt;li&gt;パネルを開いたら&lt;strong&gt;oCount&lt;/strong&gt;を増やしていきます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// パネルタッチ時
+panel.onpointstart = function() {
+  self.openPanel(panel);
+  // クリア判定
+  if (self.oCount === PANEL_NUM_XY * PANEL_NUM_XY - BOMB_NUM) {
+    // ラベル表示
+    Label({
+      text: &#39;GOOD JOB!&#39;,
+      fill: &#39;white&#39;,
+    }).addChildTo(self).setPosition(320, 700);
+    // パネルを選択不可に
+    this.panelGroup.children.each(function(panel) {
+      panel.setInteractive(false);
+    });
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パネルを開いた時に開かれた数を調べてクリアチェックをしています。&lt;/li&gt;
+&lt;li&gt;クリアならラベルを表示して、全てのパネルを選択不可にしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、ゲームオーバー処理とクリア処理を実装しました。
+この状態で最低限のゲームとしては成立していると思いますが、次回は付加機能を追加したいと
+思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/825d660c&#34;&gt;http://runstant.com/alkn203/projects/825d660c&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その４）【パネルを連鎖で開く】</title>
+      <link>https://alkn203.github.io/blog/2016/07/06/minesweeper-tut-04</link>
+      <pubDate>Wed, 06 Jul 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/07/06/minesweeper-tut-04</guid>
+      <description>
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03/&#34;&gt;前回&lt;/a&gt;はパネルを開くと周りにある爆弾の数が表示されるようにしました。
+今回は、周りに爆弾がない場合にパネルを連鎖で開くようにします。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/943f0dea/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;openpanel関数&#34;&gt;openPanel関数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // パネルを開く処理
+  openPanel: function(panel) {
+    (略)
+    // パネルに数を表示
+    panel.num = bombs === 0 ? &#39;&#39; : bombs;
+    Label({
+      text: panel.num,
+      fill: &#39;white&#39;,
+    }).addChildTo(panel);
+    panel.fill = &#39;gray&#39;;
+    // 周りに爆弾がなければ再帰的に調べる
+    if (bombs === 0) {
+      indexs.each(function(i) {
+        indexs.each(function(j) {
+          var pos = Vector2(panel.x + i * GRID_SIZE, panel.y + j * GRID_SIZE);
+          var target = self.getPanel(pos);
+          target &amp;amp;&amp;amp; self.openPanel(target);
+        });
+      });
+    }
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;周りに爆弾がない場合、現在のパネルを起点にして&lt;strong&gt;getPanel&lt;/strong&gt;を再帰呼び出しします。
+今回の変更点はこれだけです。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、パネルを連鎖で開くことができるようになりました。
+段々と形になってきたと思いますが、爆弾も開けたりと全然ゲームになっていません。
+次回は、ゲームオーバーとクリア処理を追加します。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/943f0dea&#34;&gt;http://runstant.com/alkn203/projects/943f0dea&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その３）【パネルを開く】</title>
+      <link>https://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03</link>
+      <pubDate>Mon, 04 Jul 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03</guid>
+      <description>
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/&#34;&gt;前回&lt;/a&gt;はランダムに爆弾を配置しました。
+今回はパネルを開いて周りにある爆弾の数が表示されるようにします。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/4edca5d9/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;mainscene&#34;&gt;MainScene&lt;/h4&gt;
+
+&lt;h4 id=&#34;init関数&#34;&gt;init関数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  init: function() {
+    (略)
+    var self = this;
+    // ピース配置
+    PANEL_NUM_XY.times(function(spanX) {
+      PANEL_NUM_XY.times(function(spanY) {
+        (略)
+        // 開かれているかどうか
+        panel.isOpen = false;
+        // タッチ有効化
+        panel.setInteractive(true);
+        // パネルタッチ時
+        panel.onpointstart = function() {
+          self.openPanel(panel);
+        };
+        (略)
+      });
+    });
+    // 参照用
+    this.panelGroup = panelGroup;
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;後に&lt;strong&gt;MainScene&lt;/strong&gt;を&lt;strong&gt;this&lt;/strong&gt;として参照するために、&lt;strong&gt;self&lt;/strong&gt;に代入しています。&lt;/li&gt;
+&lt;li&gt;パネルが既に開かれているかどうかのフラグ変数&lt;strong&gt;isOpen&lt;/strong&gt;を作成しています。&lt;/li&gt;
+&lt;li&gt;パネルをタッチできるように&lt;strong&gt;setInteractive(true)&lt;/strong&gt;としています。&lt;/li&gt;
+&lt;li&gt;パネルのタッチイベント&lt;strong&gt;onpointstart&lt;/strong&gt;が発生した際に&lt;strong&gt;openPanel&lt;/strong&gt;関数を呼び出すようにしています。&lt;/li&gt;
+&lt;li&gt;最後に&lt;strong&gt;panelGroup&lt;/strong&gt;を別の関数からも参照できるように&lt;strong&gt;this.panelGroup&lt;/strong&gt;に代入しています。
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;openpanel関数-新規追加&#34;&gt;openPanel関数(新規追加)&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // パネルを開く処理
+  openPanel: function(panel) {
+    // 既に開かれていた何もしない
+    if (panel.isOpen) return;
+    // 開いたとフラグを立てる
+    panel.isOpen = true;
+    // タッチ不可にする
+    panel.setInteractive(false);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パネルを開いた直後の処理です。既に開かれていたら以降の処理をパスします。&lt;/li&gt;
+&lt;li&gt;フラグを変更して、&lt;strong&gt;setInteractive(false)&lt;/strong&gt;でタッチ不可にします。
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    var bombs = 0;
+    var indexs = [-1, 0, 1];
+    var self = this;
+    // 周りのパネルの爆弾数をカウント
+    indexs.each(function(i) {
+      indexs.each(function(j) {
+        var pos = Vector2(panel.x + i * GRID_SIZE, panel.y + j * GRID_SIZE);
+        var target = self.getPanel(pos);
+        if (target &amp;amp;&amp;amp; target.isBomb) bombs++;
+      });
+    });
+    // パネルに数を表示
+    panel.num = bombs === 0 ? &#39;&#39; : bombs;
+    Label({
+      text: panel.num,
+      fill: &#39;white&#39;,
+    }).addChildTo(panel);
+    panel.fill = &#39;gray&#39;;
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;インデックス値を利用して周りのパネルに爆弾が何個あるかを調べます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;getPanel&lt;/strong&gt;関数は、与えられた位置（Vector2）にパネルがあるかを返します。&lt;/li&gt;
+&lt;li&gt;パネルが爆弾ならカウントして、ラベルで結果を表示しています。
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;getpanel関数-新規追加&#34;&gt;getPanel関数（新規追加）&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 指定された位置のパネルを得る  
+  getPanel: function(pos) {
+    var result = null;
+    
+    this.panelGroup.children.some(function(panel) {
+      if (panel.position.equals(pos)) {
+        result = panel;
+        return true;
+      } 
+    });
+    return result;
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;panelGroup&lt;/strong&gt;を調べて指定された位置にパネルがあれば、それを返します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;some&lt;/strong&gt;を使って条件が合ったらループを抜けるようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、パネルを開いて爆弾数を表示することが出来ました。
+次回は、再帰処理を使ってパネルが連鎖で開くようにします。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34;&gt;http://runstant.com/alkn203/projects/a24d063d&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その２）【爆弾の配置】</title>
+      <link>https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02</link>
+      <pubDate>Sun, 03 Jul 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02</guid>
+      <description>
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01/&#34;&gt;前回&lt;/a&gt;はパネルをグリッド状に配置しました。
+今回はマインスイーパーの主役とも言える爆弾を配置します。爆弾はランダムな場所に配置されるようにします。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/a24d063d/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640; // 画面横サイズ
+var PANEL_NUM_XY = 9; // 縦横のパネル数
+var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
+var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
+var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
+var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
+var BOMB_NUM = 10; // 爆弾数
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: SCREEN_WIDTH,
+      height: SCREEN_HEIGHT,
+    });
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
+    // グループ
+    var panelGroup = DisplayElement().addChildTo(this);
+    // 爆弾位置をランダムに決めた配列を作成
+    var bombs = [];
+    (PANEL_NUM_XY * PANEL_NUM_XY).times(function() {
+      bombs.push(false);
+    });
+    bombs.fill(true, 0, 10).shuffle();
+    // ピース配置
+    PANEL_NUM_XY.times(function(spanX) {
+      PANEL_NUM_XY.times(function(spanY) {
+        // パネル作成
+        var panel = Panel().addChildTo(panelGroup);
+        // Gridを利用して配置
+        panel.x = grid.span(spanX) + PANEL_OFFSET;
+        panel.y = grid.span(spanY) + PANEL_OFFSET;
+        // パネルに爆弾情報を紐づける
+        panel.isBomb = bombs[spanX * PANEL_NUM_XY + spanY];
+        // 爆弾なら表示
+        if (panel.isBomb) Bomb().addChildTo(panel);
+      });
+    });
+  },
+});
+// パネルクラス
+phina.define(&#39;Panel&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PANEL_SIZE,
+        height: PANEL_SIZE,
+        fill: &#39;silver&#39;, // 塗りつぶし色
+        stroke: &#39;white&#39;, // 枠の色
+        cornerRadius: 2, // 角の丸み
+      });
+    },
+});
+// 爆弾クラス
+phina.define(&#39;Bomb&#39;, {
+  // Shapeを継承
+  superClass: &#39;Shape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: GRID_SIZE,
+        height: GRID_SIZE,
+        backgroundColor: &#39;transparent&#39;,
+      });
+      // 導線
+      RectangleShape({
+        width: PANEL_SIZE / 8,
+        height: PANEL_SIZE / 8,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+        y: -20,
+      }).addChildTo(this);
+      // 本体
+      CircleShape({
+        radius: PANEL_SIZE / 4,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;, // メイン画面からスタート
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
+（略）
+var BOMB_NUM = 10; // 爆弾数
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;設置する爆弾数を定義します。&lt;/p&gt;
+
+&lt;h4 id=&#34;爆弾位置情報の作成&#34;&gt;爆弾位置情報の作成&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;init: function() {
+  （略）
+  // 爆弾位置をランダムに決めた配列を作成
+  var bombs = [];
+  (PANEL_NUM_XY * PANEL_NUM_XY).times(function() {
+    bombs.push(false);
+  });
+  bombs.fill(true, 0, 10).shuffle();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;爆弾位置格納用の配列を作ります。&lt;/li&gt;
+&lt;li&gt;一旦&lt;strong&gt;false&lt;/strong&gt;で埋めて、先頭の10個まで&lt;strong&gt;true&lt;/strong&gt;に置き換えてから&lt;strong&gt;shuffle&lt;/strong&gt;関数で要素をランダムに並び替えています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;爆弾位置情報をパネルに紐づける&#34;&gt;爆弾位置情報をパネルに紐づける&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピース配置
+  PANEL_NUM_XY.times(function(spanX) {
+    PANEL_NUM_XY.times(function(spanY) {
+      （略）
+      // パネルに爆弾情報を紐づける
+      panel.isBomb = bombs[spanX * PANEL_NUM_XY + spanY];
+      // 爆弾なら表示
+      if (panel.isBomb) Bomb().addChildTo(panel);
+    });
+  });
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パネルの&lt;strong&gt;isBomb&lt;/strong&gt;プロパティに爆弾かどうかの情報&lt;strong&gt;true&lt;/strong&gt; or &lt;strong&gt;false&lt;/strong&gt;を設定しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;isBomb&lt;/strong&gt;プロパティが&lt;strong&gt;true&lt;/strong&gt;なら、爆弾を配置します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;爆弾クラス&#34;&gt;爆弾クラス&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 爆弾クラス
+phina.define(&#39;Bomb&#39;, {
+  // Shapeを継承
+  superClass: &#39;Shape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: GRID_SIZE,
+        height: GRID_SIZE,
+        backgroundColor: &#39;transparent&#39;,
+      });
+      // 導線
+      RectangleShape({
+        width: PANEL_SIZE / 8,
+        height: PANEL_SIZE / 8,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+        y: -20,
+      }).addChildTo(this);
+      // 本体
+      CircleShape({
+        radius: PANEL_SIZE / 4,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;新たに&lt;strong&gt;Bomb&lt;/strong&gt;クラスを作成しています。&lt;/li&gt;
+&lt;li&gt;爆弾はスプライト画像を使っても良いのですが、今回は敢えて&lt;strong&gt;Shape&lt;/strong&gt;を組み合わせて表現してみました。&lt;/li&gt;
+&lt;li&gt;素の&lt;strong&gt;Shape&lt;/strong&gt;は&lt;strong&gt;backgroundColor&lt;/strong&gt;が設定されているので、これを透明にします。&lt;/li&gt;
+&lt;li&gt;導線は本体の少し上になるようにy座標を指定しています。この場合、親から見た&lt;strong&gt;相対座標&lt;/strong&gt;になるということに注意してください。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、爆弾をランダムに配置することができました。読み込まれる度に配置が異なることが確認できるかと思います。
+次回は、パネルを開く処理を追加します。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34;&gt;http://runstant.com/alkn203/projects/a24d063d&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その１）【パネルの配置】</title>
+      <link>https://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01</link>
+      <pubDate>Thu, 30 Jun 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/a533b1264b912dec9590&#34;&gt;tmlib.js ＝マインスイーパー＝ チュートリアル編（目次）&lt;/a&gt;を投稿しましたが、今回は、これを&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;で作り直すのが目標です。なお、本ブログのこれまでのチュートリアルを見て、「&lt;strong&gt;phina.js&lt;/strong&gt;でのゲーム作り」を少しは知っているということを前提にしています。
+このチュートリアルでは、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の公式開発環境として更に便利になった&lt;a href=&#34;http://runstant.com/&#34;&gt;runstant&lt;/a&gt;を使っていきたいと思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;以下のようにパネルを並べます。
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/ada3aa47/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640; // 画面横サイズ
+var PANEL_NUM_XY = 9; // 縦横のパネル数
+var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
+var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
+var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
+var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: SCREEN_WIDTH,
+      height: SCREEN_HEIGHT,
+    });
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
+    // グループ
+    var panelGroup = DisplayElement().addChildTo(this);
+    // ピース配置
+    PANEL_NUM_XY.times(function(spanX) {
+      PANEL_NUM_XY.times(function(spanY) {
+        // パネル作成
+        var panel = Panel().addChildTo(panelGroup);
+        // Gridを利用して配置
+        panel.x = grid.span(spanX) + PANEL_OFFSET;
+        panel.y = grid.span(spanY) + PANEL_OFFSET;
+      });
+    });
+  },
+});
+// パネルクラス
+phina.define(&#39;Panel&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PANEL_SIZE,
+        height: PANEL_SIZE,
+        fill: &#39;silver&#39;, // 塗りつぶし色
+        stroke: &#39;white&#39;, // 枠の色
+        cornerRadius: 2, // 角の丸み
+      });
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;, // メイン画面からスタート
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
+var SCREEN_WIDTH = 640; // 画面横サイズ
+var PANEL_NUM_XY = 9; // 縦横のパネル数
+var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
+var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
+var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
+var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ゲームに必要な各種定数を定義しています。&lt;/li&gt;
+&lt;li&gt;グリッドのサイズは、出来るだけ大きいサイズでパネル数で分割出来るように計算で求めています。&lt;/li&gt;
+&lt;li&gt;パネルの大きさをグリッドサイズより少し小さくしてるのは、配置するときに隙間を開けるためです。&lt;/li&gt;
+&lt;li&gt;パネルを正しい位置に配置できるようにオフセット値を計算しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;panelクラス&#34;&gt;Panelクラス&lt;/h4&gt;
+
+&lt;p&gt;メイン処理の前にパネルクラスについて説明します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// パネルクラス
+phina.define(&#39;Panel&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PANEL_SIZE,
+        height: PANEL_SIZE,
+        fill: &#39;silver&#39;, // 塗りつぶし色
+        stroke: &#39;white&#39;, // 枠の色
+        cornerRadius: 2, // 角の丸み
+      });
+    },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;phina.define&lt;/strong&gt;でクラスを定義します。&lt;/li&gt;
+&lt;li&gt;パネルは四角形なので&lt;strong&gt;RectangleShape&lt;/strong&gt;（矩形）クラスを継承します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;this.superInit&lt;/strong&gt;で親クラスにパラメーターを与えて初期化します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;cornerRadius&lt;/strong&gt;は角の丸みを指定します。（tmlib.jsではRoundRectangleShape）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;メインシーン&#34;&gt;メインシーン&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// コンストラクタ
+init: function() {
+  // 親クラス初期化
+  this.superInit({
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;画面サイズを反映させるためには、&lt;strong&gt;DisplayScene&lt;/strong&gt;の親クラスにも&lt;strong&gt;width&lt;/strong&gt;と&lt;strong&gt;height&lt;/strong&gt;を指定する必要があります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 背景色
+  this.backgroundColor = &#39;gray&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Scene&lt;/strong&gt;の背景色を指定しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // グリッド
+  var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Grid&lt;/strong&gt;クラスを使って、配置用の情報を生成しています。ここで1グリッドの大きさが決まります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // グループ
+  var panelGroup = DisplayElement().addChildTo(this);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;DisplayElement&lt;/strong&gt;を使ってパネルを格納するグループを作成しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピース配置
+  PANEL_NUM_XY.times(function(spanX) {
+    PANEL_NUM_XY.times(function(spanY) {
+      // パネル作成
+      var panel = Panel().addChildTo(panelGroup);
+      // Gridを利用して配置
+      panel.x = grid.span(spanX) + PANEL_OFFSET;
+      panel.y = grid.span(spanY) + PANEL_OFFSET;
+    });
+  });
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パネルをグリッド状に配置する処理です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;関数は、&lt;strong&gt;phina.js&lt;/strong&gt;独自の仕様で、前に付いた値の回数だけ処理を繰り返します。ここでは、&lt;strong&gt;PANEL_NUM_XY&lt;/strong&gt;回、つまり9回の繰り返しです。入れ子にしてグリッド状に配置します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Panel&lt;/strong&gt;を作成して&lt;strong&gt;panelGroup&lt;/strong&gt;に追加しています。&lt;/li&gt;
+&lt;li&gt;最後にパネルの位置を指定します。&lt;strong&gt;span&lt;/strong&gt;にインデックス値を指定することで、グリッド状に綺麗に配置することが出来ます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、パネルを配置することができました。
+次回は、&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/&#34;&gt;爆弾の配置&lt;/a&gt;です。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/ada3aa47&#34;&gt;http://runstant.com/alkn203/projects/ada3aa47&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（15パズル）（最終回）【ゲーム的要素の追加】</title>
+      <link>https://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06</link>
+      <pubDate>Tue, 05 Jan 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06</guid>
+      <description>
+
+&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+
+&lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その５）【tweenerで移動処理】&lt;/a&gt;では、&lt;strong&gt;tweener&lt;/strong&gt;を使ってピースをアニメーション移動させました。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;今回は、もう少しゲームらしくするために以下の要素を追加したいと思います。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ピースのシャッフル処理&lt;/li&gt;
+&lt;li&gt;クリア判定&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;ピースのシャッフル&#34;&gt;ピースのシャッフル&lt;/h3&gt;
+
+&lt;p&gt;まずは以下で動きを確認してみてください。
+&lt;strong&gt;SHUFFLE&lt;/strong&gt;ボタンをタッチすると、ピースがシャッフルされます。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/HIgbx1&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// シャッフルボタン
+var shuffleButton = Button({
+  text: &#39;SHUFFLE&#39;,
+}).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(13));
+// ボタンプッシュ時処理
+shuffleButton.onpush = function() {
+    // ピースをシャッフル
+    (100).times(function() {
+      self.shufflePieces();  
+    });
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;MainScnene&lt;/strong&gt;に&lt;strong&gt;Button&lt;/strong&gt;クラスを使ってシャッフルボタンを追加しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;shuffleButton.onpush&lt;/strong&gt;にボタンが押された時の処理を記述しています。&lt;strong&gt;times&lt;/strong&gt;を使って100回シャッフルしています。&lt;strong&gt;shufflePieces&lt;/strong&gt;関数については後述します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 指定の位置のピースを返す
+  getPieceByXY: function(x, y) {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 指定した座標なら
+      if (piece.x === x &amp;amp;&amp;amp; piece.y === y) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;getPieceByXY&lt;/strong&gt;は、指定された位置のピースを返します。該当ピースがあればそのピース、なければ&lt;strong&gt;null&lt;/strong&gt;を返します。この後の&lt;strong&gt;shufflePieces&lt;/strong&gt;から呼ばれます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピースをシャッフルする
+  shufflePieces: function() {
+    var self = this;
+    // 隣接ピース格納用
+    var pieces = [];
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 上下左右隣りのピースがあれば配列に追加
+    [1, 0, -1].each(function(i) {
+      [1, 0, -1].each(function(j) {
+        if (i != j) {
+          var x = blank.x + i * GRID_SIZE;
+          var y = blank.y + j * GRID_SIZE;
+          var target = self.getPieceByXY(x, y);
+          if (target) pieces.push(target);
+        }
+      });
+    });
+    // 隣接ピースからランダムに選択して空白ピースと入れ替える
+    this.movePiece(pieces.random(), &#39;instantly&#39;);
+    pieces.clear();
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;空白ピースの上下左右隣りのピースがあるか調べて、その中からランダムに選んで移動させる&lt;/strong&gt;という処理をしています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;movePiece&lt;/strong&gt;の引数を一つ増やして、&lt;strong&gt;tweener&lt;/strong&gt;を使わずに即座に移動するかどうかを指定しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピースの移動処理
+  movePiece: function(piece, isInstantly) {
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 即入れ替え
+    if (isInstantly) {
+      var tmpX = piece.x;
+      var tmpY = piece.y;
+      piece.setPosition(blank.x, blank.y);
+      blank.setPosition(tmpX, tmpY);
+      return;
+    }
+    // x, yの座標差の絶対値
+    var dx = Math.abs(piece.x - blank.x);
+    var dy = Math.abs(piece.y - blank.y);
+    // 隣り合わせの判定
+    if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) ||
+        (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+      // タッチされたピース位置を記憶
+      var touchX = piece.x;
+      var touchY = piece.y;
+      var self = this;
+      // tweenerで移動処理
+      piece.tweener.clear()
+                   .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+                   .call(function() {
+                     // 空白ピースをタッチされたピースの位置へ
+                     blank.setPosition(touchX, touchY);
+                   });
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第二引数が指定されていた場合、シャッフル処理の一環と判断して&lt;strong&gt;tweener&lt;/strong&gt;でアニメーションさせずに即座に移動させます。最初に書いてた移動処理を復活させただけです。&lt;/li&gt;
+&lt;li&gt;15パズルのシャッフルのポイントは、実際に可能な移動をさせるという点です。そうすればパズルが解けなくなるという心配もありません。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h3&gt;
+
+&lt;p&gt;15パズルにおけるクリアとは、言うまでもなく&lt;strong&gt;全てのピースが正しい位置に収まった時&lt;/strong&gt;です。
+以下で動作を確認してみて下さい。シャッフルボタンを押した後にピースを正しい位置に揃えると、リザルトシーンに移行します。（確認しやすいようにシャッフル回数を2回にしています。）&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/TLD1J6&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;p&gt;以下が主な変更点です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// Gridを利用して配置
+piece.x = grid.span(spanX) + PIECE_OFFSET;
+piece.y = grid.span(spanY) + PIECE_OFFSET;
+// 正解の位置を記憶させておく
+piece.correctX = piece.x;
+piece.correctY = piece.y;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ピースの初期位置をプロパティとして保存しておきます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 一回でも押されたかどうか
+shuffleButton.isPushed = false;
+// ボタンプッシュ時処理
+shuffleButton.onpush = function() {
+    // ピースをシャッフル
+    (2).times(function() {
+      self.shufflePieces();  
+    });
+    // 残りステップリセット
+    self.step = 200;
+    // 押されたフラグ立て
+    this.isPushed = true;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;シャッフルボタンに&lt;strong&gt;isPushed&lt;/strong&gt;というフラグを作っています。これはシャッフルされた後だけにクリア判定するために使われます。&lt;/li&gt;
+&lt;li&gt;スコア用に残りステップ数を設けています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// tweenerで移動処理
+piece.tweener.clear()
+             .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+             .call(function() {
+               // 空白ピースをタッチされたピースの位置へ
+               blank.setPosition(touchX, touchY);
+               // 残りステップを減らす
+               self.step--;
+               // クリアチェック
+               if (self.shuffleButton.isPushed) self.checkPiecePosition();
+             });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ピースが移動し終わったタイミングでクリア判定を行っています。&lt;strong&gt;checkPiecePosition&lt;/strong&gt;については後述します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// クリア判定
+checkPiecePosition: function() {
+  // 正しくない位置のピースがあるかチェックする
+  var result = this.pieceGroup.children.some(function(piece) {
+    if (piece.x != piece.correctX || piece.y != piece.correctY) return true;
+  });
+  // 全て正しい位置ならクリア画面へ
+  var score = this.step;
+  if (!result) {
+    this.exit({
+      score: score,
+      message: &#39;15 Puzzle Clear!&#39;
+    });
+  }
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;「全てのピースが正しい位置」ということは「正しくない位置のピースが一つでもある」と同じ意味なので、該当ピースがあったら即座に関数を抜けるようにしています。&lt;/li&gt;
+&lt;li&gt;全て正しい位置なら、残りステップ数を&lt;strong&gt;score&lt;/strong&gt;に渡して&lt;strong&gt;exit&lt;/strong&gt;でリザルトシーンに遷移させます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+
+&lt;p&gt;今回で&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;を使った15パズル作成のチュートリアルは終わりです。分かりづらい部分も多々あったかと思いますが、少しでも&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;を使ったゲーム作りのヒントになれば幸いです。最後まで読んで頂きありがとうございました。&lt;/p&gt;
+
+&lt;h3 id=&#34;完成版&#34;&gt;完成版&lt;/h3&gt;
+
+&lt;p&gt;最後にシャッフル回数を通常に戻した完成版を掲載します。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Tsxuak&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（15パズル）（その５）【tweenerで移動処理】</title>
+      <link>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05</link>
+      <pubDate>Fri, 01 Jan 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05</guid>
+      <description>
+
+&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+
+&lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その４）【ピースの移動】&lt;/a&gt;では、ピースをタッチで移動できるようにしました。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の目玉機能の1つである&lt;strong&gt;tweener&lt;/strong&gt;を使ってピースの移動を滑らかにしてみます。
+まずは以下で動きを確認してみてください。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/y8M1QA&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;p&gt;前回までに比べて移動が滑らかになったかと思います。
+&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;では、このような動きを&lt;strong&gt;tweener&lt;/strong&gt;という機能で実現できます。&lt;/p&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;movePiece&lt;/strong&gt;関数を以下のように変更します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピースの移動処理
+movePiece: function(piece) {
+  // 空白ピースを得る
+  var blank = this.getBlankPiece();
+  // x, yの座標差の絶対値
+  var dx = Math.abs(piece.x - blank.x);
+  var dy = Math.abs(piece.y - blank.y);
+  // 隣り合わせの判定
+  if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) ||
+      (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+    // タッチされたピース位置を記憶
+    var touchX = piece.x;
+    var touchY = piece.y;
+    // tweenerで移動処理
+    piece.tweener.clear()
+                 .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+                 .call(function() {
+                   // 空白ピースをタッチされたピースの位置へ
+                   blank.setPosition(touchX, touchY);
+                 });
+  }
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;tweenerの設定部分を説明します。
+最初に&lt;strong&gt;clear&lt;/strong&gt;で設定をリセットします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    piece.tweener.clear()
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;見やすいように改行していますが、次にさせたい処理をチェインメソッドで繋げます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;
+                 .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;to&lt;/strong&gt;の{}内にパラメータを設定します。今回は指定の位置（空白ピース）へ移動と設定しています。その他、拡大縮小、回転といったパラメータが同時に設定可能です。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;次の&lt;strong&gt;200&lt;/strong&gt;という数字は、{}内の処理をどれくらいの時間をかけて行うかの設定です。単位は&lt;strong&gt;ミリ秒&lt;/strong&gt;（1000分の1秒）です。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;最後の&lt;strong&gt;easeOutCubic&lt;/strong&gt;は、イージングといって、動きにエフェクトをかけることができます。&lt;strong&gt;tweener&lt;/strong&gt;の使い方については、&lt;a href=&#34;https://twitter.com/simiraaaa&#34;&gt;simiraaaa&lt;/a&gt;さんの記事&lt;a href=&#34;http://qiita.com/simiraaaa/items/b80fec588fa2db272f67&#34;&gt;[phina.js] Tweenerを使いこなそう! [Tweener 基本編]&lt;/a&gt;がとても参考になります。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;call&lt;/strong&gt;を使うことで、以下のように通常の処理を繋げて&lt;strong&gt;非同期で&lt;/strong&gt;実行させることができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;.call(function() {
+  // 空白ピースをタッチされたピースの位置へ
+  blank.setPosition(touchX, touchY);
+});
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以上をまとめると、&lt;strong&gt;タッチされたピースを空白ピースの場所に移動させた後、空白ピースをタッチされたピースの元位置に移動（入れ替え）&lt;/strong&gt;という一連の処理になります。書き方に多少慣れが必要ですが、より複雑な動きも&lt;strong&gt;tweener&lt;/strong&gt;なら手軽に設定することができます。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、&lt;strong&gt;tweener&lt;/strong&gt;を使ってピースが滑らかに移動できるようになりました。
+次回は&lt;strong&gt;ゲーム的要素の追加&lt;/strong&gt;で、よりゲームらしくしていきます。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（15パズル）（その４）【ピースの移動】</title>
+      <link>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04</link>
+      <pubDate>Fri, 01 Jan 2016 23:58:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04</guid>
+      <description>
+
+&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+
+&lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その３）【ピースのタッチ】&lt;/a&gt;では、15パズルのピースをタッチできるようにしました。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;以下のように、ピースをタッチで移動できるようにします。まずは、動作確認してみて下さい。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/63h9GZ&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;ピース移動の考え方&#34;&gt;ピース移動の考え方&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;15パズルにおいて移動できるピースは、空白と隣り合わせのピースだけです。よって、&lt;strong&gt;タッチされたピースと空白の位置を入れ替える&lt;/strong&gt;ことが移動とみなせます。これまで、空白をあえて&lt;strong&gt;見えない16番ピース&lt;/strong&gt;にしたのは、このためです。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;隣り合わせ&lt;/strong&gt;については、&lt;strong&gt;x座標が同じでy座標の差の絶対値がグリッド1個分のサイズ*、またはその逆パターンの時&lt;/strong&gt;で判定しています。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;以下のバージョンでは、判定の様子がコンソールに出力されるようにしています。試しにピースをタッチしてみてください。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/fg9O2l&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h3 id=&#34;ピースの移動処理&#34;&gt;ピースの移動処理&lt;/h3&gt;
+
+&lt;p&gt;まず、見えない16番ピースを返すだけの&lt;strong&gt;getBlankPiece&lt;/strong&gt;関数を&lt;strong&gt;MainScene&lt;/strong&gt;に追加します。コードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 16番ピース（空白）を取得
+getBlankPiece: function() {
+  var result = null;
+  this.pieceGroup.children.some(function(piece) {
+    // 16番ピースを結果に格納
+    if (piece.num === 16) {
+      result = piece;
+      return true;
+    }
+  });
+  return result;
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;pieceGroup&lt;/strong&gt;の子要素配列を&lt;strong&gt;some&lt;/strong&gt;関数でループして、16番ピースがあったら&lt;strong&gt;return true&lt;/strong&gt;としてループを抜けるようにしています。&lt;/p&gt;
+
+&lt;p&gt;次に、ピースの移動処理を行う&lt;strong&gt;movePiece&lt;/strong&gt;関数を&lt;strong&gt;MainScene&lt;/strong&gt;に追加します。コードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピースの移動処理
+movePiece: function(piece) {
+  // 空白ピースを得る
+  var blank = this.getBlankPiece();
+  // x, yの座標差の絶対値
+  var dx = Math.abs(piece.x - blank.x);
+  var dy = Math.abs(piece.y - blank.y);
+  // 隣り合わせの判定
+  if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) ||
+      (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+    // 一時変数に待避
+    var tmpX = blank.x;
+    var tmpY = blank.y;
+    // 位置入れ換え
+    blank.setPosition(piece.x, piece.y);
+    piece.setPosition(tmpX, tmpY);
+  }
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;タッチされたピースを引数で受け取り、空白ピースと位置を入れ替えます。先に述べたとおり、&lt;strong&gt;隣り合わせ&lt;/strong&gt;については、&lt;strong&gt;x座標が同じでy座標の差の絶対値がピース1個分のサイズ*、またはその逆パターンの時&lt;/strong&gt;で判定しています。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;位置の入れ替えは、一方の座標を一時変数に待避させて、どちらかが上書きされないようにします。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最後に、&lt;strong&gt;MainScene&lt;/strong&gt;の一部を以下のように変更します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピースグループ
+var pieceGroup = CanvasElement().addChildTo(this);
+var self = this;
+// ピース配置
+PIECE_NUM_XY.times(function(spanX) {
+  PIECE_NUM_XY.times(function(spanY) {
+    // 番号
+    var num = spanY * PIECE_NUM_XY + spanX + 1;
+    // ピース作成
+    var piece = Piece(num).addChildTo(pieceGroup);
+    // Gridを利用して配置
+    piece.x = grid.span(spanX) + PIECE_OFFSET;
+    piece.y = grid.span(spanY) + PIECE_OFFSET;
+    // タッチを有効にする
+    piece.setInteractive(true);
+    // タッチされた時の処理
+    piece.onpointend = function() {
+      // ピース移動処理
+      self.movePiece(this);
+    };
+    // 16番のピースは非表示
+    if (num === 16) piece.hide();
+  });
+});
+// 参照用
+this.pieceGroup = pieceGroup;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;this&lt;/strong&gt;の参照が正しくなるように、&lt;strong&gt;MainScene&lt;/strong&gt;を指す&lt;strong&gt;this&lt;/strong&gt;を&lt;strong&gt;self&lt;/strong&gt;という変数に代入しています。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;piece.onpointend&lt;/strong&gt;の中身を&lt;strong&gt;self.movePiece(this)&lt;/strong&gt;として、タッチされたピースが引数として渡されるようにしています。ここでの&lt;strong&gt;self&lt;/strong&gt;は&lt;strong&gt;MainScene&lt;/strong&gt;で&lt;strong&gt;this&lt;/strong&gt;は&lt;strong&gt;piece&lt;/strong&gt;を指しています。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;pieceGroup&lt;/strong&gt;を&lt;strong&gt;MainScene&lt;/strong&gt;全体から参照できるように&lt;strong&gt;this.pieceGroup&lt;/strong&gt;という変数に代入しています。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、ピースが移動できるようになりました。書き方にもよりますが、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;だと&lt;strong&gt;100行程度&lt;/strong&gt;でここまで作ることができるのがお分かり頂けたかと思います。
+次回は、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の目玉機能の一つである&lt;strong&gt;tweener&lt;/strong&gt;で&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/&#34;&gt;ピースの動きを滑らかに&lt;/a&gt;してみます。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（15パズル）（その３）【ピースのタッチ】</title>
+      <link>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03</link>
+      <pubDate>Fri, 01 Jan 2016 23:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03</guid>
+      <description>
+
+&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+
+&lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2015/12/31/15puzzle-tut-02/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その２）【数字の表示】&lt;/a&gt;では、15パズルのピースに数字を表示させました。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;見た目の変化はありませんが、ピースにタッチイベントを追加して、結果が分かるようにコンソールに出力させます。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/YnrdZj&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h3 id=&#34;タッチイベントの追加&#34;&gt;タッチイベントの追加&lt;/h3&gt;
+
+&lt;p&gt;ピース作成時の処理を以下のように変更します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピース配置
+PIECE_NUM_XY.times(function(spanX) {
+  PIECE_NUM_XY.times(function(spanY) {
+    // 番号
+    var num = spanY * PIECE_NUM_XY + spanX + 1;
+    // ピース作成
+    var piece = Piece(num).addChildTo(pieceGroup);
+    // Gridを利用して配置
+    piece.x = grid.span(spanX) + PIECE_OFFSET;
+    piece.y = grid.span(spanY) + PIECE_OFFSET;
+    // タッチを有効にする
+    piece.setInteractive(true);
+    // タッチされた時の処理
+    piece.onpointend = function() {
+      console.log(this.num);
+    };
+    // 16番のピースは非表示
+    if (num === 16) piece.hide();
+  });
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;でオブジェクトのタッチを有効にするためには、&lt;strong&gt;obj.setInteractive(true)&lt;/strong&gt;と設定します。今回は、ピース配置時に有効にしますので、&lt;strong&gt;piece.setInteractive(true)&lt;/strong&gt;を追加します。&lt;/p&gt;
+
+&lt;p&gt;タッチを有効にしましたが、通常プログラムで使うためにはタッチイベントを拾う必要があります。そこで、ピースに対して&lt;strong&gt;onpointend&lt;/strong&gt;関数を追加し、タッチ時の処理を記述します。今回は動作確認用にタッチされたピースの数字をコンソールに出力するようにしています。&lt;/p&gt;
+
+&lt;p&gt;良く使うタッチイベントは、以下の3種類があります。それぞれ書き換えてみて動作確認すると、違いが分かるかと思います。
+* &lt;strong&gt;onpointstart&lt;/strong&gt;　&amp;mdash; タッチ開始時
+* &lt;strong&gt;onpointmove&lt;/strong&gt;　 &amp;mdash; タッチ中（移動含む）
+* &lt;strong&gt;onpointgend&lt;/strong&gt;　 &amp;mdash; タッチが離れた時&lt;/p&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、ピースにタッチイベントを追加することができました。
+次回は、メインともいえる&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04/&#34;&gt;ピースの移動&lt;/a&gt;を実装したいと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（15パズル）（その２）【数字の表示】</title>
+      <link>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02</link>
+      <pubDate>Fri, 01 Jan 2016 22:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02</guid>
+      <description>
+
+&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+
+&lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2015/12/31/15puzzle-tut-01/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その１）【ピースの配置】&lt;/a&gt;では、15パズルのピースの配置を行いました。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;以下のように、15パズルのピースに数字を表示します。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Nso2wV&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h3 id=&#34;数字の表示&#34;&gt;数字の表示&lt;/h3&gt;
+
+&lt;p&gt;数字の表示には、&lt;strong&gt;Label&lt;/strong&gt;クラスを使います。そのために、&lt;strong&gt;Piece&lt;/strong&gt;クラスを以下のように変更します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;init&lt;/strong&gt;関数に&lt;strong&gt;num&lt;/strong&gt;という引数を作成し、初期化時に数字を与えるようにします。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;this.num&lt;/strong&gt;に与えらえた値を保持させます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Label&lt;/strong&gt;の&lt;strong&gt;text&lt;/strong&gt;プロパティに与えられた数字を設定して、&lt;strong&gt;addChildTo&lt;/strong&gt;で&lt;strong&gt;this&lt;/strong&gt;(Piece)に追加します。併せて、フォントサイズと色を設定しています。ピースの子要素としてラベルを追加しておけば、ピースが動いた時もラベルが追従するようになります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;数字の計算&#34;&gt;数字の計算&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピース配置
+PIECE_NUM_XY.times(function(spanX) {
+  PIECE_NUM_XY.times(function(spanY) {
+    // 番号
+    var num = spanY * PIECE_NUM_XY + spanX + 1;
+    // ピース作成
+    var piece = Piece(num).addChildTo(pieceGroup);
+    // Gridを利用して配置
+    piece.x = grid.span(spanX) + PIECE_OFFSET;
+    piece.y = grid.span(spanY) + PIECE_OFFSET;
+    // 16番のピースは非表示
+    if (num === 16) piece.hide();
+  });
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;数字は、&lt;strong&gt;MainScene&lt;/strong&gt;のピースを配置するループ処理で正しい値になるように計算して、&lt;strong&gt;Piece&lt;/strong&gt;に引数として与えます。&lt;/li&gt;
+&lt;li&gt;ループでは16番までの数字が作成されますが、15パズルでは16番は不要ですので、条件で16番のピースは空白とみなして&lt;strong&gt;hide&lt;/strong&gt;を使って非表示にしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、各ピースの中心に数字が表示されるようになりました。
+次回は、&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/&#34;&gt;ピースにタッチイベントを追加&lt;/a&gt;させたいと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（15パズル）（その１）【ピースの配置】</title>
+      <link>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01</link>
+      <pubDate>Fri, 01 Jan 2016 21:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/3220d55d85a13c69e6c6&#34;&gt;tmlib.js ＝15パズル＝ チュートリアル編&lt;/a&gt;を投稿しましたが、今回は、これを&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;で作り直すのが目標です。&lt;/p&gt;
+
+&lt;p&gt;このチュートリアルでは、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の公式エディタである&lt;a href=&#34;http://runstant.com/about&#34;&gt;runstant&lt;/a&gt;を使っていきたいと思います。
+それでは、早速作っていきます。&lt;/p&gt;
+
+&lt;h3 id=&#34;ひな形の用意&#34;&gt;ひな形の用意&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/about&#34;&gt;runstant&lt;/a&gt;で用意した以下のひな形をベースに作成していきます。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/flgqTs&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.game.GameApp&lt;/strong&gt;のように階層的に定義されているクラスを&lt;strong&gt;GameApp&lt;/strong&gt;だけで呼び出せるようにする処理などをしています。とりあえずは、必要なおまじないと覚えておいてください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;CanvasScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+  },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;phina.define&lt;/strong&gt;は、クラスを定義する関数です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CanvasScene&lt;/strong&gt;を継承した&lt;strong&gt;MainScene&lt;/strong&gt;を定義しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;init&lt;/strong&gt;関数は、いわゆる&lt;strong&gt;コンストラクタ&lt;/strong&gt;です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;this.superInit&lt;/strong&gt;で親クラスの&lt;strong&gt;コンストラクタ&lt;/strong&gt;を呼び出しています。この後に、実際のゲーム処理コードを書いていくことになります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;phina.main&lt;/strong&gt;は、メイン関数です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GameApp&lt;/strong&gt;のコンストラクタに、&lt;strong&gt;連想配列形式&lt;/strong&gt;でパラメータを与えます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;startLabel&lt;/strong&gt;で最初に読み込む&lt;strong&gt;Scene&lt;/strong&gt;を指定します。今回は&lt;strong&gt;main&lt;/strong&gt;が指定されているので、&lt;strong&gt;MainScene&lt;/strong&gt;が最初に表示されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;現時点では、&lt;a href=&#34;http://runstant.com/about&#34;&gt;runstant&lt;/a&gt;画面上部メニューの&lt;strong&gt;play&lt;/strong&gt;で実行すると何もない画面が表示されるだけです。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;以下のように、15パズルのピースを配置します。
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/1oucz4&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h3 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h3&gt;
+
+&lt;p&gt;メインシーンの前にピースサイズなどを定数として定義します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ピースクラスの定義&#34;&gt;ピースクラスの定義&lt;/h3&gt;
+
+&lt;p&gt;後々の利便性を考え、&lt;strong&gt;phina.define&lt;/strong&gt;で以下のようにクラス化します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+    },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Piece&lt;/strong&gt;クラスは&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;で最初から用意されている&lt;strong&gt;RectangleShape&lt;/strong&gt;クラス（矩形）を継承し、&lt;strong&gt;init&lt;/strong&gt;関数内で親クラス(RectangleShape）にパラメータを渡して初期化しています。&lt;/li&gt;
+&lt;li&gt;ピースは正方形ですので、&lt;strong&gt;width&lt;/strong&gt;と&lt;strong&gt;height&lt;/strong&gt;には同じ&lt;strong&gt;PIECE_SIZE&lt;/strong&gt;を与えています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;cornerRadius&lt;/strong&gt;プロパティを設定することで、角丸の四角形にすることができます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;fill&lt;/strong&gt;は塗りつぶしの色、&lt;strong&gt;stroke&lt;/strong&gt;は枠の色です。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;には他にも円や三角形などの&lt;strong&gt;Shape&lt;/strong&gt;（基本図形）が用意されており、どれも最小限のパラメータで描画することができるので、簡単な動作確認の際に重宝します。
+&lt;strong&gt;Shape&lt;/strong&gt;の使い方については、作者である&lt;a href=&#34;https://twitter.com/phi_jp&#34;&gt;phi&lt;/a&gt;さんの記事&lt;a href=&#34;http://phiary.me/phinajs-shape-collection/&#34;&gt;phina.js を使って様々な図形を表示してみよう&lt;/a&gt;が参考になります。&lt;/p&gt;
+
+&lt;h3 id=&#34;ピースの配置&#34;&gt;ピースの配置&lt;/h3&gt;
+
+&lt;p&gt;今回の目的であるピースの配置について説明します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グリッド
+var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+// ピースグループ
+var pieceGroup = CanvasElement().addChildTo(this);
+// ピース配置
+PIECE_NUM_XY.times(function(spanX) {
+  PIECE_NUM_XY.times(function(spanY) {
+    // ピース作成
+    var piece = Piece().addChildTo(pieceGroup);
+    // Gridを利用して配置
+    piece.x = grid.span(spanX) + PIECE_OFFSET;
+    piece.y = grid.span(spanY) + PIECE_OFFSET;
+  });
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;画面幅をピースの並び数で区割りした&lt;strong&gt;Grid&lt;/strong&gt;を作成しています。&lt;strong&gt;Grid&lt;/strong&gt;クラスの使い方については、手前味噌ですみませんが&lt;a href=&#34;http://qiita.com/alkn203/items/d176a10d4e38d15e4062&#34;&gt;【phina.js】Gridクラスを使いこなそう&lt;/a&gt;を参考にして下さい。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CanvasElement&lt;/strong&gt;クラスを使って、&lt;strong&gt;pieceGroup&lt;/strong&gt;という名前のグループを作っています。グループ管理については、こちらも手前味噌ですが&lt;a href=&#34;http://qiita.com/alkn203/items/8ad0b80175d23d03bd49&#34;&gt;【phina.js】グループ管理の基本テクニック&lt;/a&gt;を参考にして下さい。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;ピースの配置は2重ループ処理で行いますが、今回は、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;独自の&lt;strong&gt;times&lt;/strong&gt;メソッドを使用しています。&lt;strong&gt;PIECE_NUM_XY&lt;/strong&gt;には&lt;strong&gt;4&lt;/strong&gt;という数値が入っていますので、引数で与えられた&lt;strong&gt;function&lt;/strong&gt;内の処理を&lt;strong&gt;4回繰り返す&lt;/strong&gt;という意味になります。&lt;strong&gt;spanX&lt;/strong&gt;と&lt;strong&gt;spanY&lt;/strong&gt;には、インデックス値である&lt;strong&gt;0～3&lt;/strong&gt;の数値がループ処理で入ってきますので、これを上手く利用します。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;次にピースを作成して、先に作った&lt;strong&gt;pieceGroup&lt;/strong&gt;に追加しています。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;最後に、グリッドを利用してピースを配置しています。定数の定義部分でグリッドのサイズよりピースのサイズを少し小さくしていますが、これにより&lt;strong&gt;padding&lt;/strong&gt;に似た効果を得ることができます。なお、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;でのオブジェクトの座標値はオブジェクトの原点（デフォルトではオブジェクトの中心）となりますので、&lt;strong&gt;PIECE_OFFSET&lt;/strong&gt;で位置を調整しています。&lt;strong&gt;PIECE_OFFSET&lt;/strong&gt;の箇所を削除して実行してみると、結果の違いが分かるかと思います。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;作成した&lt;strong&gt;pieceGroup&lt;/strong&gt;を&lt;strong&gt;MainScene&lt;/strong&gt;に&lt;strong&gt;addChildTo&lt;/strong&gt;することで、ピースが画面に表示されます。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ピースは配置できましたが、現時点ではただのタイルの集まりですね。
+次回は、&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02/&#34;&gt;ピースに数字を表示&lt;/a&gt;させたいと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（15パズル）</title>
+      <link>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-00</link>
+      <pubDate>Fri, 01 Jan 2016 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-00</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/3220d55d85a13c69e6c6&#34;&gt;tmlib.js ＝15パズル＝ チュートリアル編&lt;/a&gt;を投稿しましたが、今回、これを&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;で作り直してみます。
+以後、6回ほどに分けて掲載していく予定です。
+作成の基本的な部分からステップアップ形式で、実際のコードや動作サンプルを交えながら書いていくつもりですので、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;を使ったゲーム作成に興味のある方に読んで頂けると嬉しいです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;については、Qiitaの&lt;a href=&#34;http://qiita.com/advent-calendar/2015/phinajs&#34;&gt;phina.js Advent Calendar 2015&lt;/a&gt;にライブラリの紹介をはじめ、多くのTIPSが掲載されています。
+こちらも併せてチェックしてみて下さい。&lt;/p&gt;
+
+&lt;h3 id=&#34;目次&#34;&gt;目次&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01/&#34;&gt;（その１）【ピースの配置】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02/&#34;&gt;（その２）【数字の表示】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/&#34;&gt;（その３）【ピースのタッチ】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04/&#34;&gt;（その４）【ピースの移動】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/&#34;&gt;（その５）【tweenerで移動処理】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06/&#34;&gt;（最終回）【ゲーム的要素の追加】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;（番外編）【絵合わせパズル風にしてみる】&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）最終回＝ゲームオーバーとクリア処理＝</title>
+      <link>https://alkn203.github.io/blog/2015/11/06/breakout-tut-07</link>
+      <pubDate>Fri, 06 Nov 2015 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2015/11/06/breakout-tut-07</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;前回は、&lt;strong&gt;Tweener&lt;/strong&gt;を使ったアニメーション処理を追加しました。
+今回は最終回として、ゲームオーバーとクリア処理を追加したいと思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;ゲームオーバー処理&#34;&gt;ゲームオーバー処理&lt;/h3&gt;
+
+&lt;p&gt;ボールが画面下に落下したら、&lt;strong&gt;GAME OVER&lt;/strong&gt;という文字を表示してタイトル画面に戻るようにします。
+コードは以下のとおりです。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Gn8EzI&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h5 id=&#34;93から111行目&#34;&gt;93から111行目&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;      // 落下
+      var self = this;
+
+      if (ball.top &amp;gt; screenRect.bottom) {
+        // ゲームオーバー表示
+        var label = Label({
+          text: &#39;GAME OVER&#39;,
+          fill: &#39;yellow&#39;,
+          fontSize: 64,
+        }).addChildTo(this);
+        label.setPosition(this.gridX.center(), this.gridY.center());
+        // 少し待ってからタイトル画面へ
+        label.tweener.clear()
+                     .wait(2000)
+                     .call(function() {
+                       self.nextLabel = &#39;title&#39;;
+                       self.exit();
+                     });
+      }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Label&lt;/strong&gt;クラスを使って表示用のラベルを追加しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;tweener&lt;/strong&gt;を使って、&lt;strong&gt;wait&lt;/strong&gt;で2秒ほど待ってからタイトル画面に移動するようにしています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;nextLabel&lt;/strong&gt;で移動先のシーン名を指定します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;exit&lt;/strong&gt;で現在のシーンを抜けます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;クリア処理&#34;&gt;クリア処理&lt;/h3&gt;
+
+&lt;p&gt;全てのブロックを崩したらクリアとして、スコアを結果画面に表示してみます。
+コードは以下のとおりです。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/15M7pz&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h5 id=&#34;53から63行目&#34;&gt;53から63行目&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// スコア
+this.score = 0;
+var scoreLabel = Label({
+  text: this.score + &#39;&#39;,
+  fill: &#39;lime&#39;,
+  fontSize: 64,
+}).addChildTo(this);
+scoreLabel.setPosition(this.gridX.center(), this.gridY.center());
+scoreLabel.alpha = 0.6;
+// 連続ヒット数
+this.hitNumber = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;this.score&lt;/strong&gt;は、スコア用の変数です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Label&lt;/strong&gt;クラスを使ってスコア表示用のラベルを追加しています。ラベルの&lt;strong&gt;text&lt;/strong&gt;プロパティにスコア値を設定しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;alpha&lt;/strong&gt;は透明度で、0に近づくほど透明になります。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;this.hitNumber&lt;/strong&gt;ブロックを連続で崩した回数を記録します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&#34;232から240行目&#34;&gt;232から240行目&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // スコア加算
+  this.addScore();
+},
+// スコア加算処理
+addScore: function() {
+  this.hitNumber++;
+  this.score += this.hitNumber * 10;
+  this.scoreLabel.text = this.score;
+},
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ブロックを崩した時に&lt;strong&gt;addScore&lt;/strong&gt;関数を呼び出して、スコアを加算します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;addScore&lt;/strong&gt;関数内では、連続ヒット数の場合、スコアを上乗せしています。&lt;/li&gt;
+&lt;li&gt;スコア表示用ラベルの&lt;strong&gt;text&lt;/strong&gt;プロパティに現在のスコアを反映させれば、ラベルが更新されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&#34;209から215行目&#34;&gt;209から215行目&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// クリアチェック
+if (this.blockGroup.children.length === 0) {
+  // スコアをリザルトシーンに渡す
+  this.exit({
+    score: this.score,  
+  });
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ブロックを全て崩した時がクリアの条件ですので、&lt;strong&gt;length&lt;/strong&gt;の値をチェックします。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;exit&lt;/strong&gt;にスコアを渡して、リザルトシーンに移動します。&lt;strong&gt;nextLabel&lt;/strong&gt;を設定していないのは、&lt;strong&gt;main&lt;/strong&gt;の次はデフォルトで&lt;strong&gt;result&lt;/strong&gt;が設定されているためです。&lt;/li&gt;
+&lt;li&gt;実際にクリアすると、リザルト画面にスコアが引き渡されているのが分かるかと思います。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+
+&lt;p&gt;今回のチュートリアルでは、&lt;strong&gt;phina.js&lt;/strong&gt;を使った簡単なブロック崩しの作成について触れさせて頂きました。
+&lt;strong&gt;phina.js&lt;/strong&gt;には、今回では紹介しきれていない機能がまだまだありますので、これからこのブログなどで私なりに紹介できればと思っております。&lt;/p&gt;
+
+&lt;p&gt;今回の一連のエントリーに関する質問などは、私(&lt;a href=&#34;https://twitter.com/alkn203&#34;&gt;@alkn203&lt;/a&gt;)までお気軽にどうぞ。
+&lt;strong&gt;phina.js&lt;/strong&gt;に関する質問は、作者のphi氏(&lt;a href=&#34;https://twitter.com/phi_jp&#34;&gt;@phi-jp&lt;/a&gt;)に直接して頂くか、&lt;a href=&#34;https://gitter.im/phi-jp/phina.js&#34;&gt;gitter&lt;/a&gt;でして頂ければ、メンバーが真剣に答えてくれると思います。(微力ながら私も参加しています）&lt;/p&gt;
+
+&lt;p&gt;今回のチュートリアルが、&lt;strong&gt;phina.js&lt;/strong&gt;を使ったゲーム作成の際に少しでも参考になれば幸いです。
+最後までお付き合い頂きありがとうございました。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第6回＝Tweenerを使ったアニメーション処理＝</title>
+      <link>https://alkn203.github.io/blog/2015/11/05/breakout-tut-06</link>
+      <pubDate>Thu, 05 Nov 2015 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2015/11/05/breakout-tut-06</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;前回は、ブロックの消去処理を追加しました。
+今回は、ゲームとしての見栄えを良くするために、ブロックがアニメーションして消えるようにしたいと思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;tweenerを使ったアニメーション処理&#34;&gt;Tweenerを使ったアニメーション処理&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;には&lt;strong&gt;Tweener&lt;/strong&gt;という機能があり、オブジェクトに対して移動、拡大・縮小、回転などといったアニメーションを簡単に設定することができます。
+今回は、ブロックが&lt;strong&gt;縮小して消える&lt;/strong&gt;ようにしてみます。&lt;/p&gt;
+
+&lt;h3 id=&#34;アニメーション用ダミーブロックの作成&#34;&gt;アニメーション用ダミーブロックの作成&lt;/h3&gt;
+
+&lt;p&gt;ブロックそのものに&lt;strong&gt;Tweener&lt;/strong&gt;を設定しても良いのですが、消去アニメーション中も当たり判定が有効だと予期しない動作を招きかねないので、アニメーション用のダミーブロックを別途作成してから、それに&lt;strong&gt;Tweener&lt;/strong&gt;を設定する方法をとります。
+コードは以下のとおりです。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/2SQ3Zh&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h5 id=&#34;20行目&#34;&gt;20行目&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // ダミーブロックグループ
+    this.dummyGroup = CanvasElement().addChildTo(this);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;dummyGroup&lt;/strong&gt;は、ダミーブロック用のグループです。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&#34;189から204行目&#34;&gt;189から204行目&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ブロックの消去処理
+disableBlock: function(block) {
+  // 消去アニメーション用のダミーブロック
+  var dummy = Block().addChildTo(this.dummyGroup);
+  // 属性コピー
+  dummy.x = block.x;
+  dummy.y = block.y;
+  // ブロック削除
+  block.remove();
+  // 縮小して消えるアニメーション
+  dummy.tweener.clear()
+               .to({scaleX: 0.1, scaleY: 0.1}, 200)
+               .call(function() {
+                 dummy.remove();
+               });
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;disableBlock&lt;/strong&gt;では、まず引数で与えられたブロックの位置情報をコピーしてダミーブロックを作っています。そして、元のブロックを消去しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 縮小して消えるアニメーション
+dummy.tweener.clear()
+             .to({scaleX: 0.1, scaleY: 0.1}, 200)
+             .call(function() {
+               dummy.remove();
+             });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ダミーブロックの&lt;strong&gt;Tweener&lt;/strong&gt;設定を行っています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;clear()&lt;/strong&gt;で一旦初期化し、&lt;strong&gt;to&lt;/strong&gt;でパラメータの変更を行います。&lt;/li&gt;
+&lt;li&gt;今回は縮小を行うので、&lt;strong&gt;scaleX&lt;/strong&gt;と&lt;strong&gt;scaleY&lt;/strong&gt;に縮小後の大きさを割合で指定します。&lt;strong&gt;0.1&lt;/strong&gt;の場合は、元の0.1倍の大きさになります。&lt;/li&gt;
+&lt;li&gt;その後の数字で、そのアニメーションをどれ位の時間をかけて行うかを指定します。単位は&lt;strong&gt;ミリ秒&lt;/strong&gt;です。&lt;/li&gt;
+&lt;li&gt;次の&lt;strong&gt;call&lt;/strong&gt;で、任意の処理を呼び出すことができます。ここでは、ダミーを消去したいので&lt;strong&gt;remove&lt;/strong&gt;としています。&lt;/li&gt;
+&lt;li&gt;一連の処理は、チェインメソッドで繋げることができ、順番に実行されます。&lt;/li&gt;
+&lt;li&gt;つまり今回は、&lt;strong&gt;200ミリ秒かけて0.1倍まで縮小させた後に、自分自身を消去する&lt;/strong&gt;という一連の処理になります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&#34;122行目-他&#34;&gt;122行目　他&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;            // ブロック削除処理
+            self.disableBlock(block);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;前回までの&lt;strong&gt;remove&lt;/strong&gt;関数を上記のコードに置き換えます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;今回は&lt;strong&gt;phina.js&lt;/strong&gt;の目玉機能の１つとも言える&lt;strong&gt;Tweener&lt;/strong&gt;を使って、ブロックの消去アニメーションを作ってみました。
+次回はいよいよ最終回です。最終回では、もう少しゲームらしくするために、ゲームオーバーとクリア処理を追加してみたいと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

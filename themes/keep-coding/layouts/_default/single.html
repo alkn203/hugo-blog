@@ -1,0 +1,46 @@
+{{ partial "header.html" . }}
+
+  <!-- Main Section Layout -->
+  <main id="single" role="main" class="col span_9">
+    <div class="article-header">
+      <h1>{{ .Title }}</h1>
+      <div class="meta">
+        {{ .Date.Format "Jan 2, 2006" }} &nbsp;
+        {{ range .Params.tags }}
+          #<a href="/tags/{{ . | urlize }}">{{ . }}</a>&nbsp;
+        {{ end }}
+      </div>
+    </div>
+
+    {{ if .Site.Params.showsShare }}
+      {{ partial "share.html" . }}
+    {{ end }}
+
+    <article>
+      <!-- check toc flag -->
+      {{ if .Site.Params.showsToc }}
+        <h2>Table of contents</h2>
+        {{ .TableOfContents }}
+      {{ end }}
+      {{ .Content }}
+    </article>
+
+    {{ if .Site.Params.showsShare }}
+      {{ partial "share.html" . }}
+    {{ end }}
+
+    {{ partial "disqus.html" . }}
+  </main>
+  
+  {{ partial "sidemenu.html" . }}
+
+  <nav class="pagination-single" class="col span_3">>
+    {{ if .Next }}
+      <span class="previous">&larr; <a href="{{ .Next.Permalink }}" rel="prev">{{ .Next.Title }}</a></span>
+    {{ end }}
+    {{ if .Prev }}
+      <span class="next"><a href="{{ .Prev.Permalink }}" rel="next">{{ .Prev.Title }}</a> &rarr;</span>
+    {{ end }}
+  </nav>
+
+{{ partial "footer.html" . }}

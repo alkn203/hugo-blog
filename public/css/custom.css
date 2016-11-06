@@ -1,0 +1,54 @@
+.article-header {
+  border-bottom: 1px solid #29abe2;
+}
+
+#profile img {
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#profile-text {
+  word-break: break-all;
+  text-align: left;
+}
+
+.summary {
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #eee;
+}
+
+.summary h2 {
+  font-size: 14px;
+}
+
+table {
+  border: 0;
+  margin: 0;
+}
+
+td {
+  border: 0;
+  padding: 4px;
+  vertical-align: bottom;
+}
+
+footer {
+  margin: 0;
+}
+
+article h2 {
+  margin: 25px 0 25px 0;
+}
+
+aside {
+  padding-left: 20px;
+}
+
+aside table {
+  margin-left: auto;
+  margin-right: auto;
+}

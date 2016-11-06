@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Works on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/works/</link>
+    <description>Recent content in Works on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sun, 24 Jan 2016 23:59:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/works/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>phina.jsでテトリス風落ちものゲーム作ってみた</title>
+      <link>https://alkn203.github.io/blog/2016/01/24/phina-tetris</link>
+      <pubDate>Sun, 24 Jan 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/24/phina-tetris</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;Twitter上のアンケートの成り行きで、「300行でテトリス風落ち物ゲームを作る」という命題を自分に課していましたが、何とか形になりましたので公開したいと思います。結果的にコメントを含めて300行ジャストになりました。&lt;/p&gt;
+
+&lt;h3 id=&#34;作成したプログラム&#34;&gt;作成したプログラム&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;オーソドックスなテトリス風落ち物ゲームのプロトタイプです。&lt;/li&gt;
+&lt;li&gt;元ネタで行える操作をほぼ再現できたと思いますので、思い出しながら色々と試してみて下さい。&lt;/li&gt;
+&lt;li&gt;2次元配列を使わずに座標値情報だけでブロックを管理してみました。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今後の予定&#34;&gt;今後の予定&lt;/h3&gt;
+
+&lt;p&gt;チュートリアルという形で作り方を説明していく予定です。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://lite.runstant.com/?v=0.0.3#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&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】ゲーム以外の作成サンプル（カレンダー）</title>
+      <link>https://alkn203.github.io/blog/2015/11/17/phina-calendar</link>
+      <pubDate>Tue, 17 Nov 2015 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2015/11/17/phina-calendar</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/5f9b227bf13b395eb7e0&#34;&gt;tmlib.jsで作ってみた⑨＝カレンダー＝&lt;/a&gt;を投稿しましたが、今回、これを&lt;a href=&#34;https://github.com/phi-jp/phina.js&#34;&gt;phina.js&lt;/a&gt;でリファクタンリングしてみました。&lt;/p&gt;
+
+&lt;h3 id=&#34;作成したサンプルプログラム&#34;&gt;作成したサンプルプログラム&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Windowsのカレンダーを参考に作りました。&lt;/li&gt;
+&lt;li&gt;日付の配置に&lt;strong&gt;Grid&lt;/strong&gt;を使い、スライド処理に&lt;strong&gt;tweener&lt;/strong&gt;を使っています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/odsvmZ&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;を使ってゲーム以外のプログラムを作成してみました。&lt;strong&gt;Electron&lt;/strong&gt;などと組み合わせるといわゆるガジェット系のデスクトップアプリも作ることができると思います。他にも電卓などを作ってみたいと思っていますので、その時はまたこのブログで紹介したいと思います。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;2015-11-21　一部の環境で時刻ラベルが画面からはみ出さないように修正（&lt;a href=&#34;https://twitter.com/phi_jp&#34;&gt;@phi-jp&lt;/a&gt;さんありがとうございました。）&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;月ボタンをもう少し押しやすいように変更&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

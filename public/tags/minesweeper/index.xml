@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Minesweeper on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/minesweeper/</link>
+    <description>Recent content in Minesweeper on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 03 Aug 2016 23:59:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/minesweeper/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（最終回）【マーク機能の追加】</title>
+      <link>https://alkn203.github.io/blog/2016/08/03/minesweeper-tut-06</link>
+      <pubDate>Wed, 03 Aug 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/08/03/minesweeper-tut-06</guid>
+      <description>
+
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/11/minesweeper-tut-05/&#34;&gt;前回&lt;/a&gt;ではゲームオーバーとクリア処理を追加しました。
+今回は最終回で、マーク機能を追加します。
+マーク機能とは、自分で爆弾と判断したパネルをマークして開けないようにする機能です。
+完成版は以下のとおりです。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/a76987b1/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h4 id=&#34;マーク機能の追加&#34;&gt;マーク機能の追加&lt;/h4&gt;
+
+&lt;h4 id=&#34;mainsceneの変更点&#34;&gt;MainSceneの変更点&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // メインシーン
+  phina.define(&#39;MainScene&#39;, {
+    superClass: &#39;DisplayScene&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      （略）
+      // ピース配置
+      PANEL_NUM_XY.times(function(spanX) {
+        PANEL_NUM_XY.times(function(spanY) {
+          // パネル作成
+          （略）
+          // パネルタッチ時
+          panel.onpointstart = function() {
+            // マークモードなら
+            if (self.mode === &#39;mark&#39;) {
+              if (!panel.isOpen &amp;amp;&amp;amp; !panel.isMark) {
+                // マーク追加
+                if (self.markCount &amp;lt; BOMB_NUM) {
+                  Mark().addChildTo(panel);
+                  panel.isMark = true;
+                  self.markCount++;
+                }
+              }
+              else {
+                if (self.markCount &amp;gt; 0) {
+                  // マーク削除
+                  panel.children[0].remove();
+                  panel.isMark = false;
+                  self.markCount--;
+                }
+              }
+            }
+            else {
+              // パネルを開く
+              self.openPanel(panel);
+              // クリア判定
+              self.checkClear();
+            }
+          };
+        });
+      });
+      // モード
+      this.mode = &#39;normal&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;this.mode&lt;/strong&gt;という変数でモードを管理します。&lt;/li&gt;
+&lt;li&gt;マークモードであれば、パネルがタッチされた時にそのパネルがまだ開かれていなくて、かつ、マークされていなければマークを追加します。&lt;/li&gt;
+&lt;li&gt;逆にマークがあれば、マークを削除します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;this.markCount&lt;/strong&gt;という変数で、マーク数が爆弾の数を超えないようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;      // マークモードボタン
+      Button({
+        width: 120,
+        height: 64,
+        text: &#39;Mark&#39;,
+        fill: &#39;silver&#39;,
+      }).addChildTo(this)
+        .setPosition(this.gridX.span(14), this.gridY.span(14.5))
+        .onpush = function() {
+          // モード変更
+          if (self.mode === &#39;normal&#39;) {
+            this.fill = &#39;hsl(160, 80%, 50%)&#39;;
+            self.mode = &#39;mark&#39;;
+          }
+          else {
+            this.fill = &#39;silver&#39;;
+            self.mode = &#39;normal&#39;;
+          }
+        };
+      // 参照用
+      （略）
+      // マークの数
+      this.markCount = 0;
+    },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;マークモードの切り替えには&lt;strong&gt;Button&lt;/strong&gt;を使用します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;onpush&lt;/strong&gt; 関数にボタンを押したときの処理を記述します。&lt;/li&gt;
+&lt;li&gt;今回は現在のモードが分かるように切り替えでボタンの色が変わるようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// パネルを開く処理
+openPanel: function(panel) {
+  // マークされていた何もしない
+  if (panel.isMark) return;
+  （略）
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;マークされたパネルが連鎖で開かれないようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;6回に渡ってチュートリアルを書いてきましたが、本エントリーが&lt;strong&gt;phina.js&lt;/strong&gt;を使ったゲーム作りの参考になれば幸いです。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a76987b1&#34;&gt;http://runstant.com/alkn203/projects/a76987b1&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その５）【ゲームオーバーとクリア処理】</title>
+      <link>https://alkn203.github.io/blog/2016/07/11/minesweeper-tut-05</link>
+      <pubDate>Mon, 11 Jul 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/07/11/minesweeper-tut-05</guid>
+      <description>
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03/&#34;&gt;前回&lt;/a&gt;はパネルが連鎖で開かれるようにしました。
+今回は、ゲームオーバーとクリア処理を追加します。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/825d660c/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;ゲームオーバー処理&#34;&gt;ゲームオーバー処理&lt;/h4&gt;
+
+&lt;h4 id=&#34;openpanel関数&#34;&gt;openPanel関数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // パネルを開く処理
+  openPanel: function(panel) {
+    // 爆弾ならゲームオーバー
+    if (panel.isBomb) {
+      Explosion().addChildTo(panel);
+      this.showAllBombs();
+      return;
+    }
+    // 既に開かれていた何もしない
+    （略）
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;開いたパネルが爆弾だった場合、爆発を表示して、全ての爆弾を表示します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Explosion&lt;/strong&gt;クラスと&lt;strong&gt;showAllBombs&lt;/strong&gt;関数については後述します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;explosionクラス&#34;&gt;Explosionクラス&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 爆発クラス
+  phina.define(&#39;Explosion&#39;, {
+    // StarShapeを継承
+    superClass: &#39;StarShape&#39;,
+      // コンストラクタ
+      init: function() {
+        // 親クラス初期化
+        this.superInit({
+          radius: (PANEL_SIZE + 5) / 2,
+          sides: 10,
+          sideIndent: 0.75,
+          rotation: 15,
+          fill: &amp;quot;red&amp;quot;,
+          stroke: &amp;quot;yellow&amp;quot;,
+        });
+      },
+  });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;StarShape&lt;/strong&gt;のパラメータを変えて爆発のように見せています。&lt;/li&gt;
+&lt;li&gt;パラメータを変えることで、このような一風違った表現も可能です。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;showallbombs関数&#34;&gt;showAllBombs関数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 爆弾を全て表示する
+  showAllBombs: function() {
+    var self = this;
+    
+    this.panelGroup.children.each(function(panel) {
+      panel.setInteractive(false);
+      
+      if (panel.isBomb) {
+        Bomb().addChildTo(panel);
+        panel.tweener.clear().scaleTo(1.2, 100)
+                     .scaleTo(1.0, 100)
+                     .call(function() {
+                       // ラベル表示
+                       Label({
+                        text: &#39;TOUCH TO RESTART&#39;,
+                        fill: &#39;white&#39;,
+                       }).addChildTo(self).setPosition(320, 700);
+                       // 画面をタッチ可能に
+                       self.setInteractive(true);
+                     });
+      }
+    });
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Panel&lt;/strong&gt;をループで調べて、&lt;strong&gt;isBomb&lt;/strong&gt;が&lt;strong&gt;true&lt;/strong&gt;なら爆弾を表示します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;tweener&lt;/strong&gt;で拡大・縮小のアニメーションをつけています。&lt;/li&gt;
+&lt;li&gt;アニメーションした後は、ラベルを表示して画面のタッチを有効にしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;リスタート処理&#34;&gt;リスタート処理&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 画面タッチ可能な場合
+ onpointstart: function() {
+   // 再スタート
+   this.exit({
+     nextLabel: &#39;main&#39;,  
+   });  
+ },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;先に出た&lt;strong&gt;showAllBombs&lt;/strong&gt;で画面がタッチ有効になっている場合、画面をタッチするとこの関数が呼び出されます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;exit&lt;/strong&gt;関数で&lt;strong&gt;nextLabel&lt;/strong&gt;に&lt;strong&gt;main&lt;/strong&gt;を指定することで、メインシーンが呼び直されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;クリア処理&#34;&gt;クリア処理&lt;/h4&gt;
+
+&lt;p&gt;マインスイーパーのクリアとは、爆弾以外のパネルが全部開かれた時です。
+結果的には、「全体のパネル数から開かれたパネル数を引いた値が爆弾数と一致」すればよいということになります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    （略）
+    // 参照用
+    this.panelGroup = panelGroup;
+    // クリア判定用
+    this.oCount = 0;
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;開かれたパネル数をカウントするための変数&lt;strong&gt;oCount&lt;/strong&gt;を用意します。&lt;/li&gt;
+&lt;li&gt;パネルを開いたら&lt;strong&gt;oCount&lt;/strong&gt;を増やしていきます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// パネルタッチ時
+panel.onpointstart = function() {
+  self.openPanel(panel);
+  // クリア判定
+  if (self.oCount === PANEL_NUM_XY * PANEL_NUM_XY - BOMB_NUM) {
+    // ラベル表示
+    Label({
+      text: &#39;GOOD JOB!&#39;,
+      fill: &#39;white&#39;,
+    }).addChildTo(self).setPosition(320, 700);
+    // パネルを選択不可に
+    this.panelGroup.children.each(function(panel) {
+      panel.setInteractive(false);
+    });
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パネルを開いた時に開かれた数を調べてクリアチェックをしています。&lt;/li&gt;
+&lt;li&gt;クリアならラベルを表示して、全てのパネルを選択不可にしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、ゲームオーバー処理とクリア処理を実装しました。
+この状態で最低限のゲームとしては成立していると思いますが、次回は付加機能を追加したいと
+思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/825d660c&#34;&gt;http://runstant.com/alkn203/projects/825d660c&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その４）【パネルを連鎖で開く】</title>
+      <link>https://alkn203.github.io/blog/2016/07/06/minesweeper-tut-04</link>
+      <pubDate>Wed, 06 Jul 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/07/06/minesweeper-tut-04</guid>
+      <description>
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03/&#34;&gt;前回&lt;/a&gt;はパネルを開くと周りにある爆弾の数が表示されるようにしました。
+今回は、周りに爆弾がない場合にパネルを連鎖で開くようにします。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/943f0dea/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;openpanel関数&#34;&gt;openPanel関数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // パネルを開く処理
+  openPanel: function(panel) {
+    (略)
+    // パネルに数を表示
+    panel.num = bombs === 0 ? &#39;&#39; : bombs;
+    Label({
+      text: panel.num,
+      fill: &#39;white&#39;,
+    }).addChildTo(panel);
+    panel.fill = &#39;gray&#39;;
+    // 周りに爆弾がなければ再帰的に調べる
+    if (bombs === 0) {
+      indexs.each(function(i) {
+        indexs.each(function(j) {
+          var pos = Vector2(panel.x + i * GRID_SIZE, panel.y + j * GRID_SIZE);
+          var target = self.getPanel(pos);
+          target &amp;amp;&amp;amp; self.openPanel(target);
+        });
+      });
+    }
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;周りに爆弾がない場合、現在のパネルを起点にして&lt;strong&gt;getPanel&lt;/strong&gt;を再帰呼び出しします。
+今回の変更点はこれだけです。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、パネルを連鎖で開くことができるようになりました。
+段々と形になってきたと思いますが、爆弾も開けたりと全然ゲームになっていません。
+次回は、ゲームオーバーとクリア処理を追加します。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/943f0dea&#34;&gt;http://runstant.com/alkn203/projects/943f0dea&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その３）【パネルを開く】</title>
+      <link>https://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03</link>
+      <pubDate>Mon, 04 Jul 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03</guid>
+      <description>
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/&#34;&gt;前回&lt;/a&gt;はランダムに爆弾を配置しました。
+今回はパネルを開いて周りにある爆弾の数が表示されるようにします。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/4edca5d9/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;mainscene&#34;&gt;MainScene&lt;/h4&gt;
+
+&lt;h4 id=&#34;init関数&#34;&gt;init関数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  init: function() {
+    (略)
+    var self = this;
+    // ピース配置
+    PANEL_NUM_XY.times(function(spanX) {
+      PANEL_NUM_XY.times(function(spanY) {
+        (略)
+        // 開かれているかどうか
+        panel.isOpen = false;
+        // タッチ有効化
+        panel.setInteractive(true);
+        // パネルタッチ時
+        panel.onpointstart = function() {
+          self.openPanel(panel);
+        };
+        (略)
+      });
+    });
+    // 参照用
+    this.panelGroup = panelGroup;
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;後に&lt;strong&gt;MainScene&lt;/strong&gt;を&lt;strong&gt;this&lt;/strong&gt;として参照するために、&lt;strong&gt;self&lt;/strong&gt;に代入しています。&lt;/li&gt;
+&lt;li&gt;パネルが既に開かれているかどうかのフラグ変数&lt;strong&gt;isOpen&lt;/strong&gt;を作成しています。&lt;/li&gt;
+&lt;li&gt;パネルをタッチできるように&lt;strong&gt;setInteractive(true)&lt;/strong&gt;としています。&lt;/li&gt;
+&lt;li&gt;パネルのタッチイベント&lt;strong&gt;onpointstart&lt;/strong&gt;が発生した際に&lt;strong&gt;openPanel&lt;/strong&gt;関数を呼び出すようにしています。&lt;/li&gt;
+&lt;li&gt;最後に&lt;strong&gt;panelGroup&lt;/strong&gt;を別の関数からも参照できるように&lt;strong&gt;this.panelGroup&lt;/strong&gt;に代入しています。
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;openpanel関数-新規追加&#34;&gt;openPanel関数(新規追加)&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // パネルを開く処理
+  openPanel: function(panel) {
+    // 既に開かれていた何もしない
+    if (panel.isOpen) return;
+    // 開いたとフラグを立てる
+    panel.isOpen = true;
+    // タッチ不可にする
+    panel.setInteractive(false);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パネルを開いた直後の処理です。既に開かれていたら以降の処理をパスします。&lt;/li&gt;
+&lt;li&gt;フラグを変更して、&lt;strong&gt;setInteractive(false)&lt;/strong&gt;でタッチ不可にします。
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    var bombs = 0;
+    var indexs = [-1, 0, 1];
+    var self = this;
+    // 周りのパネルの爆弾数をカウント
+    indexs.each(function(i) {
+      indexs.each(function(j) {
+        var pos = Vector2(panel.x + i * GRID_SIZE, panel.y + j * GRID_SIZE);
+        var target = self.getPanel(pos);
+        if (target &amp;amp;&amp;amp; target.isBomb) bombs++;
+      });
+    });
+    // パネルに数を表示
+    panel.num = bombs === 0 ? &#39;&#39; : bombs;
+    Label({
+      text: panel.num,
+      fill: &#39;white&#39;,
+    }).addChildTo(panel);
+    panel.fill = &#39;gray&#39;;
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;インデックス値を利用して周りのパネルに爆弾が何個あるかを調べます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;getPanel&lt;/strong&gt;関数は、与えられた位置（Vector2）にパネルがあるかを返します。&lt;/li&gt;
+&lt;li&gt;パネルが爆弾ならカウントして、ラベルで結果を表示しています。
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;getpanel関数-新規追加&#34;&gt;getPanel関数（新規追加）&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 指定された位置のパネルを得る  
+  getPanel: function(pos) {
+    var result = null;
+    
+    this.panelGroup.children.some(function(panel) {
+      if (panel.position.equals(pos)) {
+        result = panel;
+        return true;
+      } 
+    });
+    return result;
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;panelGroup&lt;/strong&gt;を調べて指定された位置にパネルがあれば、それを返します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;some&lt;/strong&gt;を使って条件が合ったらループを抜けるようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、パネルを開いて爆弾数を表示することが出来ました。
+次回は、再帰処理を使ってパネルが連鎖で開くようにします。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34;&gt;http://runstant.com/alkn203/projects/a24d063d&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その２）【爆弾の配置】</title>
+      <link>https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02</link>
+      <pubDate>Sun, 03 Jul 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02</guid>
+      <description>
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01/&#34;&gt;前回&lt;/a&gt;はパネルをグリッド状に配置しました。
+今回はマインスイーパーの主役とも言える爆弾を配置します。爆弾はランダムな場所に配置されるようにします。&lt;/p&gt;
+
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/a24d063d/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640; // 画面横サイズ
+var PANEL_NUM_XY = 9; // 縦横のパネル数
+var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
+var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
+var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
+var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
+var BOMB_NUM = 10; // 爆弾数
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: SCREEN_WIDTH,
+      height: SCREEN_HEIGHT,
+    });
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
+    // グループ
+    var panelGroup = DisplayElement().addChildTo(this);
+    // 爆弾位置をランダムに決めた配列を作成
+    var bombs = [];
+    (PANEL_NUM_XY * PANEL_NUM_XY).times(function() {
+      bombs.push(false);
+    });
+    bombs.fill(true, 0, 10).shuffle();
+    // ピース配置
+    PANEL_NUM_XY.times(function(spanX) {
+      PANEL_NUM_XY.times(function(spanY) {
+        // パネル作成
+        var panel = Panel().addChildTo(panelGroup);
+        // Gridを利用して配置
+        panel.x = grid.span(spanX) + PANEL_OFFSET;
+        panel.y = grid.span(spanY) + PANEL_OFFSET;
+        // パネルに爆弾情報を紐づける
+        panel.isBomb = bombs[spanX * PANEL_NUM_XY + spanY];
+        // 爆弾なら表示
+        if (panel.isBomb) Bomb().addChildTo(panel);
+      });
+    });
+  },
+});
+// パネルクラス
+phina.define(&#39;Panel&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PANEL_SIZE,
+        height: PANEL_SIZE,
+        fill: &#39;silver&#39;, // 塗りつぶし色
+        stroke: &#39;white&#39;, // 枠の色
+        cornerRadius: 2, // 角の丸み
+      });
+    },
+});
+// 爆弾クラス
+phina.define(&#39;Bomb&#39;, {
+  // Shapeを継承
+  superClass: &#39;Shape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: GRID_SIZE,
+        height: GRID_SIZE,
+        backgroundColor: &#39;transparent&#39;,
+      });
+      // 導線
+      RectangleShape({
+        width: PANEL_SIZE / 8,
+        height: PANEL_SIZE / 8,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+        y: -20,
+      }).addChildTo(this);
+      // 本体
+      CircleShape({
+        radius: PANEL_SIZE / 4,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;, // メイン画面からスタート
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
+（略）
+var BOMB_NUM = 10; // 爆弾数
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;設置する爆弾数を定義します。&lt;/p&gt;
+
+&lt;h4 id=&#34;爆弾位置情報の作成&#34;&gt;爆弾位置情報の作成&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;init: function() {
+  （略）
+  // 爆弾位置をランダムに決めた配列を作成
+  var bombs = [];
+  (PANEL_NUM_XY * PANEL_NUM_XY).times(function() {
+    bombs.push(false);
+  });
+  bombs.fill(true, 0, 10).shuffle();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;爆弾位置格納用の配列を作ります。&lt;/li&gt;
+&lt;li&gt;一旦&lt;strong&gt;false&lt;/strong&gt;で埋めて、先頭の10個まで&lt;strong&gt;true&lt;/strong&gt;に置き換えてから&lt;strong&gt;shuffle&lt;/strong&gt;関数で要素をランダムに並び替えています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;爆弾位置情報をパネルに紐づける&#34;&gt;爆弾位置情報をパネルに紐づける&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピース配置
+  PANEL_NUM_XY.times(function(spanX) {
+    PANEL_NUM_XY.times(function(spanY) {
+      （略）
+      // パネルに爆弾情報を紐づける
+      panel.isBomb = bombs[spanX * PANEL_NUM_XY + spanY];
+      // 爆弾なら表示
+      if (panel.isBomb) Bomb().addChildTo(panel);
+    });
+  });
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パネルの&lt;strong&gt;isBomb&lt;/strong&gt;プロパティに爆弾かどうかの情報&lt;strong&gt;true&lt;/strong&gt; or &lt;strong&gt;false&lt;/strong&gt;を設定しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;isBomb&lt;/strong&gt;プロパティが&lt;strong&gt;true&lt;/strong&gt;なら、爆弾を配置します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;爆弾クラス&#34;&gt;爆弾クラス&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 爆弾クラス
+phina.define(&#39;Bomb&#39;, {
+  // Shapeを継承
+  superClass: &#39;Shape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: GRID_SIZE,
+        height: GRID_SIZE,
+        backgroundColor: &#39;transparent&#39;,
+      });
+      // 導線
+      RectangleShape({
+        width: PANEL_SIZE / 8,
+        height: PANEL_SIZE / 8,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+        y: -20,
+      }).addChildTo(this);
+      // 本体
+      CircleShape({
+        radius: PANEL_SIZE / 4,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;新たに&lt;strong&gt;Bomb&lt;/strong&gt;クラスを作成しています。&lt;/li&gt;
+&lt;li&gt;爆弾はスプライト画像を使っても良いのですが、今回は敢えて&lt;strong&gt;Shape&lt;/strong&gt;を組み合わせて表現してみました。&lt;/li&gt;
+&lt;li&gt;素の&lt;strong&gt;Shape&lt;/strong&gt;は&lt;strong&gt;backgroundColor&lt;/strong&gt;が設定されているので、これを透明にします。&lt;/li&gt;
+&lt;li&gt;導線は本体の少し上になるようにy座標を指定しています。この場合、親から見た&lt;strong&gt;相対座標&lt;/strong&gt;になるということに注意してください。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、爆弾をランダムに配置することができました。読み込まれる度に配置が異なることが確認できるかと思います。
+次回は、パネルを開く処理を追加します。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34;&gt;http://runstant.com/alkn203/projects/a24d063d&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ゲーム作成チュートリアル（マインスイーパー）（その１）【パネルの配置】</title>
+      <link>https://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01</link>
+      <pubDate>Thu, 30 Jun 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01</guid>
+      <description>
+
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/a533b1264b912dec9590&#34;&gt;tmlib.js ＝マインスイーパー＝ チュートリアル編（目次）&lt;/a&gt;を投稿しましたが、今回は、これを&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;で作り直すのが目標です。なお、本ブログのこれまでのチュートリアルを見て、「&lt;strong&gt;phina.js&lt;/strong&gt;でのゲーム作り」を少しは知っているということを前提にしています。
+このチュートリアルでは、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の公式開発環境として更に便利になった&lt;a href=&#34;http://runstant.com/&#34;&gt;runstant&lt;/a&gt;を使っていきたいと思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+
+&lt;p&gt;以下のようにパネルを並べます。
+&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/ada3aa47/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640; // 画面横サイズ
+var PANEL_NUM_XY = 9; // 縦横のパネル数
+var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
+var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
+var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
+var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: SCREEN_WIDTH,
+      height: SCREEN_HEIGHT,
+    });
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
+    // グループ
+    var panelGroup = DisplayElement().addChildTo(this);
+    // ピース配置
+    PANEL_NUM_XY.times(function(spanX) {
+      PANEL_NUM_XY.times(function(spanY) {
+        // パネル作成
+        var panel = Panel().addChildTo(panelGroup);
+        // Gridを利用して配置
+        panel.x = grid.span(spanX) + PANEL_OFFSET;
+        panel.y = grid.span(spanY) + PANEL_OFFSET;
+      });
+    });
+  },
+});
+// パネルクラス
+phina.define(&#39;Panel&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PANEL_SIZE,
+        height: PANEL_SIZE,
+        fill: &#39;silver&#39;, // 塗りつぶし色
+        stroke: &#39;white&#39;, // 枠の色
+        cornerRadius: 2, // 角の丸み
+      });
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;, // メイン画面からスタート
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+
+&lt;h4 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
+var SCREEN_WIDTH = 640; // 画面横サイズ
+var PANEL_NUM_XY = 9; // 縦横のパネル数
+var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
+var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
+var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
+var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ゲームに必要な各種定数を定義しています。&lt;/li&gt;
+&lt;li&gt;グリッドのサイズは、出来るだけ大きいサイズでパネル数で分割出来るように計算で求めています。&lt;/li&gt;
+&lt;li&gt;パネルの大きさをグリッドサイズより少し小さくしてるのは、配置するときに隙間を開けるためです。&lt;/li&gt;
+&lt;li&gt;パネルを正しい位置に配置できるようにオフセット値を計算しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;panelクラス&#34;&gt;Panelクラス&lt;/h4&gt;
+
+&lt;p&gt;メイン処理の前にパネルクラスについて説明します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// パネルクラス
+phina.define(&#39;Panel&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PANEL_SIZE,
+        height: PANEL_SIZE,
+        fill: &#39;silver&#39;, // 塗りつぶし色
+        stroke: &#39;white&#39;, // 枠の色
+        cornerRadius: 2, // 角の丸み
+      });
+    },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;phina.define&lt;/strong&gt;でクラスを定義します。&lt;/li&gt;
+&lt;li&gt;パネルは四角形なので&lt;strong&gt;RectangleShape&lt;/strong&gt;（矩形）クラスを継承します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;this.superInit&lt;/strong&gt;で親クラスにパラメーターを与えて初期化します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;cornerRadius&lt;/strong&gt;は角の丸みを指定します。（tmlib.jsではRoundRectangleShape）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;メインシーン&#34;&gt;メインシーン&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// コンストラクタ
+init: function() {
+  // 親クラス初期化
+  this.superInit({
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;画面サイズを反映させるためには、&lt;strong&gt;DisplayScene&lt;/strong&gt;の親クラスにも&lt;strong&gt;width&lt;/strong&gt;と&lt;strong&gt;height&lt;/strong&gt;を指定する必要があります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 背景色
+  this.backgroundColor = &#39;gray&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Scene&lt;/strong&gt;の背景色を指定しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // グリッド
+  var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Grid&lt;/strong&gt;クラスを使って、配置用の情報を生成しています。ここで1グリッドの大きさが決まります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // グループ
+  var panelGroup = DisplayElement().addChildTo(this);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;DisplayElement&lt;/strong&gt;を使ってパネルを格納するグループを作成しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピース配置
+  PANEL_NUM_XY.times(function(spanX) {
+    PANEL_NUM_XY.times(function(spanY) {
+      // パネル作成
+      var panel = Panel().addChildTo(panelGroup);
+      // Gridを利用して配置
+      panel.x = grid.span(spanX) + PANEL_OFFSET;
+      panel.y = grid.span(spanY) + PANEL_OFFSET;
+    });
+  });
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パネルをグリッド状に配置する処理です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;関数は、&lt;strong&gt;phina.js&lt;/strong&gt;独自の仕様で、前に付いた値の回数だけ処理を繰り返します。ここでは、&lt;strong&gt;PANEL_NUM_XY&lt;/strong&gt;回、つまり9回の繰り返しです。入れ子にしてグリッド状に配置します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Panel&lt;/strong&gt;を作成して&lt;strong&gt;panelGroup&lt;/strong&gt;に追加しています。&lt;/li&gt;
+&lt;li&gt;最後にパネルの位置を指定します。&lt;strong&gt;span&lt;/strong&gt;にインデックス値を指定することで、グリッド状に綺麗に配置することが出来ます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、パネルを配置することができました。
+次回は、&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/&#34;&gt;爆弾の配置&lt;/a&gt;です。&lt;/p&gt;
+
+&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/ada3aa47&#34;&gt;http://runstant.com/alkn203/projects/ada3aa47&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

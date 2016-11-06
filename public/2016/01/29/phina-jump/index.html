@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  
+  <meta charset="UTF-8">
+  <title>
+    Physicalクラスを利用したジャンプアクションの基本サンプル | Keep Coding
+  </title>
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+  
+  <link rel="canonical" href="https://alkn203.github.io/blog/2016/01/29/phina-jump"/>
+  
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/responsive.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/highlight_monokai.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/theme.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/custom.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  
+  <link href="https://alkn203.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Keep Coding" />
+  <link href="https://alkn203.github.io/blog/index.xml" rel="feed" type="application/rss+xml" title="Keep Coding" />
+</head>
+<body>
+<div class="container">
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_9">
+        <h1><a href="https://alkn203.github.io/blog/">Keep Coding</a></h1>
+        <h2>Tutorials And Tips For phina.js Users</h2>
+      </div>
+      <div id="link" class="col span_3" style="text-align: right;">
+        <a href="https://alkn203.github.io/blog/index.xml" type="application/rss+xml" target="_blank"><i class="fa fa-rss" aria-hidden="true"></i>&nbsp;rss</a>
+      </div>
+    </div>
+  </header>
+
+  
+  <main id="single" role="main" class="col span_9">
+    <div class="article-header">
+      <h1>Physicalクラスを利用したジャンプアクションの基本サンプル</h1>
+      <div class="meta">
+        Jan 29, 2016 &nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/tips">tips</a>&nbsp;
+        
+      </div>
+    </div>
+
+    
+      
+<table>
+  <tr>
+    
+    <td><a href="https://twitter.com/share" class="twitter-share-button" data-via="alkn203" data-size="default" data-hashtags="phina_js">Tweet</a></td>
+    
+    <td><div class="fb-like" data-layout="box_count" data-action="like" data-size="small" data-show-faces="false"></div></td>
+    
+    <td>
+      <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-title="Physicalクラスを利用したジャンプアクションの基本サンプル" data-hatena-bookmark-layout="vertical-balloon" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+    </td>
+    
+    <td><a data-pocket-label="pocket" data-pocket-count="vertical" class="pocket-btn" data-lang="en"></a></td>
+    
+    <td><div class="g-plusone" data-size="tall"></div></td>
+  </tr>
+</table>
+    
+
+    <article>
+      
+      
+        <h2>Table of contents</h2>
+        <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#サンプル">サンプル</a></li>
+<li><a href="#ソースコード">ソースコード</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+      
+      
+
+<h3 id="はじめに">はじめに</h3>
+
+<p>phina.jsでゲームを作る際には、通常は<strong>Sprite</strong>や<strong>Shape</strong>を使うことになるでしょう。
+しかし、phina.jsには<strong>html5</strong>の<strong>canvas</strong>を機能的にラップした<strong>phina.graphics.Canvas</strong>という便利なクラスがあります。
+今回は、その<strong>Canvas</strong>クラスと<strong>Shape</strong>を組み合わせたサンプルを紹介したいと思います。</p>
+
+<h3 id="サンプル">サンプル</h3>
+
+<ul>
+<li>画面をタッチするとキャラクターがジャンプします。</li>
+<li><strong>Physical</strong>クラスの<strong>velocity</strong>と<strong>gravity</strong>の使い分けがポイントです。</li>
+</ul>
+
+<div class='runstant'><iframe src='http://goo.gl/MejrGg' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+
+<p>[<a href="http://goo.gl/MejrGg">runstantで開く</a>]</p>
+
+<h3 id="ソースコード">ソースコード</h3>
+
+<pre><code class="language-js">phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    'tomapiko': 'https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png',
+  },
+  // フレームアニメーション情報
+  spritesheet: {
+    'tomapiko_ss': 'https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss',
+  },
+};
+// 定数
+var JUMP_POWOR = 10; // ジャンプ力
+var GRAVITY = 0.5; // 重力
+// メインシーン
+phina.define('MainScene', {
+  superClass: 'CanvasScene',
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = 'skyblue';
+
+    Label({
+      text: 'Touch To Jump',
+      fontSize: 48,
+      fill: 'gray',
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(3));
+    // 床
+    this.floor = RectangleShape({
+      width: this.gridX.width,
+      height: this.gridY.span(1),
+      fill: 'silver',
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(2));
+    // プレイヤー作成
+    var player = Player('tomapiko').addChildTo(this);
+    // 初期位置
+    player.x = this.gridX.center();
+    player.bottom = this.floor.top;
+    // 画面タッチ時処理
+    this.onpointend = function() {
+      // 床の上なら
+      if (player.isOnFloor) {
+        // 上方向に速度を与える（ジャンプ）
+        player.physical.velocity.y = -JUMP_POWOR;
+        // 重力復活
+        player.physical.gravity.y = GRAVITY;
+        // フラグ変更
+        player.isOnFloor = false;
+        // アニメーション変更
+        player.anim.gotoAndPlay('fly');
+      }
+    };
+    // 参照用
+    this.player = player;
+  },
+  // 毎フレーム処理
+  update: function() {
+    var player = this.player;
+    // 床とヒットしたら
+    if (player.hitTestElement(this.floor)) {
+      // y方向の速度と重力を無効にする
+      player.physical.velocity.y = 0;
+      player.physical.gravity.y = 0;
+      // 位置調整
+      player.bottom = this.floor.top;
+      // フラグ立て
+      player.isOnFloor = true;
+      // アニメーション変更
+      player.anim.gotoAndPlay('left');
+    }
+  },
+});
+// プレイヤークラス
+phina.define('Player', {
+  superClass: 'Sprite',
+  // コンストラクタ
+  init: function(image) {
+    // 親クラス初期化
+    this.superInit(image);
+    // フレームアニメーションをアタッチ
+    this.anim = FrameAnimation('tomapiko_ss').attachTo(this);
+    // 初期アニメーション指定
+    this.anim.gotoAndPlay('left');
+    // 初速度を与える
+    this.physical.force(-2, 0);
+    // 床の上かどうか
+    this.isOnFloor = true;
+  },
+  // 毎フレーム処理
+  update: function() {
+    // 画面端で速度と向き反転
+    if (this.left &lt; 0 || this.right &gt; 640) {
+      this.physical.velocity.x *= -1;
+      this.scaleX *= -1;
+    }
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    // アセット読み込み
+    assets: ASSETS,
+    startLabel: 'main',
+  });
+  app.run();
+});
+
+</code></pre>
+
+    </article>
+
+    
+      
+<table>
+  <tr>
+    
+    <td><a href="https://twitter.com/share" class="twitter-share-button" data-via="alkn203" data-size="default" data-hashtags="phina_js">Tweet</a></td>
+    
+    <td><div class="fb-like" data-layout="box_count" data-action="like" data-size="small" data-show-faces="false"></div></td>
+    
+    <td>
+      <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-title="Physicalクラスを利用したジャンプアクションの基本サンプル" data-hatena-bookmark-layout="vertical-balloon" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+    </td>
+    
+    <td><a data-pocket-label="pocket" data-pocket-count="vertical" class="pocket-btn" data-lang="en"></a></td>
+    
+    <td><div class="g-plusone" data-size="tall"></div></td>
+  </tr>
+</table>
+    
+
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'alkn203githubio';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  
+<aside role="complementary" class="col span_3">
+  
+  <div class="article-header light-gray"><h1>About Me</h1></div>
+  <div id="profile" style="text-align: center;">
+    <div><img src="https://alkn203.github.io/blog/images/alkn203.png" width="64" height="64"></div>
+    <div>alkn203</div>
+    <div id="profile-text">Hobbyist programmer/javascript/phina.js/retro games</div>
+  </div>
+  
+    <div id="social">
+      <table>
+        <tr>
+          <td><a href="https://twitter.com/alkn203" target="_blank"><i class="fa fa-twitter fa-2x"></i></a></td>
+          
+          <td><a href="https://github.com/alkn203" target="_blank"><i class="fa fa-github fa-2x"></i></a></td>
+        </tr>
+      </table>
+    </div>
+  
+  <div class="article-header light-gray"><h1>Sections</h1></div>
+  <ul>
+    <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a></li>
+    <li><a href="https://alkn203.github.io/blog/tips/">Tips</a></li>
+    <li><a href="https://alkn203.github.io/blog/works/">Works</a></li>
+  </ul>
+  
+  <div class="article-header light-gray"><h1>Tags</h1></div>
+    <ul>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/15puzzle/">
+          <div>15puzzle&nbsp;(7)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/breakout/">
+          <div>breakout&nbsp;(8)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/calendar/">
+          <div>calendar&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/frameanimation/">
+          <div>frameanimation&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/minesweeper/">
+          <div>minesweeper&nbsp;(6)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/shape/">
+          <div>shape&nbsp;(4)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/sprite/">
+          <div>sprite&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/template/">
+          <div>template&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/tips/">
+          <div>tips&nbsp;(15)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/tutorial/">
+          <div>tutorial&nbsp;(21)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/works/">
+          <div>works&nbsp;(1)</div>
+          </a>
+        </li>
+      
+    </ul>
+</aside>
+
+  <nav class="pagination-single" class="col span_3">>
+    
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2016/01/24/phina-tetris" rel="prev">phina.jsでテトリス風落ちものゲーム作ってみた</a></span>
+    
+    
+      <span class="next"><a href="https://alkn203.github.io/blog/2016/01/31/phina-canvas" rel="next">ShapeとCanvas描画を組み合わせたサンプル</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo" class="col span_9">
+    <div style="text-align:center;">
+      ©&nbsp2016&nbspalkn203
+    </div>
+  </footer>
+</div>
+
+<script src="https://alkn203.github.io/blog/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-69423602-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.8";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+
+<script src="https://apis.google.com/js/platform.js" async defer>
+  {lang: 'ja'}
+</script>
+</body>
+</html>
+

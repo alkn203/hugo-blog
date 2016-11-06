@@ -1,0 +1,38 @@
+<!-- SideBars Layout -->
+<aside role="complementary" class="col span_3">
+  <!-- Profile -->
+  <div class="article-header light-gray"><h1>About Me</h1></div>
+  <div id="profile" style="text-align: center;">
+    {{ with .Site.Params.profileImage }}<div><img src="{{ . }}" width="64" height="64"></div>{{ end }}
+    {{ with .Site.Params.author}}<div>{{ . }}</div>{{ end }}
+    {{ with .Site.Params.profileText }}<div id="profile-text">{{ . }}</div>{{ end }}
+  </div>
+  <!-- Social -->
+    <div id="social">
+      <table>
+        <tr>
+          {{ with .Site.Params.twitter }}<td><a href="https://twitter.com/{{ . }}" target="_blank"><i class="fa fa-twitter fa-2x"></i></a></td>{{ end }}
+          {{ with .Site.Params.facebook }}<td><a href="{{ . }}" target="_blank">Facebook</a></td>{{ end }}
+          {{ with .Site.Params.github }}<td><a href="https://github.com/{{ . }}" target="_blank"><i class="fa fa-github fa-2x"></i></a></td>{{ end }}
+        </tr>
+      </table>
+    </div>
+  <!-- Sections -->
+  <div class="article-header light-gray"><h1>Sections</h1></div>
+  <ul>
+    <li><a href="/tutorials/">Tutorials</a></li>
+    <li><a href="/tips/">Tips</a></li>
+    <li><a href="/works/">Works</a></li>
+  </ul>
+  <!-- Tags -->
+  <div class="article-header light-gray"><h1>Tags</h1></div>
+    <ul>
+      {{ range $name, $value := $.Site.Taxonomies.tags }}
+        <li>
+          <a href="{{ $.Site.BaseURL }}/tags/{{ $name }}/">
+          <div>{{ $name }}&nbsp;({{ .Count }})</div>
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+</aside>

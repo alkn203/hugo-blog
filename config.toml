@@ -1,0 +1,23 @@
+baseurl = "https://alkn203.github.io/blog/"
+languageCode = "ja"
+title = "Keep Coding"
+canonifyurls = true
+disqusShortname = "alkn203githubio"
+
+[permalinks]
+tutorials = ":year/:month/:day/:filename"
+tips = ":year/:month/:day/:filename"
+works = ":year/:month/:day/:filename"
+
+[Params]
+subtitle = "Tutorials And Tips For phina.js Users"
+author = "alkn203"
+profileImage = "/images/alkn203.png"
+profileText = "Hobbyist programmer/javascript/phina.js/retro games"
+copyrightYear = "2016"
+twitter = "alkn203"
+github = "alkn203"
+showsRSS = true
+analytics = "UA-69423602-1"
+showsShare = true
+showsToc = true
