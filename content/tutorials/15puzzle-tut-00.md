@@ -4,6 +4,7 @@ draft = false
 slug = ""
 tags = ["tutorial", "15puzzle"]
 title = "【phina.js】ゲーム作成チュートリアル（15パズル）"
+eyecatch = "/images/15puzzle-tut-0.png"
 
 +++
 
@@ -15,11 +16,13 @@ title = "【phina.js】ゲーム作成チュートリアル（15パズル）"
 [phina.js](http://phinajs.com/)については、Qiitaの[phina.js Advent Calendar 2015](http://qiita.com/advent-calendar/2015/phinajs)にライブラリの紹介をはじめ、多くのTIPSが掲載されています。
 こちらも併せてチェックしてみて下さい。
 
+<center>![15puzzle-tut-0](/images/15puzzle-tut-0.png)</center>
+
 ### 目次
-* [（その１）【ピースの配置】](http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01/)
-* [（その２）【数字の表示】](http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02/)
-* [（その３）【ピースのタッチ】](http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/)
-* [（その４）【ピースの移動】](http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04/)
-* [（その５）【tweenerで移動処理】](http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/)
-* [（最終回）【ゲーム的要素の追加】](http://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06/)
+* [（その１）【ピースの配置】](https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01/)
+* [（その２）【数字の表示】](https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02/)
+* [（その３）【ピースのタッチ】](https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/)
+* [（その４）【ピースの移動】](https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04/)
+* [（その５）【tweenerで移動処理】](https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/)
+* [（最終回）【ゲーム的要素の追加】](https://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06/)
 * （番外編）【絵合わせパズル風にしてみる】

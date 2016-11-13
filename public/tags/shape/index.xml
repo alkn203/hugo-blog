@@ -6,8 +6,53 @@
     <description>Recent content in Shape on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 09 Oct 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 13 Nov 2016 00:01:08 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tags/shape/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>005-Shapeを透明化する</title>
+      <link>https://alkn203.github.io/blog/2016/11/13/phina-invisible-shape</link>
+      <pubDate>Sun, 13 Nov 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/11/13/phina-invisible-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を透明化する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-invisible-shape.png&#34; alt=&#34;phina-invisible-shape&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;shapeの透明化&#34;&gt;Shapeの透明化&lt;/h2&gt;
+
+&lt;p&gt;透明にするには&lt;strong&gt;alpha&lt;/strong&gt;プロパティに&lt;strong&gt;0&lt;/strong&gt;を指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.alpha = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7e1a191a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;alpha&lt;/strong&gt;プロパティには&lt;strong&gt;0から1&lt;/strong&gt;が指定できるので、好みの透明度にすることができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;shapeの非表示&#34;&gt;Shapeの非表示&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、透明化の他に&lt;strong&gt;hide&lt;/strong&gt;メソッドでオブジェクトそのものを非表示にすることができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.hide();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3df6a8b8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;再表示するには、&lt;strong&gt;show&lt;/strong&gt;メソッドを使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.show();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;透明化と非表示の違い&#34;&gt;透明化と非表示の違い&lt;/h2&gt;
+
+&lt;p&gt;透明化ではオブジェクト自体は存在するので、当たり判定やタッチ処理は有効ですが、非表示にした場合は描画自体されないので、当たり判定やタッチ処理は無効になります。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>004-Shapeの背景色指定</title>

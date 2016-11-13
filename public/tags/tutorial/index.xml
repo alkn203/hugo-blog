@@ -1417,17 +1417,90 @@ PIECE_NUM_XY.times(function(spanX) {
       <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02</guid>
       <description>
 
-&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+&lt;h2 id=&#34;前回&#34;&gt;前回&lt;/h2&gt;
 
 &lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2015/12/31/15puzzle-tut-01/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その１）【ピースの配置】&lt;/a&gt;では、15パズルのピースの配置を行いました。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
-&lt;p&gt;以下のように、15パズルのピースに数字を表示します。&lt;/p&gt;
+&lt;p&gt;以下のように、15パズルのピースに数字を表示します。
+&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/15puzzle-tut-2.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Nso2wV&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;p&gt;コードは以下のとおりです。&lt;/p&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // 番号
+        var num = spanY * PIECE_NUM_XY + spanX + 1;
+        // ピース作成
+        var piece = Piece(num).addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+        // 16番のピースは非表示
+        if (num === 16) piece.hide();
+      });
+    });
+  },
+});
+// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7c4b18ba&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;h3 id=&#34;数字の表示&#34;&gt;数字の表示&lt;/h3&gt;
 
@@ -1436,7 +1509,7 @@ PIECE_NUM_XY.times(function(spanX) {
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピースクラス
 phina.define(&#39;Piece&#39;, {
   // RectangleShapeを継承
-  superClass: &#39;phina.display.RectangleShape&#39;,
+  superClass: &#39;RectangleShape&#39;,
     // コンストラクタ
     init: function(num) {
       // 親クラス初期化
@@ -1488,7 +1561,7 @@ PIECE_NUM_XY.times(function(spanX) {
 &lt;li&gt;ループでは16番までの数字が作成されますが、15パズルでは16番は不要ですので、条件で16番のピースは空白とみなして&lt;strong&gt;hide&lt;/strong&gt;を使って非表示にしています。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ここまでで、各ピースの中心に数字が表示されるようになりました。
 次回は、&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/&#34;&gt;ピースにタッチイベントを追加&lt;/a&gt;させたいと思います。&lt;/p&gt;
@@ -1503,20 +1576,37 @@ PIECE_NUM_XY.times(function(spanX) {
       <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01</guid>
       <description>
 
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/3220d55d85a13c69e6c6&#34;&gt;tmlib.js ＝15パズル＝ チュートリアル編&lt;/a&gt;を投稿しましたが、今回は、これを&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;で作り直すのが目標です。&lt;/p&gt;
 
 &lt;p&gt;このチュートリアルでは、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の公式エディタである&lt;a href=&#34;http://runstant.com/about&#34;&gt;runstant&lt;/a&gt;を使っていきたいと思います。
 それでは、早速作っていきます。&lt;/p&gt;
 
-&lt;h3 id=&#34;ひな形の用意&#34;&gt;ひな形の用意&lt;/h3&gt;
+&lt;h2 id=&#34;ひな形の用意&#34;&gt;ひな形の用意&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://runstant.com/about&#34;&gt;runstant&lt;/a&gt;で用意した以下のひな形をベースに作成していきます。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/flgqTs&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;CanvasScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
 &lt;/code&gt;&lt;/pre&gt;
@@ -1525,7 +1615,7 @@ PIECE_NUM_XY.times(function(spanX) {
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// メインシーン
 phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;CanvasScene&#39;,
+  superClass: &#39;DisplayScene&#39;,
   // コンストラクタ
   init: function() {
     // 親クラス初期化
@@ -1536,7 +1626,7 @@ phina.define(&#39;MainScene&#39;, {
 
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;phina.define&lt;/strong&gt;は、クラスを定義する関数です。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;CanvasScene&lt;/strong&gt;を継承した&lt;strong&gt;MainScene&lt;/strong&gt;を定義しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DisplayScene&lt;/strong&gt;MainScene**を定義しています。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;init&lt;/strong&gt;関数は、いわゆる&lt;strong&gt;コンストラクタ&lt;/strong&gt;です。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;this.superInit&lt;/strong&gt;で親クラスの&lt;strong&gt;コンストラクタ&lt;/strong&gt;を呼び出しています。この後に、実際のゲーム処理コードを書いていくことになります。&lt;/li&gt;
 &lt;/ul&gt;
@@ -1558,12 +1648,86 @@ phina.main(function() {
 
 &lt;p&gt;現時点では、&lt;a href=&#34;http://runstant.com/about&#34;&gt;runstant&lt;/a&gt;画面上部メニューの&lt;strong&gt;play&lt;/strong&gt;で実行すると何もない画面が表示されるだけです。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
 &lt;p&gt;以下のように、15パズルのピースを配置します。
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/1oucz4&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/15puzzle-tut-1.png&#34; alt=&#34;15puzzle-tut-1&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h3&gt;
+&lt;p&gt;コードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+/*
+ * メインシーン
+ */
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // ピース作成
+        var piece = Piece().addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+      });
+    });
+  },
+});
+/*
+ * ピースクラス
+ */
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+    },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/211ed4f6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;h3 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h3&gt;
 
@@ -1585,7 +1749,7 @@ var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピースクラス
 phina.define(&#39;Piece&#39;, {
   // RectangleShapeを継承
-  superClass: &#39;phina.display.RectangleShape&#39;,
+  superClass: &#39;RectangleShape&#39;,
     // コンストラクタ
     init: function() {
       // 親クラス初期化
@@ -1617,7 +1781,7 @@ phina.define(&#39;Piece&#39;, {
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グリッド
 var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
 // ピースグループ
-var pieceGroup = CanvasElement().addChildTo(this);
+var pieceGroup = DisplayElement().addChildTo(this);
 // ピース配置
 PIECE_NUM_XY.times(function(spanX) {
   PIECE_NUM_XY.times(function(spanY) {
@@ -1633,7 +1797,7 @@ PIECE_NUM_XY.times(function(spanX) {
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;画面幅をピースの並び数で区割りした&lt;strong&gt;Grid&lt;/strong&gt;を作成しています。&lt;strong&gt;Grid&lt;/strong&gt;クラスの使い方については、手前味噌ですみませんが&lt;a href=&#34;http://qiita.com/alkn203/items/d176a10d4e38d15e4062&#34;&gt;【phina.js】Gridクラスを使いこなそう&lt;/a&gt;を参考にして下さい。&lt;/p&gt;&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;CanvasElement&lt;/strong&gt;クラスを使って、&lt;strong&gt;pieceGroup&lt;/strong&gt;という名前のグループを作っています。グループ管理については、こちらも手前味噌ですが&lt;a href=&#34;http://qiita.com/alkn203/items/8ad0b80175d23d03bd49&#34;&gt;【phina.js】グループ管理の基本テクニック&lt;/a&gt;を参考にして下さい。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;DisplayElement&lt;/strong&gt;クラスを使って、&lt;strong&gt;pieceGroup&lt;/strong&gt;という名前のグループを作っています。グループ管理については、こちらも手前味噌ですが&lt;a href=&#34;http://qiita.com/alkn203/items/8ad0b80175d23d03bd49&#34;&gt;【phina.js】グループ管理の基本テクニック&lt;/a&gt;を参考にして下さい。&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;ピースの配置は2重ループ処理で行いますが、今回は、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;独自の&lt;strong&gt;times&lt;/strong&gt;メソッドを使用しています。&lt;strong&gt;PIECE_NUM_XY&lt;/strong&gt;には&lt;strong&gt;4&lt;/strong&gt;という数値が入っていますので、引数で与えられた&lt;strong&gt;function&lt;/strong&gt;内の処理を&lt;strong&gt;4回繰り返す&lt;/strong&gt;という意味になります。&lt;strong&gt;spanX&lt;/strong&gt;と&lt;strong&gt;spanY&lt;/strong&gt;には、インデックス値である&lt;strong&gt;0～3&lt;/strong&gt;の数値がループ処理で入ってきますので、これを上手く利用します。&lt;/p&gt;&lt;/li&gt;
 
@@ -1644,7 +1808,7 @@ PIECE_NUM_XY.times(function(spanX) {
 &lt;li&gt;&lt;p&gt;作成した&lt;strong&gt;pieceGroup&lt;/strong&gt;を&lt;strong&gt;MainScene&lt;/strong&gt;に&lt;strong&gt;addChildTo&lt;/strong&gt;することで、ピースが画面に表示されます。&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ピースは配置できましたが、現時点ではただのタイルの集まりですね。
 次回は、&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02/&#34;&gt;ピースに数字を表示&lt;/a&gt;させたいと思います。&lt;/p&gt;
@@ -1668,43 +1832,327 @@ PIECE_NUM_XY.times(function(spanX) {
 &lt;p&gt;&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;については、Qiitaの&lt;a href=&#34;http://qiita.com/advent-calendar/2015/phinajs&#34;&gt;phina.js Advent Calendar 2015&lt;/a&gt;にライブラリの紹介をはじめ、多くのTIPSが掲載されています。
 こちらも併せてチェックしてみて下さい。&lt;/p&gt;
 
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/15puzzle-tut-0.png&#34; alt=&#34;15puzzle-tut-0&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
 &lt;h3 id=&#34;目次&#34;&gt;目次&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01/&#34;&gt;（その１）【ピースの配置】&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02/&#34;&gt;（その２）【数字の表示】&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/&#34;&gt;（その３）【ピースのタッチ】&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04/&#34;&gt;（その４）【ピースの移動】&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/&#34;&gt;（その５）【tweenerで移動処理】&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06/&#34;&gt;（最終回）【ゲーム的要素の追加】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01/&#34;&gt;（その１）【ピースの配置】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-02/&#34;&gt;（その２）【数字の表示】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/&#34;&gt;（その３）【ピースのタッチ】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04/&#34;&gt;（その４）【ピースの移動】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/&#34;&gt;（その５）【tweenerで移動処理】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06/&#34;&gt;（最終回）【ゲーム的要素の追加】&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;（番外編）【絵合わせパズル風にしてみる】&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
-      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）最終回＝ゲームオーバーとクリア処理＝</title>
+      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）最終回＝ゲームオーバーとクリア＝</title>
       <link>https://alkn203.github.io/blog/2015/11/06/breakout-tut-07</link>
       <pubDate>Fri, 06 Nov 2015 20:55:06 +0900</pubDate>
       
       <guid>https://alkn203.github.io/blog/2015/11/06/breakout-tut-07</guid>
       <description>
 
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;前回は、&lt;strong&gt;Tweener&lt;/strong&gt;を使ったアニメーション処理を追加しました。
 今回は最終回として、ゲームオーバーとクリア処理を追加したいと思います。&lt;/p&gt;
 
-&lt;h3 id=&#34;ゲームオーバー処理&#34;&gt;ゲームオーバー処理&lt;/h3&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/breakout-tut-07.png&#34; alt=&#34;breakout-tut-05&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ゲームオーバー処理&#34;&gt;ゲームオーバー処理&lt;/h2&gt;
 
 &lt;p&gt;ボールが画面下に落下したら、&lt;strong&gt;GAME OVER&lt;/strong&gt;という文字を表示してタイトル画面に戻るようにします。
 コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Gn8EzI&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * 定数
+ */
+var BLOCK_WIDTH = 40 * 2;
+var BLOCK_HEIGHT = 60 / 2;
+var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
+var PADDLE_HEIGHT = BLOCK_HEIGHT;
+var BALL_RADIUS = BLOCK_WIDTH / 8;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ブロックグループ
+    this.blockGroup = DisplayElement().addChildTo(this);
+    // ダミーブロックグループ
+    this.dummyGroup = DisplayElement().addChildTo(this);
+    // 位置判定用のRect
+    var screenRect = Rect(0, 0, 640, 960);
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+    var self = this;
+    // Gridを利用してブロック設置
+    Array.range(2, 16, 2).each(function(spanX) {
+      Array.range(1, 4, 0.5).each(function(spanY) {
+        Block().addChildTo(self.blockGroup)
+               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
+      });
+    });
+    // パドル移動ライン
+    var paddleY = this.gridY.span(14.5);
+    // パドル設置
+    var paddle = Paddle().addChildTo(this)
+                         .setPosition(this.gridX.center(), paddleY);
+    // 画面上でのタッチ移動時
+    this.onpointmove = function(e) {
+      // タッチ位置に移動
+      paddle.setPosition(e.pointer.x | 0, paddleY);
+      // 画面はみ出し防止
+      if (paddle.left &amp;lt; screenRect.left) { paddle.left = screenRect.left; }
+      if (paddle.right &amp;gt; screenRect.right) { paddle.right = screenRect.right; }
+    };
+    // 画面上でタッチが離れた時
+    this.onpointend = function() {
+      if (self.status === &#39;ready&#39;) {
+        // ボール発射
+        self.ball.vy = -self.ball.speed;
+        self.status = &#39;move&#39;;
+      }
+    };
+    // ボール作成
+    this.ball = Ball().addChildTo(this);
+    // シーン全体から参照可能にする
+    this.paddle = paddle;
+    this.screenRect = screenRect;
+    // ゲーム状態
+    this.status = &#39;ready&#39;;
+  },
+    // 毎フレーム更新
+  update: function() {
+    var ball = this.ball;
+    var paddle = this.paddle;
+    var screenRect = this.screenRect;
+    // ボール待機中
+    if (this.status === &#39;ready&#39;) {
+      // ボールはパドルの真上
+      ball.vx = ball.vy = 0;
+      ball.x = paddle.x;
+      ball.bottom = paddle.top;
+    }
+    // ボール移動中
+    if (this.status === &#39;move&#39;) {
+      // ボール移動
+      ball.moveBy(ball.vx, ball.vy);
+      // 画面端反射
+      // 上
+      if (ball.top &amp;lt; screenRect.top) {
+        ball.top = screenRect.top;
+        ball.vy = -ball.vy;
+      }
+      // 左
+      if (ball.left &amp;lt; screenRect.left) {
+        ball.left = screenRect.left;
+        ball.vx = -ball.vx;
+      }
+      // 右
+      if (ball.right &amp;gt; screenRect.right) {
+        ball.right = screenRect.right;
+        ball.vx = -ball.vx;
+      }
+      // 落下
+      var self = this;
 
-&lt;h5 id=&#34;93から111行目&#34;&gt;93から111行目&lt;/h5&gt;
+      if (ball.top &amp;gt; screenRect.bottom) {
+        // ゲームオーバー表示
+        var label = Label({
+          text: &#39;GAME OVER&#39;,
+          fill: &#39;yellow&#39;,
+          fontSize: 64,
+        }).addChildTo(this);
+        label.setPosition(this.gridX.center(), this.gridY.center());
+        // 少し待ってからタイトル画面へ
+        label.tweener.clear()
+                     .wait(2000)
+                     .call(function() {
+                       self.nextLabel = &#39;title&#39;;
+                       self.exit();
+                     });
+      }
+      // パドルとの反射
+      if (ball.hitTestElement(paddle) &amp;amp;&amp;amp; ball.vy &amp;gt; 0) {
+        ball.bottom = paddle.top;
+        ball.vy = -ball.vy;
+        // 当たった位置で角度を変化させる
+        var dx = paddle.x - ball.x;
+        ball.vx = -dx / 5;
+      }
+      // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            // ブロック消去
+            self.disableBlock(block);
+            return true;
+          }
+          // 右上かど
+          if (block.top &amp;lt; ball.top &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左側
+          if (ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右側
+          if (block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 上側
+          if (ball.top &amp;lt; block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+          // 下側
+          if (block.bottom &amp;lt; ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+        }
+      });
+    }
+  },
+  // ブロックの消去処理
+  disableBlock: function(block) {
+    // 消去アニメーション用のダミーブロック
+    var dummy = Block().addChildTo(this.dummyGroup);
+    // 属性コピー
+    dummy.x = block.x;
+    dummy.y = block.y;
+    // ブロック削除
+    block.remove();
+    // 縮小して消えるアニメーション
+    dummy.tweener.clear()
+                 .to({scaleX: 0.1, scaleY: 0.1}, 200)
+                 .call(function() {
+                   dummy.remove();
+                 });
+  },
+});
+/*
+ * ブロッククラス
+ */
+phina.define(&#39;Block&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: BLOCK_WIDTH,
+      height: BLOCK_HEIGHT,
+    });
+  },
+});
+/*
+ * パドルクラス
+ */
+phina.define(&#39;Paddle&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+      fill: &#39;silver&#39;,
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define(&#39;Ball&#39;, {
+  // 親クラス指定
+  superClass: &#39;CircleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      radius: BALL_RADIUS,
+      fill: &#39;silver&#39;,
+    });
+    // スピード
+    this.speed = 6;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;Break Out&#39;,
+  });
+  // fps変更
+  app.fps = 60;
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/211ed4f6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;ゲームオーバー処理-1&#34;&gt;ゲームオーバー処理&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;      // 落下
       var self = this;
@@ -1734,16 +2182,323 @@ PIECE_NUM_XY.times(function(spanX) {
 &lt;li&gt;&lt;strong&gt;exit&lt;/strong&gt;で現在のシーンを抜けます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;クリア処理&#34;&gt;クリア処理&lt;/h3&gt;
+&lt;h2 id=&#34;クリア処理&#34;&gt;クリア処理&lt;/h2&gt;
 
 &lt;p&gt;全てのブロックを崩したらクリアとして、スコアを結果画面に表示してみます。
 コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/15M7pz&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * 定数
+ */
+var BLOCK_WIDTH = 40 * 2;
+var BLOCK_HEIGHT = 60 / 2;
+var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
+var PADDLE_HEIGHT = BLOCK_HEIGHT;
+var BALL_RADIUS = BLOCK_WIDTH / 8;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ブロックグループ
+    this.blockGroup = DisplayElement().addChildTo(this);
+    // ダミーブロックグループ
+    this.dummyGroup = DisplayElement().addChildTo(this);
+    // 位置判定用のRect
+    var screenRect = Rect(0, 0, 640, 960);
 
-&lt;h3 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h3&gt;
+    var self = this;
+    // Gridを利用してブロック設置
+    Array.range(2, 16, 2).each(function(spanX) {
+      Array.range(1, 4, 0.5).each(function(spanY) {
+        Block().addChildTo(self.blockGroup)
+               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
+      });
+    });
+    // パドル移動ライン
+    var paddleY = this.gridY.span(14.5);
+    // パドル設置
+    var paddle = Paddle().addChildTo(this)
+                         .setPosition(this.gridX.center(), paddleY);
+    // 画面上でのタッチ移動時
+    this.onpointmove = function(e) {
+      // タッチ位置に移動
+      paddle.setPosition(e.pointer.x | 0, paddleY);
+      // 画面はみ出し防止
+      if (paddle.left &amp;lt; screenRect.left) { paddle.left = screenRect.left; }
+      if (paddle.right &amp;gt; screenRect.right) { paddle.right = screenRect.right; }
+    };
+    // 画面上でタッチが離れた時
+    this.onpointend = function() {
+      if (self.status === &#39;ready&#39;) {
+        // ボール発射
+        self.ball.vy = -self.ball.speed;
+        self.status = &#39;move&#39;;
+      }
+    };
+    // スコア
+    this.score = 0;
+    var scoreLabel = Label({
+      text: this.score + &#39;&#39;,
+      fill: &#39;lime&#39;,
+      fontSize: 64,
+    }).addChildTo(this);
+    scoreLabel.setPosition(this.gridX.center(), this.gridY.center());
+    scoreLabel.alpha = 0.6;
+    // 連続ヒット数
+    this.hitNumber = 0;
+    // ボール作成
+    this.ball = Ball().addChildTo(this);
+    // シーン全体から参照可能にする
+    this.paddle = paddle;
+    this.screenRect = screenRect;
+    this.scoreLabel = scoreLabel;
+    // ゲーム状態
+    this.status = &#39;ready&#39;;
+  },
+    // 毎フレーム更新
+  update: function() {
+    var ball = this.ball;
+    var paddle = this.paddle;
+    var screenRect = this.screenRect;
+    // ボール待機中
+    if (this.status === &#39;ready&#39;) {
+      // ボールはパドルの真上
+      ball.vx = ball.vy = 0;
+      ball.x = paddle.x;
+      ball.bottom = paddle.top;
+    }
+    // ボール移動中
+    if (this.status === &#39;move&#39;) {
+      // ボール移動
+      ball.moveBy(ball.vx, ball.vy);
+      // 画面端反射
+      // 上
+      if (ball.top &amp;lt; screenRect.top) {
+        ball.top = screenRect.top;
+        ball.vy = -ball.vy;
+      }
+      // 左
+      if (ball.left &amp;lt; screenRect.left) {
+        ball.left = screenRect.left;
+        ball.vx = -ball.vx;
+      }
+      // 右
+      if (ball.right &amp;gt; screenRect.right) {
+        ball.right = screenRect.right;
+        ball.vx = -ball.vx;
+      }
+      // 落下
+      var self = this;
 
-&lt;h5 id=&#34;53から63行目&#34;&gt;53から63行目&lt;/h5&gt;
+      if (ball.top &amp;gt; screenRect.bottom) {
+        // ゲームオーバー表示
+        var label = Label({
+          text: &#39;GAME OVER&#39;,
+          fill: &#39;yellow&#39;,
+          fontSize: 64,
+        }).addChildTo(this);
+        label.setPosition(this.gridX.center(), this.gridY.center());
+        // 少し待ってからタイトル画面へ
+        label.tweener.clear()
+                     .wait(2000)
+                     .call(function() {
+                       self.nextLabel = &#39;title&#39;;
+                       self.exit();
+                     });
+      }
+      // パドルとの反射
+      if (ball.hitTestElement(paddle) &amp;amp;&amp;amp; ball.vy &amp;gt; 0) {
+        ball.bottom = paddle.top;
+        ball.vy = -ball.vy;
+        // 当たった位置で角度を変化させる
+        var dx = paddle.x - ball.x;
+        ball.vx = -dx / 5;
+      }
+      // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            // ブロック消去
+            self.disableBlock(block);
+            return true;
+          }
+          // 右上かど
+          if (block.top &amp;lt; ball.top &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左側
+          if (ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右側
+          if (block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 上側
+          if (ball.top &amp;lt; block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+          // 下側
+          if (block.bottom &amp;lt; ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+        }
+      });
+    }
+    // クリアチェック
+    if (this.blockGroup.children.length === 0) {
+      // スコアをリザルトシーンに渡す
+      this.exit({
+        score: this.score,  
+      });
+    }
+  },
+  // ブロックの消去処理
+  disableBlock: function(block) {
+    // 消去アニメーション用のダミーブロック
+    var dummy = Block().addChildTo(this.dummyGroup);
+    // 属性コピー
+    dummy.x = block.x;
+    dummy.y = block.y;
+    // ブロック削除
+    block.remove();
+    // 縮小して消えるアニメーション
+    dummy.tweener.clear()
+                 .to({scaleX: 0.1, scaleY: 0.1}, 200)
+                 .call(function() {
+                   dummy.remove();
+                 });
+    // スコア加算
+    this.addScore();
+  },
+  // スコア加算処理
+  addScore: function() {
+    this.hitNumber++;
+    this.score += this.hitNumber * 10;
+    this.scoreLabel.text = this.score;
+  },
+});
+/*
+ * ブロッククラス
+ */
+phina.define(&#39;Block&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: BLOCK_WIDTH,
+      height: BLOCK_HEIGHT,
+    });
+  },
+});
+/*
+ * パドルクラス
+ */
+phina.define(&#39;Paddle&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+      fill: &#39;silver&#39;,
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define(&#39;Ball&#39;, {
+  // 親クラス指定
+  superClass: &#39;CircleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      radius: BALL_RADIUS,
+      fill: &#39;silver&#39;,
+    });
+    // スピード
+    this.speed = 6;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;Break Out&#39;,
+  });
+  // fps変更
+  app.fps = 60;
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/5873b593&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;スコア表示&#34;&gt;スコア表示&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// スコア
 this.score = 0;
@@ -1765,7 +2520,7 @@ this.hitNumber = 0;
 &lt;li&gt;&lt;strong&gt;this.hitNumber&lt;/strong&gt;ブロックを連続で崩した回数を記録します。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;232から240行目&#34;&gt;232から240行目&lt;/h5&gt;
+&lt;h3 id=&#34;スコア加算&#34;&gt;スコア加算&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // スコア加算
   this.addScore();
@@ -1785,7 +2540,7 @@ addScore: function() {
 &lt;li&gt;スコア表示用ラベルの&lt;strong&gt;text&lt;/strong&gt;プロパティに現在のスコアを反映させれば、ラベルが更新されます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;209から215行目&#34;&gt;209から215行目&lt;/h5&gt;
+&lt;h3 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// クリアチェック
 if (this.blockGroup.children.length === 0) {
@@ -1802,7 +2557,7 @@ if (this.blockGroup.children.length === 0) {
 &lt;li&gt;実際にクリアすると、リザルト画面にスコアが引き渡されているのが分かるかと思います。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;今回のチュートリアルでは、&lt;strong&gt;phina.js&lt;/strong&gt;を使った簡単なブロック崩しの作成について触れさせて頂きました。
 &lt;strong&gt;phina.js&lt;/strong&gt;には、今回では紹介しきれていない機能がまだまだありますので、これからこのブログなどで私なりに紹介できればと思っております。&lt;/p&gt;
@@ -1816,33 +2571,302 @@ if (this.blockGroup.children.length === 0) {
     </item>
     
     <item>
-      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第6回＝Tweenerを使ったアニメーション処理＝</title>
+      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第6回＝Tweenerアニメーション＝</title>
       <link>https://alkn203.github.io/blog/2015/11/05/breakout-tut-06</link>
       <pubDate>Thu, 05 Nov 2015 20:55:06 +0900</pubDate>
       
       <guid>https://alkn203.github.io/blog/2015/11/05/breakout-tut-06</guid>
       <description>
 
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;前回は、ブロックの消去処理を追加しました。
 今回は、ゲームとしての見栄えを良くするために、ブロックがアニメーションして消えるようにしたいと思います。&lt;/p&gt;
 
-&lt;h3 id=&#34;tweenerを使ったアニメーション処理&#34;&gt;Tweenerを使ったアニメーション処理&lt;/h3&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/breakout-tut-05.png&#34; alt=&#34;breakout-tut-05&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;tweenerを使ったアニメーション処理&#34;&gt;Tweenerを使ったアニメーション処理&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;には&lt;strong&gt;Tweener&lt;/strong&gt;という機能があり、オブジェクトに対して移動、拡大・縮小、回転などといったアニメーションを簡単に設定することができます。
 今回は、ブロックが&lt;strong&gt;縮小して消える&lt;/strong&gt;ようにしてみます。&lt;/p&gt;
 
-&lt;h3 id=&#34;アニメーション用ダミーブロックの作成&#34;&gt;アニメーション用ダミーブロックの作成&lt;/h3&gt;
+&lt;h2 id=&#34;アニメーション用ダミーブロックの作成&#34;&gt;アニメーション用ダミーブロックの作成&lt;/h2&gt;
 
 &lt;p&gt;ブロックそのものに&lt;strong&gt;Tweener&lt;/strong&gt;を設定しても良いのですが、消去アニメーション中も当たり判定が有効だと予期しない動作を招きかねないので、アニメーション用のダミーブロックを別途作成してから、それに&lt;strong&gt;Tweener&lt;/strong&gt;を設定する方法をとります。
 コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/2SQ3Zh&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * 定数
+ */
+var BLOCK_WIDTH = 40 * 2;
+var BLOCK_HEIGHT = 60 / 2;
+var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
+var PADDLE_HEIGHT = BLOCK_HEIGHT;
+var BALL_RADIUS = BLOCK_WIDTH / 8;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ブロックグループ
+    this.blockGroup = DisplayElement().addChildTo(this);
+    // ダミーブロックグループ
+    this.dummyGroup = CanvasElement().addChildTo(this);
+    // 位置判定用のRect
+    var screenRect = Rect(0, 0, 640, 960);
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+    var self = this;
+    // Gridを利用してブロック設置
+    Array.range(2, 16, 2).each(function(spanX) {
+      Array.range(1, 4, 0.5).each(function(spanY) {
+        Block().addChildTo(self.blockGroup)
+               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
+      });
+    });
+    // パドル移動ライン
+    var paddleY = this.gridY.span(14.5);
+    // パドル設置
+    var paddle = Paddle().addChildTo(this)
+                         .setPosition(this.gridX.center(), paddleY);
+    // 画面上でのタッチ移動時
+    this.onpointmove = function(e) {
+      // タッチ位置に移動
+      paddle.setPosition(e.pointer.x | 0, paddleY);
+      // 画面はみ出し防止
+      if (paddle.left &amp;lt; screenRect.left) { paddle.left = screenRect.left; }
+      if (paddle.right &amp;gt; screenRect.right) { paddle.right = screenRect.right; }
+    };
+    // 画面上でタッチが離れた時
+    this.onpointend = function() {
+      if (self.status === &#39;ready&#39;) {
+        // ボール発射
+        self.ball.vy = -self.ball.speed;
+        self.status = &#39;move&#39;;
+      }
+    };
+    // ボール作成
+    this.ball = Ball().addChildTo(this);
+    // シーン全体から参照可能にする
+    this.paddle = paddle;
+    this.screenRect = screenRect;
+    // ゲーム状態
+    this.status = &#39;ready&#39;;
+  },
+    // 毎フレーム更新
+  update: function() {
+    var ball = this.ball;
+    var paddle = this.paddle;
+    var screenRect = this.screenRect;
+    // ボール待機中
+    if (this.status === &#39;ready&#39;) {
+      // ボールはパドルの真上
+      ball.vx = ball.vy = 0;
+      ball.x = paddle.x;
+      ball.bottom = paddle.top;
+    }
+    // ボール移動中
+    if (this.status === &#39;move&#39;) {
+      // ボール移動
+      ball.moveBy(ball.vx, ball.vy);
+      // 画面端反射
+      // 上
+      if (ball.top &amp;lt; screenRect.top) {
+        ball.top = screenRect.top;
+        ball.vy = -ball.vy;
+      }
+      // 左
+      if (ball.left &amp;lt; screenRect.left) {
+        ball.left = screenRect.left;
+        ball.vx = -ball.vx;
+      }
+      // 右
+      if (ball.right &amp;gt; screenRect.right) {
+        ball.right = screenRect.right;
+        ball.vx = -ball.vx;
+      }
+      // 落下
+      if (ball.top &amp;gt; screenRect.bottom) {
+        // 準備状態へ
+        this.status = &#39;ready&#39;;
+      }
+      // パドルとの反射
+      if (ball.hitTestElement(paddle) &amp;amp;&amp;amp; ball.vy &amp;gt; 0) {
+        ball.bottom = paddle.top;
+        ball.vy = -ball.vy;
+        // 当たった位置で角度を変化させる
+        var dx = paddle.x - ball.x;
+        ball.vx = -dx / 5;
+      }
+      var self = this;
+      // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            // ブロック消去
+            self.disableBlock(block);
+            return true;
+          }
+          // 右上かど
+          if (block.top &amp;lt; ball.top &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左側
+          if (ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右側
+          if (block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 上側
+          if (ball.top &amp;lt; block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+          // 下側
+          if (block.bottom &amp;lt; ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+        }
+      });
+    }
+  },
+  // ブロックの消去処理
+  disableBlock: function(block) {
+    // 消去アニメーション用のダミーブロック
+    var dummy = Block().addChildTo(this.dummyGroup);
+    // 属性コピー
+    dummy.x = block.x;
+    dummy.y = block.y;
+    // ブロック削除
+    block.remove();
+    // 縮小して消えるアニメーション
+    dummy.tweener.clear()
+                 .to({scaleX: 0.1, scaleY: 0.1}, 200)
+                 .call(function() {
+                   dummy.remove();
+                 });
+  },
+});
+/*
+ * ブロッククラス
+ */
+phina.define(&#39;Block&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: BLOCK_WIDTH,
+      height: BLOCK_HEIGHT,
+    });
+  },
+});
+/*
+ * パドルクラス
+ */
+phina.define(&#39;Paddle&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+      fill: &#39;silver&#39;,
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define(&#39;Ball&#39;, {
+  // 親クラス指定
+  superClass: &#39;CircleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      radius: BALL_RADIUS,
+      fill: &#39;silver&#39;,
+    });
+    // スピード
+    this.speed = 6;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;Break Out&#39;,
+  });
+  // fps変更
+  app.fps = 60;
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h5 id=&#34;20行目&#34;&gt;20行目&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d1392646&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;ダミーブロック&#34;&gt;ダミーブロック&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // ダミーブロックグループ
     this.dummyGroup = CanvasElement().addChildTo(this);
@@ -1852,7 +2876,7 @@ if (this.blockGroup.children.length === 0) {
 &lt;li&gt;&lt;strong&gt;dummyGroup&lt;/strong&gt;は、ダミーブロック用のグループです。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;189から204行目&#34;&gt;189から204行目&lt;/h5&gt;
+&lt;h3 id=&#34;ブロックの消去処理&#34;&gt;ブロックの消去処理&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ブロックの消去処理
 disableBlock: function(block) {
@@ -1894,7 +2918,7 @@ dummy.tweener.clear()
 &lt;li&gt;つまり今回は、&lt;strong&gt;200ミリ秒かけて0.1倍まで縮小させた後に、自分自身を消去する&lt;/strong&gt;という一連の処理になります。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;122行目-他&#34;&gt;122行目　他&lt;/h5&gt;
+&lt;h3 id=&#34;remove関数の置き換え&#34;&gt;remove関数の置き換え&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;            // ブロック削除処理
             self.disableBlock(block);
@@ -1904,7 +2928,7 @@ dummy.tweener.clear()
 &lt;li&gt;前回までの&lt;strong&gt;remove&lt;/strong&gt;関数を上記のコードに置き換えます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;今回は&lt;strong&gt;phina.js&lt;/strong&gt;の目玉機能の１つとも言える&lt;strong&gt;Tweener&lt;/strong&gt;を使って、ブロックの消去アニメーションを作ってみました。
 次回はいよいよ最終回です。最終回では、もう少しゲームらしくするために、ゲームオーバーとクリア処理を追加してみたいと思います。&lt;/p&gt;

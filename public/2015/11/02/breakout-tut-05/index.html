@@ -4,7 +4,7 @@
   
   <meta charset="UTF-8">
   <title>
-    【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射処理＝ | Keep Coding
+    【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射＝ | Keep Coding
   </title>
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
@@ -39,7 +39,7 @@
   
   <main id="single" role="main" class="col span_9">
     <div class="article-header">
-      <h1>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射処理＝</h1>
+      <h1>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射＝</h1>
       <div class="meta">
         Nov 2, 2015 &nbsp;
         
@@ -52,22 +52,32 @@
 
     
       
+<center>
 <table>
   <tr>
     
-    <td><a href="https://twitter.com/share" class="twitter-share-button" data-via="alkn203" data-size="default" data-hashtags="phina_js">Tweet</a></td>
-    
-    <td><div class="fb-like" data-layout="box_count" data-action="like" data-size="small" data-show-faces="false"></div></td>
-    
     <td>
-      <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-title="【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射処理＝" data-hatena-bookmark-layout="vertical-balloon" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+      <a href="http://twitter.com/intent/tweet?text=%e3%80%90phina.js%e3%80%91%e3%82%b2%e3%83%bc%e3%83%a0%e4%bd%9c%e6%88%90%e3%83%81%e3%83%a5%e3%83%bc%e3%83%88%e3%83%aa%e3%82%a2%e3%83%ab%ef%bc%88%e3%83%96%e3%83%ad%e3%83%83%e3%82%af%e5%b4%a9%e3%81%97%ef%bc%89%e7%ac%ac5%e5%9b%9e%ef%bc%9d%e3%83%9c%e3%83%bc%e3%83%ab%e3%81%a8%e3%83%96%e3%83%ad%e3%83%83%e3%82%af%e3%81%ae%e5%8f%8d%e5%b0%84%ef%bc%9d&url=https%3a%2f%2falkn203.github.io%2fblog%2f2015%2f11%2f02%2fbreakout-tut-05" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
     </td>
     
-    <td><a data-pocket-label="pocket" data-pocket-count="vertical" class="pocket-btn" data-lang="en"></a></td>
+    <td>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2falkn203.github.io%2fblog%2f2015%2f11%2f02%2fbreakout-tut-05" target="_blank"><i class="fa fa-facebook-square fa-2x facebook" aria-hidden="true"></i></a>
+    </td>
     
-    <td><div class="g-plusone" data-size="tall"></div></td>
+    <td>
+      <a href="http://b.hatena.ne.jp/entry/https://alkn203.github.io/blog/2015/11/02/breakout-tut-05" target="_blank"><i class="fa fa-hatena hatena"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://getpocket.com/edit?url=https%3a%2f%2falkn203.github.io%2fblog%2f2015%2f11%2f02%2fbreakout-tut-05" target="_blank"><i class="fa fa-get-pocket fa-2x pocket" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://plus.google.com/share?url=https%3a%2f%2falkn203.github.io%2fblog%2f2015%2f11%2f02%2fbreakout-tut-05" target="_blank"><i class="fa fa-google-plus-square fa-2x googleplus" aria-hidden="true"></i></a>
+    </td>
   </tr>
 </table>
+</center>
     
 
     <article>
@@ -105,6 +115,8 @@
 <p>前回は、ボールと画面端、ボールとパドルの反射処理を実装しました。
 今回は、ボールとブロックの反射処理、そしてブロックの消去処理を追加したいと思います。</p>
 
+<p><center><img src="https://alkn203.github.io/blog/images/breakout-tut-05.png" alt="breakout-tut-05" /></center></p>
+
 <h2 id="ボールとブロックの反射処理">ボールとブロックの反射処理</h2>
 
 <p>ボールがブロックに当たると反射するようにします。まず、反射のパターンを整理したいと思います。
@@ -119,11 +131,248 @@
 <li><strong>ブロックの左側面と右側面</strong> ・・・横移動を反転させる</li>
 </ul>
 
-<p><img src="http://alkn203.github.io/blog/img/balltoblock.png" /></p>
-
 <p>コードは以下のとおりです。</p>
 
-<div class='runstant'><iframe src='http://goo.gl/tCHV5X' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+<pre><code class="language-js">// グローバルに展開
+phina.globalize();
+/*
+ * 定数
+ */
+var BLOCK_WIDTH = 40 * 2;
+var BLOCK_HEIGHT = 60 / 2;
+var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
+var PADDLE_HEIGHT = BLOCK_HEIGHT;
+var BALL_RADIUS = BLOCK_WIDTH / 8;
+/*
+ * メインシーン
+ */
+phina.define(&quot;MainScene&quot;, {
+  // 継承
+  superClass: 'DisplayScene',
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = 'black';
+    // ブロックグループ
+    this.blockGroup = DisplayElement().addChildTo(this);
+    // 位置判定用のRect
+    var screenRect = Rect(0, 0, 640, 960);
+
+    var self = this;
+    // Gridを利用してブロック設置
+    Array.range(2, 16, 2).each(function(spanX) {
+      Array.range(1, 4, 0.5).each(function(spanY) {
+        Block().addChildTo(self.blockGroup)
+               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
+      });
+    });
+    // パドル移動ライン
+    var paddleY = this.gridY.span(14.5);
+    // パドル設置
+    var paddle = Paddle().addChildTo(this)
+                         .setPosition(this.gridX.center(), paddleY);
+    // 画面上でのタッチ移動時
+    this.onpointmove = function(e) {
+      // タッチ位置に移動
+      paddle.setPosition(e.pointer.x | 0, paddleY);
+      // 画面はみ出し防止
+      if (paddle.left &lt; screenRect.left) { paddle.left = screenRect.left; }
+      if (paddle.right &gt; screenRect.right) { paddle.right = screenRect.right; }
+    };
+    // 画面上でタッチが離れた時
+    this.onpointend = function() {
+      if (self.status === 'ready') {
+        // ボール発射
+        self.ball.vy = -self.ball.speed;
+        self.status = 'move';
+      }
+    };
+    // ボール作成
+    this.ball = Ball().addChildTo(this);
+    // シーン全体から参照可能にする
+    this.paddle = paddle;
+    this.screenRect = screenRect;
+    // ゲーム状態
+    this.status = 'ready';
+  },
+  // 毎フレーム更新
+  update: function() {
+    var ball = this.ball;
+    var paddle = this.paddle;
+    var screenRect = this.screenRect;
+    // ボール待機中
+    if (this.status === 'ready') {
+      // ボールはパドルの真上
+      ball.vx = ball.vy = 0;
+      ball.x = paddle.x;
+      ball.bottom = paddle.top;
+    }
+    // ボール移動中
+    if (this.status === 'move') {
+      // ボール移動
+      ball.moveBy(ball.vx, ball.vy);
+      // 画面端反射
+      // 上
+      if (ball.top &lt; screenRect.top) {
+        ball.top = screenRect.top;
+        ball.vy = -ball.vy;
+      }
+      // 左
+      if (ball.left &lt; screenRect.left) {
+        ball.left = screenRect.left;
+        ball.vx = -ball.vx;
+      }
+      // 右
+      if (ball.right &gt; screenRect.right) {
+        ball.right = screenRect.right;
+        ball.vx = -ball.vx;
+      }
+      // 落下
+      if (ball.top &gt; screenRect.bottom) {
+        // 準備状態へ
+        this.status = 'ready';
+      }
+      // パドルとの反射
+      if (ball.hitTestElement(paddle) &amp;&amp; ball.vy &gt; 0) {
+        ball.bottom = paddle.top;
+        ball.vy = -ball.vy;
+        // 当たった位置で角度を変化させる
+        var dx = paddle.x - ball.x;
+        ball.vx = -dx / 5;
+      }
+            // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top &lt; block.top &amp;&amp; ball.left &lt; block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            return true;
+          }
+          // 右上かど
+          if (block.top &lt; ball.top &amp;&amp; block.right &lt; ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            return true;
+          }
+          // 左下かど
+          if (block.bottom &lt; ball.bottom &amp;&amp; ball.left &lt; block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            return true;
+          }
+          // 右下かど
+          if (block.bottom &lt; ball.bottom &amp;&amp; block.right &lt; ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            return true;
+          }
+          // 左側
+          if (ball.left &lt; block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            return true;
+          }
+          // 右側
+          if (block.right &lt; ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            return true;
+          }
+          // 上側
+          if (ball.top &lt; block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            return true;
+          }
+          // 下側
+          if (block.bottom &lt; ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            return true;
+          }
+        }
+      });
+    }
+  },
+});
+/*
+ * ブロッククラス
+ */
+phina.define('Block', {
+  // 親クラス指定
+  superClass: 'RectangleShape',
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: BLOCK_WIDTH,
+      height: BLOCK_HEIGHT,
+    });
+  },
+});
+/*
+ * パドルクラス
+ */
+phina.define('Paddle', {
+  // 親クラス指定
+  superClass: 'RectangleShape',
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+      fill: 'silver',
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define('Ball', {
+  // 親クラス指定
+  superClass: 'CircleShape',
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      radius: BALL_RADIUS,
+      fill: 'silver',
+    });
+    // スピード
+    this.speed = 6;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: 'Break Out',
+  });
+  // fps変更
+  app.fps = 60;
+  // 実行
+  app.run();
+});
+</code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/305fd254" target="_blank">[runstantで確認]</a></p>
 
 <h2 id="コード説明">コード説明</h2>
 
@@ -158,7 +407,6 @@ if (ball.top &lt; block.top &amp;&amp; ball.left &lt; block.left) {
 </code></pre>
 
 <p>左上角の場合は、ボールがブロックに当たっていて、<strong>ボールの左側がブロックの左側より左、かつボールの上側がブロックの上側より上</strong>という位置関係にある時です。
-<img src="http://alkn203.github.io/blog/img/lefttop.png" />
 画面上で<strong>vx</strong>は負、<strong>vy</strong>も負の方向、つまり左斜め上45度方向に返します。</p>
 
 <h3 id="側面との当たり判定">側面との当たり判定</h3>
@@ -177,8 +425,7 @@ if (block.right &lt; ball.right) {
 }
 </code></pre>
 
-<p><img src="http://alkn203.github.io/blog/img/left.png" />
-側面の場合は、<strong>vy</strong>はそのままで<strong>vx</strong>を反転させます。</p>
+<p>側面の場合は、<strong>vy</strong>はそのままで<strong>vx</strong>を反転させます。</p>
 
 <h3 id="上下面との当たり判定">上下面との当たり判定</h3>
 
@@ -196,14 +443,90 @@ if (block.bottom &lt; ball.bottom) {
 }
 </code></pre>
 
-<p><img src="http://alkn203.github.io/blog/img/top.png" />
+<p>op.png&rdquo; /&gt;
 上下面の場合は、<strong>vx</strong>はそのままで<strong>vy</strong>を反転させます。</p>
 
 <h2 id="ボールが当たったブロックを消去する">ボールが当たったブロックを消去する</h2>
 
-<p>次はブロックの消去処理を追加します。コードは以下のとおりです。</p>
+<p>次はブロックの消去処理を追加します。
+<strong>update</strong>関数内のボールとブロックの衝突処理部分を以下のとおり変更します。</p>
 
-<div class='runstant'><iframe src='http://goo.gl/xF7tNc' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+<pre><code class="language-js">// ブロックとの反射
+ this.blockGroup.children.some(function(block) {
+   // ヒットなら
+   if (ball.hitTestElement(block)) {
+     // 左上かど
+     if (ball.top &lt; block.top &amp;&amp; ball.left &lt; block.left) {
+       // 位置補正
+       ball.right = block.left;
+       ball.bottom = block.top;
+       // 移動方向設定
+       ball.vx = -ball.speed;
+       ball.vy = -ball.speed;
+       // ブロック消去
+       block.remove();
+       return true;
+     }
+     // 右上かど
+     if (block.top &lt; ball.top &amp;&amp; block.right &lt; ball.right) {
+       ball.left = block.right;
+       ball.bottom = block.top;
+       ball.vx = ball.speed;
+       ball.vy = -ball.speed;
+       block.remove();
+       return true;
+     }
+     // 左下かど
+     if (block.bottom &lt; ball.bottom &amp;&amp; ball.left &lt; block.left) {
+       ball.right = block.left;
+       ball.top = block.bottom;
+       ball.vx = -ball.speed;
+       ball.vy = ball.speed;
+       block.remove();
+       return true;
+     }
+     // 右下かど
+     if (block.bottom &lt; ball.bottom &amp;&amp; block.right &lt; ball.right) {
+       ball.left = block.right;
+       ball.top = block.bottom;
+       ball.vx = ball.speed;
+       ball.vy = ball.speed;
+       block.remove();
+       return true;
+     }
+     // 左側
+     if (ball.left &lt; block.left) {
+       ball.right = block.left;
+       ball.vx = -ball.vx;
+       block.remove();
+       return true;
+     }
+     // 右側
+     if (block.right &lt; ball.right) {
+       ball.left = block.right;
+       ball.vx = -ball.vx;
+       block.remove();
+       return true;
+     }
+     // 上側
+     if (ball.top &lt; block.top) {
+       ball.bottom = block.top;
+       ball.vy = -ball.vy;
+       block.remove();
+       return true;
+     }
+     // 下側
+     if (block.bottom &lt; ball.bottom) {
+       ball.top = block.bottom;
+       ball.vy = -ball.vy;
+       block.remove();
+       return true;
+     }
+   }
+ });
+</code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/efc751d8" target="_blank">[runstantで確認]</a></p>
 
 <h2 id="コード説明-1">コード説明</h2>
 
@@ -231,22 +554,32 @@ block.remove();
 
     
       
+<center>
 <table>
   <tr>
     
-    <td><a href="https://twitter.com/share" class="twitter-share-button" data-via="alkn203" data-size="default" data-hashtags="phina_js">Tweet</a></td>
-    
-    <td><div class="fb-like" data-layout="box_count" data-action="like" data-size="small" data-show-faces="false"></div></td>
-    
     <td>
-      <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-title="【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射処理＝" data-hatena-bookmark-layout="vertical-balloon" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+      <a href="http://twitter.com/intent/tweet?text=%e3%80%90phina.js%e3%80%91%e3%82%b2%e3%83%bc%e3%83%a0%e4%bd%9c%e6%88%90%e3%83%81%e3%83%a5%e3%83%bc%e3%83%88%e3%83%aa%e3%82%a2%e3%83%ab%ef%bc%88%e3%83%96%e3%83%ad%e3%83%83%e3%82%af%e5%b4%a9%e3%81%97%ef%bc%89%e7%ac%ac5%e5%9b%9e%ef%bc%9d%e3%83%9c%e3%83%bc%e3%83%ab%e3%81%a8%e3%83%96%e3%83%ad%e3%83%83%e3%82%af%e3%81%ae%e5%8f%8d%e5%b0%84%ef%bc%9d&url=https%3a%2f%2falkn203.github.io%2fblog%2f2015%2f11%2f02%2fbreakout-tut-05" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
     </td>
     
-    <td><a data-pocket-label="pocket" data-pocket-count="vertical" class="pocket-btn" data-lang="en"></a></td>
+    <td>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2falkn203.github.io%2fblog%2f2015%2f11%2f02%2fbreakout-tut-05" target="_blank"><i class="fa fa-facebook-square fa-2x facebook" aria-hidden="true"></i></a>
+    </td>
     
-    <td><div class="g-plusone" data-size="tall"></div></td>
+    <td>
+      <a href="http://b.hatena.ne.jp/entry/https://alkn203.github.io/blog/2015/11/02/breakout-tut-05" target="_blank"><i class="fa fa-hatena hatena"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://getpocket.com/edit?url=https%3a%2f%2falkn203.github.io%2fblog%2f2015%2f11%2f02%2fbreakout-tut-05" target="_blank"><i class="fa fa-get-pocket fa-2x pocket" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://plus.google.com/share?url=https%3a%2f%2falkn203.github.io%2fblog%2f2015%2f11%2f02%2fbreakout-tut-05" target="_blank"><i class="fa fa-google-plus-square fa-2x googleplus" aria-hidden="true"></i></a>
+    </td>
   </tr>
 </table>
+</center>
     
 
     
@@ -331,7 +664,7 @@ block.remove();
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(4)</div>
+          <div>shape&nbsp;(5)</div>
           </a>
         </li>
       
@@ -349,7 +682,7 @@ block.remove();
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/tips/">
-          <div>tips&nbsp;(15)</div>
+          <div>tips&nbsp;(16)</div>
           </a>
         </li>
       
@@ -373,7 +706,7 @@ block.remove();
       <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2015/11/01/breakout-tut-04" rel="prev">【phina.js】ゲーム作成チュートリアル（ブロック崩し）第4回＝ボールの作成＝</a></span>
     
     
-      <span class="next"><a href="https://alkn203.github.io/blog/2015/11/05/breakout-tut-06" rel="next">【phina.js】ゲーム作成チュートリアル（ブロック崩し）第6回＝Tweenerを使ったアニメーション処理＝</a> &rarr;</span>
+      <span class="next"><a href="https://alkn203.github.io/blog/2015/11/05/breakout-tut-06" rel="next">【phina.js】ゲーム作成チュートリアル（ブロック崩し）第6回＝Tweenerアニメーション＝</a> &rarr;</span>
     
   </nav>
 

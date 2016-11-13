@@ -6,8 +6,53 @@
     <description>Recent content on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 09 Oct 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 13 Nov 2016 00:01:08 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>005-Shapeを透明化する</title>
+      <link>https://alkn203.github.io/blog/2016/11/13/phina-invisible-shape</link>
+      <pubDate>Sun, 13 Nov 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/11/13/phina-invisible-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を透明化する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-invisible-shape.png&#34; alt=&#34;phina-invisible-shape&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;shapeの透明化&#34;&gt;Shapeの透明化&lt;/h2&gt;
+
+&lt;p&gt;透明にするには&lt;strong&gt;alpha&lt;/strong&gt;プロパティに&lt;strong&gt;0&lt;/strong&gt;を指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.alpha = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7e1a191a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;alpha&lt;/strong&gt;プロパティには&lt;strong&gt;0から1&lt;/strong&gt;が指定できるので、好みの透明度にすることができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;shapeの非表示&#34;&gt;Shapeの非表示&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、透明化の他に&lt;strong&gt;hide&lt;/strong&gt;メソッドでオブジェクトそのものを非表示にすることができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.hide();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3df6a8b8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;再表示するには、&lt;strong&gt;show&lt;/strong&gt;メソッドを使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.show();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;透明化と非表示の違い&#34;&gt;透明化と非表示の違い&lt;/h2&gt;
+
+&lt;p&gt;透明化ではオブジェクト自体は存在するので、当たり判定やタッチ処理は有効ですが、非表示にした場合は描画自体されないので、当たり判定やタッチ処理は無効になります。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>004-Shapeの背景色指定</title>
@@ -1517,156 +1562,6 @@ phina.main(function() {
     // 画面サイズ指定
     width: LOGO_SIZE,
     height: LOGO_SIZE,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>グローバル座標とローカル座標を使ったサンプル</title>
-      <link>https://alkn203.github.io/blog/2016/03/05/parent-and-children</link>
-      <pubDate>Sat, 05 Mar 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/03/05/parent-and-children</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、オブジェクトにオブジェクトを追加すると親子関係が成立します。子オブジェクトは親オブジェクトに追従するようになり、まとめて移動する必要がある時などに便利です。
-この際に注意するべきことは、&lt;strong&gt;子オブジェクトの座標は親オブジェクトの中心からの相対座標&lt;/strong&gt;になるという点です。
-従って、子オブジェクトとの当たり判定などを行う時は、親のグローバル座標と子のローカル座標について把握しておく必要があります。&lt;/p&gt;
-
-&lt;h3 id=&#34;サンプル&#34;&gt;サンプル&lt;/h3&gt;
-
-&lt;p&gt;子オブジェクトとの当たり判定のサンプルです。
-当たり判定処理では、子オブジェクトの座標値はそのまま使えませんので&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;親のx座標 + 子のx座標（相対値）
-親のy座標 + 子のy座標（相対値）
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;で補正した値を元に位置情報だけの&lt;strong&gt;Rect&lt;/strong&gt;（矩形）を作り、&lt;strong&gt;Collision&lt;/strong&gt;クラスを使ってその&lt;strong&gt;Rect&lt;/strong&gt;と当たり判定を行っています。&lt;/p&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/IIEsns&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;[&lt;a href=&#34;http://goo.gl/IIEsns&#34;&gt;runstantで開く&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// 定数
-var SCREEN_RECT = Rect(0, 0, 640, 960); // 画面サイズのRect
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景
-    this.backgroundColor = &#39;black&#39;;
-
-    Label({
-      text: &#39;Touch To Shot&#39;,
-      fontSize: 48,
-      fill: &#39;lime&#39;,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(2));
-    // ショットグループ
-    var shotGroup = DisplayElement().addChildTo(this);
-    // 敵子供グループ
-    var pitGroup = DisplayElement().addChildTo(this);
-    // 自機
-    var player = TriangleShape().addChildTo(this);
-    player.setPosition(this.gridX.center(), this.gridY.span(15));
-    // 敵
-    var enemy = RectangleShape().addChildTo(this);
-    enemy.setPosition(this.gridX.center(), this.gridY.center(-2));
-
-    enemy.tweener.clear()
-                 .by({x: -100}, 1000)
-                 .by({x: 200}, 2000)
-                 .by({x: -100}, 1000)
-                 .setLoop(true);
-    // 敵子供追加
-    [0, 45, 90, 135, 180, 225, 270, 315].each(function(deg) {
-      Pit(deg, 4).addChildTo(enemy);
-    });
-    // 参照用
-    this.player = player;
-    this.enemy = enemy;
-    this.shotGroup = shotGroup;
-    this.pitGroup = pitGroup;
-  },
-  // 画面タッチ時処理
-  onpointstart: function() {
-    // ショットが無ければ
-    if (this.shotGroup.children.length === 0) {
-      // 上方向にショット発射
-      CircleShape({
-        radius: 16,
-      }).addChildTo(this.shotGroup)
-        .setPosition(this.player.x, this.player.top)
-        .physical.force(0, -16);
-    }
-  },
-  // 毎フレーム更新
-  update: function() {
-    var enemy = this.enemy;
-    // 画面からはみ出たショットは削除
-    this.shotGroup.children.each(function(shot) {
-      if (shot.bottom &amp;lt; SCREEN_RECT.top) shot.remove();      
-    });
-    // 敵に当たったらショットは削除
-    this.shotGroup.children.each(function(shot) {
-      if (shot.hitTestElement(enemy)) shot.remove();
-    });
-    // ショットと敵の子供のあたり判定
-    this.shotGroup.children.each(function(shot) {
-      enemy.children.each(function(pit) {
-        // 相対座標を絶対座標に変換した当たり判定用の矩形を作る
-        var rect = Rect(enemy.x + pit.x, enemy.y + pit.y, pit.width, pit.height);
-        // Collisionクラスを利用して当たり判定
-        if (Collision.testRectRect(shot, rect)) {
-          shot.remove();
-          pit.remove();
-        }
-      });
-    });
-  },
-});
-// 敵子供クラス
-phina.define(&#39;Pit&#39;, {
-  superClass: &#39;PolygonShape&#39;,
-  // コンストラクタ
-  init: function(deg, speed) {
-    // 親クラス初期化
-    this.superInit({
-      radius: 16,
-      sides: 6,
-    });
-
-    this.r = 32 * 3;
-    this.speed = speed;
-    this.deg = deg;
-  },
-  // 毎フレーム更新
-  update: function() {
-    this.rotation += -this.speed * 2;
-    this.deg += this.speed;    
-    var deg = this.deg;
-    var r = this.r;
-    // 円周上の位置（相対座標）
-    this.x = r * Math.cos(Math.degToRad(deg));
-    this.y = r * Math.sin(Math.degToRad(deg));
-  },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;,
-    title: &#39;Hit test children&#39;,
   });
   app.run();
 });

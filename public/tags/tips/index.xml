@@ -6,8 +6,53 @@
     <description>Recent content in Tips on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 09 Oct 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 13 Nov 2016 00:01:08 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>005-Shapeを透明化する</title>
+      <link>https://alkn203.github.io/blog/2016/11/13/phina-invisible-shape</link>
+      <pubDate>Sun, 13 Nov 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/11/13/phina-invisible-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を透明化する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-invisible-shape.png&#34; alt=&#34;phina-invisible-shape&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;shapeの透明化&#34;&gt;Shapeの透明化&lt;/h2&gt;
+
+&lt;p&gt;透明にするには&lt;strong&gt;alpha&lt;/strong&gt;プロパティに&lt;strong&gt;0&lt;/strong&gt;を指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.alpha = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7e1a191a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;alpha&lt;/strong&gt;プロパティには&lt;strong&gt;0から1&lt;/strong&gt;が指定できるので、好みの透明度にすることができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;shapeの非表示&#34;&gt;Shapeの非表示&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、透明化の他に&lt;strong&gt;hide&lt;/strong&gt;メソッドでオブジェクトそのものを非表示にすることができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.hide();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3df6a8b8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;再表示するには、&lt;strong&gt;show&lt;/strong&gt;メソッドを使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.show();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;透明化と非表示の違い&#34;&gt;透明化と非表示の違い&lt;/h2&gt;
+
+&lt;p&gt;透明化ではオブジェクト自体は存在するので、当たり判定やタッチ処理は有効ですが、非表示にした場合は描画自体されないので、当たり判定やタッチ処理は無効になります。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>004-Shapeの背景色指定</title>
@@ -1296,75 +1341,6 @@ phina.main(function() {
 &lt;p&gt;チュートリアルという形で作り方を説明していく予定です。&lt;/p&gt;
 
 &lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://lite.runstant.com/?v=0.0.3#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&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>フレームアニメーションのスプライトシートをコード内で定義する方法</title>
-      <link>https://alkn203.github.io/blog/2015/12/20/frameanimation</link>
-      <pubDate>Sun, 20 Dec 2015 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2015/12/20/frameanimation</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;現在、Qiitaで&lt;a href=&#34;http://qiita.com/advent-calendar/2015/phinajs&#34;&gt;phina.js Advent Calendar 2015&lt;/a&gt;が盛り上がってます。（私も微力ながら3つ登録しました。）
-そこで、個人的に側面からも盛り上げるべく、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;に関するTipsなどをこの時期に合わせて紹介したいと思います。&lt;/p&gt;
-
-&lt;h3 id=&#34;今回のネタ&#34;&gt;今回のネタ&lt;/h3&gt;
-
-&lt;p&gt;今回は、画像を使ったゲーム作りには欠かせないフレームアニメーションの小ネタを紹介します。
-フレームアニメーションについては、以下のエントリーがとても参考になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://qiita.com/minimo/items/0aad94d94478845d3ce2&#34;&gt;[phina.js]SpriteSheetを使ってみよう！&lt;/a&gt; by &lt;a href=&#34;https://twitter.com/minimo&#34;&gt;minimo&lt;/a&gt;氏&lt;/p&gt;
-
-&lt;p&gt;上の記事に書いてあるように、フレームアニメーションで使用するスプライトシートは、基本的には外部のファイルに&lt;strong&gt;JSON&lt;/strong&gt;形式で定義して、&lt;strong&gt;phina.js&lt;/strong&gt;から&lt;strong&gt;ASSET&lt;/strong&gt;として読み込みます。これは、複数のキャラ毎にフレームアニメーションを設定する際には必須と言えます。&lt;/p&gt;
-
-&lt;p&gt;一方、&lt;strong&gt;phina.js&lt;/strong&gt;のソースを読むと分かりますが、スプライトシートの定義は&lt;strong&gt;js&lt;/strong&gt;のコード内に直接書くこともできます。
-方法は、以下のように&lt;strong&gt;ASSET&lt;/strong&gt;のスプライトシートの該当箇所に&lt;strong&gt;JSON&lt;/strong&gt;ファイルの中身を書くだけです。
-この手法は、取り急ぎ１キャラずつフレームアニメーションの確認や調整をしたい場合に便利かと思います。また、&lt;strong&gt;js&lt;/strong&gt;のコード内なので、コメントを付すこともできます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var ASSETS = {
-  image: {
-    &#39;explosion&#39;: &#39;https://rawgit.com/alkn203/radar_touch/gh-pages/assets/explosion.png&#39;,
-  },
-  spritesheet: {
-    &#39;explosion_ss&#39;:
-    {
-      &amp;quot;frame&amp;quot;: {
-        &amp;quot;width&amp;quot;: 80,
-        &amp;quot;height&amp;quot;: 80,
-        &amp;quot;cols&amp;quot;: 8,
-        &amp;quot;rows&amp;quot;: 1,
-      },
-      // アニメーション
-      &amp;quot;animations&amp;quot; : {
-        &amp;quot;start&amp;quot;: {
-          &amp;quot;frames&amp;quot;: [0,1,2,3,4,5,6,7],
-          &amp;quot;next&amp;quot;: &amp;quot;end&amp;quot;,
-          &amp;quot;frequency&amp;quot;: 2,
-        },
-        &amp;quot;end&amp;quot;: {
-          &amp;quot;frames&amp;quot;: [5,6,7],
-          &amp;quot;next&amp;quot;: &amp;quot;end&amp;quot;,
-          &amp;quot;frequency&amp;quot;: 5,
-        }
-      }
-    },
-  }
-};
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;動作サンプル&#34;&gt;動作サンプル&lt;/h3&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/c8NG6s&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://goo.gl/c8NG6s&#34;&gt;[runstantで開く]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
-
-&lt;p&gt;今回は、フレームアニメーションの小ネタについて書かせて頂きました。使い勝手が良いかは微妙なところですが、こういう手法もあるということで参考程度に受け止めて頂ければ幸いです。&lt;/p&gt;
 </description>
     </item>
     

@@ -10,28 +10,310 @@
     <atom:link href="https://alkn203.github.io/blog/tags/breakout/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）最終回＝ゲームオーバーとクリア処理＝</title>
+      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）最終回＝ゲームオーバーとクリア＝</title>
       <link>https://alkn203.github.io/blog/2015/11/06/breakout-tut-07</link>
       <pubDate>Fri, 06 Nov 2015 20:55:06 +0900</pubDate>
       
       <guid>https://alkn203.github.io/blog/2015/11/06/breakout-tut-07</guid>
       <description>
 
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;前回は、&lt;strong&gt;Tweener&lt;/strong&gt;を使ったアニメーション処理を追加しました。
 今回は最終回として、ゲームオーバーとクリア処理を追加したいと思います。&lt;/p&gt;
 
-&lt;h3 id=&#34;ゲームオーバー処理&#34;&gt;ゲームオーバー処理&lt;/h3&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/breakout-tut-07.png&#34; alt=&#34;breakout-tut-05&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ゲームオーバー処理&#34;&gt;ゲームオーバー処理&lt;/h2&gt;
 
 &lt;p&gt;ボールが画面下に落下したら、&lt;strong&gt;GAME OVER&lt;/strong&gt;という文字を表示してタイトル画面に戻るようにします。
 コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Gn8EzI&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * 定数
+ */
+var BLOCK_WIDTH = 40 * 2;
+var BLOCK_HEIGHT = 60 / 2;
+var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
+var PADDLE_HEIGHT = BLOCK_HEIGHT;
+var BALL_RADIUS = BLOCK_WIDTH / 8;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ブロックグループ
+    this.blockGroup = DisplayElement().addChildTo(this);
+    // ダミーブロックグループ
+    this.dummyGroup = DisplayElement().addChildTo(this);
+    // 位置判定用のRect
+    var screenRect = Rect(0, 0, 640, 960);
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+    var self = this;
+    // Gridを利用してブロック設置
+    Array.range(2, 16, 2).each(function(spanX) {
+      Array.range(1, 4, 0.5).each(function(spanY) {
+        Block().addChildTo(self.blockGroup)
+               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
+      });
+    });
+    // パドル移動ライン
+    var paddleY = this.gridY.span(14.5);
+    // パドル設置
+    var paddle = Paddle().addChildTo(this)
+                         .setPosition(this.gridX.center(), paddleY);
+    // 画面上でのタッチ移動時
+    this.onpointmove = function(e) {
+      // タッチ位置に移動
+      paddle.setPosition(e.pointer.x | 0, paddleY);
+      // 画面はみ出し防止
+      if (paddle.left &amp;lt; screenRect.left) { paddle.left = screenRect.left; }
+      if (paddle.right &amp;gt; screenRect.right) { paddle.right = screenRect.right; }
+    };
+    // 画面上でタッチが離れた時
+    this.onpointend = function() {
+      if (self.status === &#39;ready&#39;) {
+        // ボール発射
+        self.ball.vy = -self.ball.speed;
+        self.status = &#39;move&#39;;
+      }
+    };
+    // ボール作成
+    this.ball = Ball().addChildTo(this);
+    // シーン全体から参照可能にする
+    this.paddle = paddle;
+    this.screenRect = screenRect;
+    // ゲーム状態
+    this.status = &#39;ready&#39;;
+  },
+    // 毎フレーム更新
+  update: function() {
+    var ball = this.ball;
+    var paddle = this.paddle;
+    var screenRect = this.screenRect;
+    // ボール待機中
+    if (this.status === &#39;ready&#39;) {
+      // ボールはパドルの真上
+      ball.vx = ball.vy = 0;
+      ball.x = paddle.x;
+      ball.bottom = paddle.top;
+    }
+    // ボール移動中
+    if (this.status === &#39;move&#39;) {
+      // ボール移動
+      ball.moveBy(ball.vx, ball.vy);
+      // 画面端反射
+      // 上
+      if (ball.top &amp;lt; screenRect.top) {
+        ball.top = screenRect.top;
+        ball.vy = -ball.vy;
+      }
+      // 左
+      if (ball.left &amp;lt; screenRect.left) {
+        ball.left = screenRect.left;
+        ball.vx = -ball.vx;
+      }
+      // 右
+      if (ball.right &amp;gt; screenRect.right) {
+        ball.right = screenRect.right;
+        ball.vx = -ball.vx;
+      }
+      // 落下
+      var self = this;
 
-&lt;h5 id=&#34;93から111行目&#34;&gt;93から111行目&lt;/h5&gt;
+      if (ball.top &amp;gt; screenRect.bottom) {
+        // ゲームオーバー表示
+        var label = Label({
+          text: &#39;GAME OVER&#39;,
+          fill: &#39;yellow&#39;,
+          fontSize: 64,
+        }).addChildTo(this);
+        label.setPosition(this.gridX.center(), this.gridY.center());
+        // 少し待ってからタイトル画面へ
+        label.tweener.clear()
+                     .wait(2000)
+                     .call(function() {
+                       self.nextLabel = &#39;title&#39;;
+                       self.exit();
+                     });
+      }
+      // パドルとの反射
+      if (ball.hitTestElement(paddle) &amp;amp;&amp;amp; ball.vy &amp;gt; 0) {
+        ball.bottom = paddle.top;
+        ball.vy = -ball.vy;
+        // 当たった位置で角度を変化させる
+        var dx = paddle.x - ball.x;
+        ball.vx = -dx / 5;
+      }
+      // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            // ブロック消去
+            self.disableBlock(block);
+            return true;
+          }
+          // 右上かど
+          if (block.top &amp;lt; ball.top &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左側
+          if (ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右側
+          if (block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 上側
+          if (ball.top &amp;lt; block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+          // 下側
+          if (block.bottom &amp;lt; ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+        }
+      });
+    }
+  },
+  // ブロックの消去処理
+  disableBlock: function(block) {
+    // 消去アニメーション用のダミーブロック
+    var dummy = Block().addChildTo(this.dummyGroup);
+    // 属性コピー
+    dummy.x = block.x;
+    dummy.y = block.y;
+    // ブロック削除
+    block.remove();
+    // 縮小して消えるアニメーション
+    dummy.tweener.clear()
+                 .to({scaleX: 0.1, scaleY: 0.1}, 200)
+                 .call(function() {
+                   dummy.remove();
+                 });
+  },
+});
+/*
+ * ブロッククラス
+ */
+phina.define(&#39;Block&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: BLOCK_WIDTH,
+      height: BLOCK_HEIGHT,
+    });
+  },
+});
+/*
+ * パドルクラス
+ */
+phina.define(&#39;Paddle&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+      fill: &#39;silver&#39;,
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define(&#39;Ball&#39;, {
+  // 親クラス指定
+  superClass: &#39;CircleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      radius: BALL_RADIUS,
+      fill: &#39;silver&#39;,
+    });
+    // スピード
+    this.speed = 6;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;Break Out&#39;,
+  });
+  // fps変更
+  app.fps = 60;
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/211ed4f6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;ゲームオーバー処理-1&#34;&gt;ゲームオーバー処理&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;      // 落下
       var self = this;
@@ -61,16 +343,323 @@
 &lt;li&gt;&lt;strong&gt;exit&lt;/strong&gt;で現在のシーンを抜けます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;クリア処理&#34;&gt;クリア処理&lt;/h3&gt;
+&lt;h2 id=&#34;クリア処理&#34;&gt;クリア処理&lt;/h2&gt;
 
 &lt;p&gt;全てのブロックを崩したらクリアとして、スコアを結果画面に表示してみます。
 コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/15M7pz&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * 定数
+ */
+var BLOCK_WIDTH = 40 * 2;
+var BLOCK_HEIGHT = 60 / 2;
+var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
+var PADDLE_HEIGHT = BLOCK_HEIGHT;
+var BALL_RADIUS = BLOCK_WIDTH / 8;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ブロックグループ
+    this.blockGroup = DisplayElement().addChildTo(this);
+    // ダミーブロックグループ
+    this.dummyGroup = DisplayElement().addChildTo(this);
+    // 位置判定用のRect
+    var screenRect = Rect(0, 0, 640, 960);
 
-&lt;h3 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h3&gt;
+    var self = this;
+    // Gridを利用してブロック設置
+    Array.range(2, 16, 2).each(function(spanX) {
+      Array.range(1, 4, 0.5).each(function(spanY) {
+        Block().addChildTo(self.blockGroup)
+               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
+      });
+    });
+    // パドル移動ライン
+    var paddleY = this.gridY.span(14.5);
+    // パドル設置
+    var paddle = Paddle().addChildTo(this)
+                         .setPosition(this.gridX.center(), paddleY);
+    // 画面上でのタッチ移動時
+    this.onpointmove = function(e) {
+      // タッチ位置に移動
+      paddle.setPosition(e.pointer.x | 0, paddleY);
+      // 画面はみ出し防止
+      if (paddle.left &amp;lt; screenRect.left) { paddle.left = screenRect.left; }
+      if (paddle.right &amp;gt; screenRect.right) { paddle.right = screenRect.right; }
+    };
+    // 画面上でタッチが離れた時
+    this.onpointend = function() {
+      if (self.status === &#39;ready&#39;) {
+        // ボール発射
+        self.ball.vy = -self.ball.speed;
+        self.status = &#39;move&#39;;
+      }
+    };
+    // スコア
+    this.score = 0;
+    var scoreLabel = Label({
+      text: this.score + &#39;&#39;,
+      fill: &#39;lime&#39;,
+      fontSize: 64,
+    }).addChildTo(this);
+    scoreLabel.setPosition(this.gridX.center(), this.gridY.center());
+    scoreLabel.alpha = 0.6;
+    // 連続ヒット数
+    this.hitNumber = 0;
+    // ボール作成
+    this.ball = Ball().addChildTo(this);
+    // シーン全体から参照可能にする
+    this.paddle = paddle;
+    this.screenRect = screenRect;
+    this.scoreLabel = scoreLabel;
+    // ゲーム状態
+    this.status = &#39;ready&#39;;
+  },
+    // 毎フレーム更新
+  update: function() {
+    var ball = this.ball;
+    var paddle = this.paddle;
+    var screenRect = this.screenRect;
+    // ボール待機中
+    if (this.status === &#39;ready&#39;) {
+      // ボールはパドルの真上
+      ball.vx = ball.vy = 0;
+      ball.x = paddle.x;
+      ball.bottom = paddle.top;
+    }
+    // ボール移動中
+    if (this.status === &#39;move&#39;) {
+      // ボール移動
+      ball.moveBy(ball.vx, ball.vy);
+      // 画面端反射
+      // 上
+      if (ball.top &amp;lt; screenRect.top) {
+        ball.top = screenRect.top;
+        ball.vy = -ball.vy;
+      }
+      // 左
+      if (ball.left &amp;lt; screenRect.left) {
+        ball.left = screenRect.left;
+        ball.vx = -ball.vx;
+      }
+      // 右
+      if (ball.right &amp;gt; screenRect.right) {
+        ball.right = screenRect.right;
+        ball.vx = -ball.vx;
+      }
+      // 落下
+      var self = this;
 
-&lt;h5 id=&#34;53から63行目&#34;&gt;53から63行目&lt;/h5&gt;
+      if (ball.top &amp;gt; screenRect.bottom) {
+        // ゲームオーバー表示
+        var label = Label({
+          text: &#39;GAME OVER&#39;,
+          fill: &#39;yellow&#39;,
+          fontSize: 64,
+        }).addChildTo(this);
+        label.setPosition(this.gridX.center(), this.gridY.center());
+        // 少し待ってからタイトル画面へ
+        label.tweener.clear()
+                     .wait(2000)
+                     .call(function() {
+                       self.nextLabel = &#39;title&#39;;
+                       self.exit();
+                     });
+      }
+      // パドルとの反射
+      if (ball.hitTestElement(paddle) &amp;amp;&amp;amp; ball.vy &amp;gt; 0) {
+        ball.bottom = paddle.top;
+        ball.vy = -ball.vy;
+        // 当たった位置で角度を変化させる
+        var dx = paddle.x - ball.x;
+        ball.vx = -dx / 5;
+      }
+      // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            // ブロック消去
+            self.disableBlock(block);
+            return true;
+          }
+          // 右上かど
+          if (block.top &amp;lt; ball.top &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左側
+          if (ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右側
+          if (block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 上側
+          if (ball.top &amp;lt; block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+          // 下側
+          if (block.bottom &amp;lt; ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+        }
+      });
+    }
+    // クリアチェック
+    if (this.blockGroup.children.length === 0) {
+      // スコアをリザルトシーンに渡す
+      this.exit({
+        score: this.score,  
+      });
+    }
+  },
+  // ブロックの消去処理
+  disableBlock: function(block) {
+    // 消去アニメーション用のダミーブロック
+    var dummy = Block().addChildTo(this.dummyGroup);
+    // 属性コピー
+    dummy.x = block.x;
+    dummy.y = block.y;
+    // ブロック削除
+    block.remove();
+    // 縮小して消えるアニメーション
+    dummy.tweener.clear()
+                 .to({scaleX: 0.1, scaleY: 0.1}, 200)
+                 .call(function() {
+                   dummy.remove();
+                 });
+    // スコア加算
+    this.addScore();
+  },
+  // スコア加算処理
+  addScore: function() {
+    this.hitNumber++;
+    this.score += this.hitNumber * 10;
+    this.scoreLabel.text = this.score;
+  },
+});
+/*
+ * ブロッククラス
+ */
+phina.define(&#39;Block&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: BLOCK_WIDTH,
+      height: BLOCK_HEIGHT,
+    });
+  },
+});
+/*
+ * パドルクラス
+ */
+phina.define(&#39;Paddle&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+      fill: &#39;silver&#39;,
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define(&#39;Ball&#39;, {
+  // 親クラス指定
+  superClass: &#39;CircleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      radius: BALL_RADIUS,
+      fill: &#39;silver&#39;,
+    });
+    // スピード
+    this.speed = 6;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;Break Out&#39;,
+  });
+  // fps変更
+  app.fps = 60;
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/5873b593&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;スコア表示&#34;&gt;スコア表示&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// スコア
 this.score = 0;
@@ -92,7 +681,7 @@ this.hitNumber = 0;
 &lt;li&gt;&lt;strong&gt;this.hitNumber&lt;/strong&gt;ブロックを連続で崩した回数を記録します。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;232から240行目&#34;&gt;232から240行目&lt;/h5&gt;
+&lt;h3 id=&#34;スコア加算&#34;&gt;スコア加算&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // スコア加算
   this.addScore();
@@ -112,7 +701,7 @@ addScore: function() {
 &lt;li&gt;スコア表示用ラベルの&lt;strong&gt;text&lt;/strong&gt;プロパティに現在のスコアを反映させれば、ラベルが更新されます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;209から215行目&#34;&gt;209から215行目&lt;/h5&gt;
+&lt;h3 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// クリアチェック
 if (this.blockGroup.children.length === 0) {
@@ -129,7 +718,7 @@ if (this.blockGroup.children.length === 0) {
 &lt;li&gt;実際にクリアすると、リザルト画面にスコアが引き渡されているのが分かるかと思います。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;今回のチュートリアルでは、&lt;strong&gt;phina.js&lt;/strong&gt;を使った簡単なブロック崩しの作成について触れさせて頂きました。
 &lt;strong&gt;phina.js&lt;/strong&gt;には、今回では紹介しきれていない機能がまだまだありますので、これからこのブログなどで私なりに紹介できればと思っております。&lt;/p&gt;
@@ -143,33 +732,302 @@ if (this.blockGroup.children.length === 0) {
     </item>
     
     <item>
-      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第6回＝Tweenerを使ったアニメーション処理＝</title>
+      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第6回＝Tweenerアニメーション＝</title>
       <link>https://alkn203.github.io/blog/2015/11/05/breakout-tut-06</link>
       <pubDate>Thu, 05 Nov 2015 20:55:06 +0900</pubDate>
       
       <guid>https://alkn203.github.io/blog/2015/11/05/breakout-tut-06</guid>
       <description>
 
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;前回は、ブロックの消去処理を追加しました。
 今回は、ゲームとしての見栄えを良くするために、ブロックがアニメーションして消えるようにしたいと思います。&lt;/p&gt;
 
-&lt;h3 id=&#34;tweenerを使ったアニメーション処理&#34;&gt;Tweenerを使ったアニメーション処理&lt;/h3&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/breakout-tut-05.png&#34; alt=&#34;breakout-tut-05&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;tweenerを使ったアニメーション処理&#34;&gt;Tweenerを使ったアニメーション処理&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;には&lt;strong&gt;Tweener&lt;/strong&gt;という機能があり、オブジェクトに対して移動、拡大・縮小、回転などといったアニメーションを簡単に設定することができます。
 今回は、ブロックが&lt;strong&gt;縮小して消える&lt;/strong&gt;ようにしてみます。&lt;/p&gt;
 
-&lt;h3 id=&#34;アニメーション用ダミーブロックの作成&#34;&gt;アニメーション用ダミーブロックの作成&lt;/h3&gt;
+&lt;h2 id=&#34;アニメーション用ダミーブロックの作成&#34;&gt;アニメーション用ダミーブロックの作成&lt;/h2&gt;
 
 &lt;p&gt;ブロックそのものに&lt;strong&gt;Tweener&lt;/strong&gt;を設定しても良いのですが、消去アニメーション中も当たり判定が有効だと予期しない動作を招きかねないので、アニメーション用のダミーブロックを別途作成してから、それに&lt;strong&gt;Tweener&lt;/strong&gt;を設定する方法をとります。
 コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/2SQ3Zh&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * 定数
+ */
+var BLOCK_WIDTH = 40 * 2;
+var BLOCK_HEIGHT = 60 / 2;
+var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
+var PADDLE_HEIGHT = BLOCK_HEIGHT;
+var BALL_RADIUS = BLOCK_WIDTH / 8;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ブロックグループ
+    this.blockGroup = DisplayElement().addChildTo(this);
+    // ダミーブロックグループ
+    this.dummyGroup = CanvasElement().addChildTo(this);
+    // 位置判定用のRect
+    var screenRect = Rect(0, 0, 640, 960);
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+    var self = this;
+    // Gridを利用してブロック設置
+    Array.range(2, 16, 2).each(function(spanX) {
+      Array.range(1, 4, 0.5).each(function(spanY) {
+        Block().addChildTo(self.blockGroup)
+               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
+      });
+    });
+    // パドル移動ライン
+    var paddleY = this.gridY.span(14.5);
+    // パドル設置
+    var paddle = Paddle().addChildTo(this)
+                         .setPosition(this.gridX.center(), paddleY);
+    // 画面上でのタッチ移動時
+    this.onpointmove = function(e) {
+      // タッチ位置に移動
+      paddle.setPosition(e.pointer.x | 0, paddleY);
+      // 画面はみ出し防止
+      if (paddle.left &amp;lt; screenRect.left) { paddle.left = screenRect.left; }
+      if (paddle.right &amp;gt; screenRect.right) { paddle.right = screenRect.right; }
+    };
+    // 画面上でタッチが離れた時
+    this.onpointend = function() {
+      if (self.status === &#39;ready&#39;) {
+        // ボール発射
+        self.ball.vy = -self.ball.speed;
+        self.status = &#39;move&#39;;
+      }
+    };
+    // ボール作成
+    this.ball = Ball().addChildTo(this);
+    // シーン全体から参照可能にする
+    this.paddle = paddle;
+    this.screenRect = screenRect;
+    // ゲーム状態
+    this.status = &#39;ready&#39;;
+  },
+    // 毎フレーム更新
+  update: function() {
+    var ball = this.ball;
+    var paddle = this.paddle;
+    var screenRect = this.screenRect;
+    // ボール待機中
+    if (this.status === &#39;ready&#39;) {
+      // ボールはパドルの真上
+      ball.vx = ball.vy = 0;
+      ball.x = paddle.x;
+      ball.bottom = paddle.top;
+    }
+    // ボール移動中
+    if (this.status === &#39;move&#39;) {
+      // ボール移動
+      ball.moveBy(ball.vx, ball.vy);
+      // 画面端反射
+      // 上
+      if (ball.top &amp;lt; screenRect.top) {
+        ball.top = screenRect.top;
+        ball.vy = -ball.vy;
+      }
+      // 左
+      if (ball.left &amp;lt; screenRect.left) {
+        ball.left = screenRect.left;
+        ball.vx = -ball.vx;
+      }
+      // 右
+      if (ball.right &amp;gt; screenRect.right) {
+        ball.right = screenRect.right;
+        ball.vx = -ball.vx;
+      }
+      // 落下
+      if (ball.top &amp;gt; screenRect.bottom) {
+        // 準備状態へ
+        this.status = &#39;ready&#39;;
+      }
+      // パドルとの反射
+      if (ball.hitTestElement(paddle) &amp;amp;&amp;amp; ball.vy &amp;gt; 0) {
+        ball.bottom = paddle.top;
+        ball.vy = -ball.vy;
+        // 当たった位置で角度を変化させる
+        var dx = paddle.x - ball.x;
+        ball.vx = -dx / 5;
+      }
+      var self = this;
+      // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            // ブロック消去
+            self.disableBlock(block);
+            return true;
+          }
+          // 右上かど
+          if (block.top &amp;lt; ball.top &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            self.disableBlock(block);
+            return true;
+          }
+          // 左側
+          if (ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 右側
+          if (block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            self.disableBlock(block);
+            return true;
+          }
+          // 上側
+          if (ball.top &amp;lt; block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+          // 下側
+          if (block.bottom &amp;lt; ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            self.disableBlock(block);
+            return true;
+          }
+        }
+      });
+    }
+  },
+  // ブロックの消去処理
+  disableBlock: function(block) {
+    // 消去アニメーション用のダミーブロック
+    var dummy = Block().addChildTo(this.dummyGroup);
+    // 属性コピー
+    dummy.x = block.x;
+    dummy.y = block.y;
+    // ブロック削除
+    block.remove();
+    // 縮小して消えるアニメーション
+    dummy.tweener.clear()
+                 .to({scaleX: 0.1, scaleY: 0.1}, 200)
+                 .call(function() {
+                   dummy.remove();
+                 });
+  },
+});
+/*
+ * ブロッククラス
+ */
+phina.define(&#39;Block&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: BLOCK_WIDTH,
+      height: BLOCK_HEIGHT,
+    });
+  },
+});
+/*
+ * パドルクラス
+ */
+phina.define(&#39;Paddle&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+      fill: &#39;silver&#39;,
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define(&#39;Ball&#39;, {
+  // 親クラス指定
+  superClass: &#39;CircleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      radius: BALL_RADIUS,
+      fill: &#39;silver&#39;,
+    });
+    // スピード
+    this.speed = 6;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;Break Out&#39;,
+  });
+  // fps変更
+  app.fps = 60;
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h5 id=&#34;20行目&#34;&gt;20行目&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d1392646&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;ダミーブロック&#34;&gt;ダミーブロック&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // ダミーブロックグループ
     this.dummyGroup = CanvasElement().addChildTo(this);
@@ -179,7 +1037,7 @@ if (this.blockGroup.children.length === 0) {
 &lt;li&gt;&lt;strong&gt;dummyGroup&lt;/strong&gt;は、ダミーブロック用のグループです。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;189から204行目&#34;&gt;189から204行目&lt;/h5&gt;
+&lt;h3 id=&#34;ブロックの消去処理&#34;&gt;ブロックの消去処理&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ブロックの消去処理
 disableBlock: function(block) {
@@ -221,7 +1079,7 @@ dummy.tweener.clear()
 &lt;li&gt;つまり今回は、&lt;strong&gt;200ミリ秒かけて0.1倍まで縮小させた後に、自分自身を消去する&lt;/strong&gt;という一連の処理になります。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;122行目-他&#34;&gt;122行目　他&lt;/h5&gt;
+&lt;h3 id=&#34;remove関数の置き換え&#34;&gt;remove関数の置き換え&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;            // ブロック削除処理
             self.disableBlock(block);
@@ -231,7 +1089,7 @@ dummy.tweener.clear()
 &lt;li&gt;前回までの&lt;strong&gt;remove&lt;/strong&gt;関数を上記のコードに置き換えます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;今回は&lt;strong&gt;phina.js&lt;/strong&gt;の目玉機能の１つとも言える&lt;strong&gt;Tweener&lt;/strong&gt;を使って、ブロックの消去アニメーションを作ってみました。
 次回はいよいよ最終回です。最終回では、もう少しゲームらしくするために、ゲームオーバーとクリア処理を追加してみたいと思います。&lt;/p&gt;
@@ -239,7 +1097,7 @@ dummy.tweener.clear()
     </item>
     
     <item>
-      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射処理＝</title>
+      <title>【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射＝</title>
       <link>https://alkn203.github.io/blog/2015/11/02/breakout-tut-05</link>
       <pubDate>Mon, 02 Nov 2015 20:55:06 +0900</pubDate>
       
@@ -250,6 +1108,8 @@ dummy.tweener.clear()
 
 &lt;p&gt;前回は、ボールと画面端、ボールとパドルの反射処理を実装しました。
 今回は、ボールとブロックの反射処理、そしてブロックの消去処理を追加したいと思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/breakout-tut-05.png&#34; alt=&#34;breakout-tut-05&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;ボールとブロックの反射処理&#34;&gt;ボールとブロックの反射処理&lt;/h2&gt;
 
@@ -265,11 +1125,248 @@ dummy.tweener.clear()
 &lt;li&gt;&lt;strong&gt;ブロックの左側面と右側面&lt;/strong&gt; ・・・横移動を反転させる&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://alkn203.github.io/blog/img/balltoblock.png&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/tCHV5X&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * 定数
+ */
+var BLOCK_WIDTH = 40 * 2;
+var BLOCK_HEIGHT = 60 / 2;
+var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
+var PADDLE_HEIGHT = BLOCK_HEIGHT;
+var BALL_RADIUS = BLOCK_WIDTH / 8;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ブロックグループ
+    this.blockGroup = DisplayElement().addChildTo(this);
+    // 位置判定用のRect
+    var screenRect = Rect(0, 0, 640, 960);
+
+    var self = this;
+    // Gridを利用してブロック設置
+    Array.range(2, 16, 2).each(function(spanX) {
+      Array.range(1, 4, 0.5).each(function(spanY) {
+        Block().addChildTo(self.blockGroup)
+               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
+      });
+    });
+    // パドル移動ライン
+    var paddleY = this.gridY.span(14.5);
+    // パドル設置
+    var paddle = Paddle().addChildTo(this)
+                         .setPosition(this.gridX.center(), paddleY);
+    // 画面上でのタッチ移動時
+    this.onpointmove = function(e) {
+      // タッチ位置に移動
+      paddle.setPosition(e.pointer.x | 0, paddleY);
+      // 画面はみ出し防止
+      if (paddle.left &amp;lt; screenRect.left) { paddle.left = screenRect.left; }
+      if (paddle.right &amp;gt; screenRect.right) { paddle.right = screenRect.right; }
+    };
+    // 画面上でタッチが離れた時
+    this.onpointend = function() {
+      if (self.status === &#39;ready&#39;) {
+        // ボール発射
+        self.ball.vy = -self.ball.speed;
+        self.status = &#39;move&#39;;
+      }
+    };
+    // ボール作成
+    this.ball = Ball().addChildTo(this);
+    // シーン全体から参照可能にする
+    this.paddle = paddle;
+    this.screenRect = screenRect;
+    // ゲーム状態
+    this.status = &#39;ready&#39;;
+  },
+  // 毎フレーム更新
+  update: function() {
+    var ball = this.ball;
+    var paddle = this.paddle;
+    var screenRect = this.screenRect;
+    // ボール待機中
+    if (this.status === &#39;ready&#39;) {
+      // ボールはパドルの真上
+      ball.vx = ball.vy = 0;
+      ball.x = paddle.x;
+      ball.bottom = paddle.top;
+    }
+    // ボール移動中
+    if (this.status === &#39;move&#39;) {
+      // ボール移動
+      ball.moveBy(ball.vx, ball.vy);
+      // 画面端反射
+      // 上
+      if (ball.top &amp;lt; screenRect.top) {
+        ball.top = screenRect.top;
+        ball.vy = -ball.vy;
+      }
+      // 左
+      if (ball.left &amp;lt; screenRect.left) {
+        ball.left = screenRect.left;
+        ball.vx = -ball.vx;
+      }
+      // 右
+      if (ball.right &amp;gt; screenRect.right) {
+        ball.right = screenRect.right;
+        ball.vx = -ball.vx;
+      }
+      // 落下
+      if (ball.top &amp;gt; screenRect.bottom) {
+        // 準備状態へ
+        this.status = &#39;ready&#39;;
+      }
+      // パドルとの反射
+      if (ball.hitTestElement(paddle) &amp;amp;&amp;amp; ball.vy &amp;gt; 0) {
+        ball.bottom = paddle.top;
+        ball.vy = -ball.vy;
+        // 当たった位置で角度を変化させる
+        var dx = paddle.x - ball.x;
+        ball.vx = -dx / 5;
+      }
+            // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            return true;
+          }
+          // 右上かど
+          if (block.top &amp;lt; ball.top &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            return true;
+          }
+          // 左下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            return true;
+          }
+          // 右下かど
+          if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            return true;
+          }
+          // 左側
+          if (ball.left &amp;lt; block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            return true;
+          }
+          // 右側
+          if (block.right &amp;lt; ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            return true;
+          }
+          // 上側
+          if (ball.top &amp;lt; block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            return true;
+          }
+          // 下側
+          if (block.bottom &amp;lt; ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            return true;
+          }
+        }
+      });
+    }
+  },
+});
+/*
+ * ブロッククラス
+ */
+phina.define(&#39;Block&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: BLOCK_WIDTH,
+      height: BLOCK_HEIGHT,
+    });
+  },
+});
+/*
+ * パドルクラス
+ */
+phina.define(&#39;Paddle&#39;, {
+  // 親クラス指定
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+      fill: &#39;silver&#39;,
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define(&#39;Ball&#39;, {
+  // 親クラス指定
+  superClass: &#39;CircleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      radius: BALL_RADIUS,
+      fill: &#39;silver&#39;,
+    });
+    // スピード
+    this.speed = 6;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;Break Out&#39;,
+  });
+  // fps変更
+  app.fps = 60;
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/305fd254&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
 
@@ -304,7 +1401,6 @@ if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;左上角の場合は、ボールがブロックに当たっていて、&lt;strong&gt;ボールの左側がブロックの左側より左、かつボールの上側がブロックの上側より上&lt;/strong&gt;という位置関係にある時です。
-&lt;img src=&#34;http://alkn203.github.io/blog/img/lefttop.png&#34; /&gt;
 画面上で&lt;strong&gt;vx&lt;/strong&gt;は負、&lt;strong&gt;vy&lt;/strong&gt;も負の方向、つまり左斜め上45度方向に返します。&lt;/p&gt;
 
 &lt;h3 id=&#34;側面との当たり判定&#34;&gt;側面との当たり判定&lt;/h3&gt;
@@ -323,8 +1419,7 @@ if (block.right &amp;lt; ball.right) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://alkn203.github.io/blog/img/left.png&#34; /&gt;
-側面の場合は、&lt;strong&gt;vy&lt;/strong&gt;はそのままで&lt;strong&gt;vx&lt;/strong&gt;を反転させます。&lt;/p&gt;
+&lt;p&gt;側面の場合は、&lt;strong&gt;vy&lt;/strong&gt;はそのままで&lt;strong&gt;vx&lt;/strong&gt;を反転させます。&lt;/p&gt;
 
 &lt;h3 id=&#34;上下面との当たり判定&#34;&gt;上下面との当たり判定&lt;/h3&gt;
 
@@ -342,14 +1437,90 @@ if (block.bottom &amp;lt; ball.bottom) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://alkn203.github.io/blog/img/top.png&#34; /&gt;
+&lt;p&gt;op.png&amp;rdquo; /&amp;gt;
 上下面の場合は、&lt;strong&gt;vx&lt;/strong&gt;はそのままで&lt;strong&gt;vy&lt;/strong&gt;を反転させます。&lt;/p&gt;
 
 &lt;h2 id=&#34;ボールが当たったブロックを消去する&#34;&gt;ボールが当たったブロックを消去する&lt;/h2&gt;
 
-&lt;p&gt;次はブロックの消去処理を追加します。コードは以下のとおりです。&lt;/p&gt;
+&lt;p&gt;次はブロックの消去処理を追加します。
+&lt;strong&gt;update&lt;/strong&gt;関数内のボールとブロックの衝突処理部分を以下のとおり変更します。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/xF7tNc&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ブロックとの反射
+ this.blockGroup.children.some(function(block) {
+   // ヒットなら
+   if (ball.hitTestElement(block)) {
+     // 左上かど
+     if (ball.top &amp;lt; block.top &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+       // 位置補正
+       ball.right = block.left;
+       ball.bottom = block.top;
+       // 移動方向設定
+       ball.vx = -ball.speed;
+       ball.vy = -ball.speed;
+       // ブロック消去
+       block.remove();
+       return true;
+     }
+     // 右上かど
+     if (block.top &amp;lt; ball.top &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+       ball.left = block.right;
+       ball.bottom = block.top;
+       ball.vx = ball.speed;
+       ball.vy = -ball.speed;
+       block.remove();
+       return true;
+     }
+     // 左下かど
+     if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; ball.left &amp;lt; block.left) {
+       ball.right = block.left;
+       ball.top = block.bottom;
+       ball.vx = -ball.speed;
+       ball.vy = ball.speed;
+       block.remove();
+       return true;
+     }
+     // 右下かど
+     if (block.bottom &amp;lt; ball.bottom &amp;amp;&amp;amp; block.right &amp;lt; ball.right) {
+       ball.left = block.right;
+       ball.top = block.bottom;
+       ball.vx = ball.speed;
+       ball.vy = ball.speed;
+       block.remove();
+       return true;
+     }
+     // 左側
+     if (ball.left &amp;lt; block.left) {
+       ball.right = block.left;
+       ball.vx = -ball.vx;
+       block.remove();
+       return true;
+     }
+     // 右側
+     if (block.right &amp;lt; ball.right) {
+       ball.left = block.right;
+       ball.vx = -ball.vx;
+       block.remove();
+       return true;
+     }
+     // 上側
+     if (ball.top &amp;lt; block.top) {
+       ball.bottom = block.top;
+       ball.vy = -ball.vy;
+       block.remove();
+       return true;
+     }
+     // 下側
+     if (block.bottom &amp;lt; ball.bottom) {
+       ball.top = block.bottom;
+       ball.vy = -ball.vy;
+       block.remove();
+       return true;
+     }
+   }
+ });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/efc751d8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
 
