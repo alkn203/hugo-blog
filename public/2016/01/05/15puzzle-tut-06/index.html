@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（15パズル）（最終回）【ゲーム的要素の追加】" />
+  <meta name="og:description" content="前回 前回の【phina.js】ゲーム作成チュートリアル（15パズル）（その５）【tweenerで移動処理】では、tweenerを使ってピースをアニメーション移動させました。 今回の目標 今回は、もう少しゲームらしくするために以下の要素を追加したいと思います。 ピースのシャッフル処理 クリア判定 ピースのシャッフル まずは以下で動きを確認してみてください。 SHUFFLEボタンをタッチすると、ピースがシャッフルされます。 コード説明 // シャッフルボタン var shuffleButton = Button({ text: &#39;SHUFFLE&#39;, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(13)); // ボタンプッシュ時処理 shuffleButton.onpush = function() { // ピースをシャッフル (100).times(function() { self.shufflePieces(); }); }; MainScneneにButtonクラスを使ってシャッフルボタンを追加しています。 shuffleButton.onpushにボタンが押された時の処理を記述しています。timesを使って100回シャッフルしています。shufflePieces関数については後述します。 // 指定の位置のピースを返す getPieceByXY: function(x, y) { var result = null; this.pieceGroup.children.some(function(piece) { // 指定した座標なら if (piece.x === x &amp;&amp; piece.y === y) { result = piece; return true; } }); return result; }, getPieceByXYは、指定された位置のピースを返します。該当ピースがあればそのピース、なければnullを返します。この後のshufflePiecesから呼ばれます。 //" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

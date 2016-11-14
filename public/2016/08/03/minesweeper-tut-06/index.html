@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="ゲーム作成チュートリアル（マインスイーパー）（最終回）【マーク機能の追加】" />
+  <meta name="og:description" content="今回の目標 前回ではゲームオーバーとクリア処理を追加しました。 今回は最終回で、マーク機能を追加します。 マーク機能とは、自分で爆弾と判断したパネルをマークして開けないようにする機能です。 完成版は以下のとおりです。 コード説明 マーク機能の追加 MainSceneの変更点 // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 （略） // ピース配置 PANEL_NUM_XY.times(function(spanX) { PANEL_NUM_XY.times(function(spanY) { // パネル作成 （略） // パネルタッチ時 panel.onpointstart = function() { // マークモードなら if (self.mode === &#39;mark&#39;) { if (!panel.isOpen &amp;&amp; !panel.isMark) { // マーク追加 if (self.markCount &lt; BOMB_NUM) { Mark().addChildTo(panel); panel.isMark = true; self.markCount&#43;&#43;; } } else { if (self.markCount &gt; 0) {" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/08/03/minesweeper-tut-06" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/08/03/minesweeper-tut-06"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

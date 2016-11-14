@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="ポーズ動作のサンプル" />
+  <meta name="og:description" content="サンプル ゲームでよくあるポーズ機能です。 もっとスマートな方法があるかと思いますが、今回はupdate関数の差し替えを活用しています。 コード phina.globalize(); // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; var label = Label({ text: &#39;画面タッチでポーズ切り替え&#39;, fontSize: 36, fill: &#39;yellow&#39;, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-4)); label.alpha = 0.7; var rect = RectangleShape().addChildTo(this); rect.setPosition(this.gridX.center(), this.gridY.center()); this.rect = rect; this.update = this.start; }, start: function() { this.rect.rotation &#43;= 8; }, onpointstart: function() { this.update = this.update !== null ? null :" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/04/23/pause" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/04/23/pause"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

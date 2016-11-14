@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（15パズル）（その３）【ピースのタッチ】" />
+  <meta name="og:description" content="前回 前回の【phina.js】ゲーム作成チュートリアル（15パズル）（その２）【数字の表示】では、15パズルのピースに数字を表示させました。 今回の目標 見た目の変化はありませんが、ピースにタッチイベントを追加して、結果が分かるようにコンソールに出力させます。 コード説明 タッチイベントの追加 ピース作成時の処理を以下のように変更します。 // ピース配置 PIECE_NUM_XY.times(function(spanX) { PIECE_NUM_XY.times(function(spanY) { // 番号 var num = spanY * PIECE_NUM_XY &#43; spanX &#43; 1; // ピース作成 var piece = Piece(num).addChildTo(pieceGroup); // Gridを利用して配置 piece.x = grid.span(spanX) &#43; PIECE_OFFSET; piece.y = grid.span(spanY) &#43; PIECE_OFFSET; // タッチを有効にする piece.setInteractive(true); // タッチされた時の処理 piece.onpointend = function() { console.log(this.num); }; // 16番のピースは非表示 if (num === 16) piece.hide(); }); }); phina.jsでオブジェクトのタッチを有効にするためには、obj.setInteractive(true)と設定します。今回は、ピース配置時に有効にしますので、piece.setInteractive(true)を追加します。 タッチを有効にしましたが、通常プログラムで使うためにはタッチイベントを拾う必要があります。そこで、ピースに対してonpointend関数を追加し、タッチ時の処理を記述します。今回は動作確認用にタッチされたピースの数字をコンソールに出力するようにしています。 良く使うタッチイベントは、以下の3種類があります。それぞれ書き換えてみて動作確認すると、違いが分かるかと思います。 * onpointstart &mdash; タッチ開始時" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

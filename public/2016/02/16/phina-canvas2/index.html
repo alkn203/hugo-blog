@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="ShapeとCanvas描画を組み合わせたサンプル（時計Shape）" />
+  <meta name="og:description" content="はじめに 以前にtmlib.jsで作った物をphina.jsにリファクタリングしてみました。 Shapeを通常のcanvasと見なせますので、今回の時計に限らず、canvasで描けるものは全てShapeとして取り扱うことができます。 [runstantで開く] コード phina.globalize(); // 定数 var SCREEN_WIDTH = 640; var SCREEN_HEIGHT = 960; var CENTER_X = SCREEN_WIDTH / 2; var CENTER_Y = SCREEN_HEIGHT / 2; // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;CanvasScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // 時計Shapeを作成 this.clock = ClockShape({ width: 320, // 幅 height: 320, // 高さ fill: &quot;silver&quot;, stroke: &quot;gray&quot;, }).addChildTo(this).setPosition(320, 480); this.clock.physical.gravity.y = 0.5; }, // 毎フレーム更新 update: function() { // canvasを再描画するようにフラグを立てる this.clock._dirtyDraw = true; if (this.clock.bottom &gt; 960) { this.clock.physical.force(0, -10); } }, }); // 時計クラス phina.define(&#39;ClockShape&#39;, { // Shapeクラスを継承 superClass: &#39;Shape&#39;, // コンストラクタ init: function(options) { this.superInit(options); this.backgroundColor = &#39;transparent&#39;; }, // 自身のcanvasの描画内容 render: function(canvas) { // 描画領域クリア canvas.clear(); // スタイル指定 canvas.fillStyle = this.fill; canvas.strokeStyle = this.stroke; // 半径 var radius = this.radius; // canvasの中心 var cx = 0; var cy = 0; var baseW = radius / 50; // 時計盤描画 canvas.fillCircle(cx, cy, radius); canvas.lineWidth = baseW; canvas.strokeCircle(cx, cy, radius - 2); canvas.lineWidth = baseW * 2; canvas.strokeCircle(cx, cy, radius * 9.0 / 10); // 目盛終点 var tr = radius * 8.3 / 10; // 角度 var deg = 0; canvas.lineWidth = baseW; // 繰り返し (60).times(function(i) { // 目盛始点（5分毎の目盛か判定） var fr = deg % 30 === 0 ?" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/02/16/phina-canvas2" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/02/16/phina-canvas2"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

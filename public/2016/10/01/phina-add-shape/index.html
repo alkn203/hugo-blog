@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="001-Shapeを生成してSceneに追加する" />
+  <meta name="og:description" content="内容 今回は基本的な内容ではありますが、オブジェクトの基本形であるShapeを以下のように画面に表示してみます。 [runstantで実行] コード // グローバルに展開 phina.globalize(); /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // 初期化 init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // Shapeを作成してシーンに追加 var shape = Shape(); shape.addChildTo(this); }, }); /* * メイン処理 */ phina.main(function() { // アプリケーションを生成 var app = GameApp({ // MainScene から開始 startLabel: &#39;main&#39;, }); // fps表示 //app.enableStats(); // 実行 app.run(); }); コード説明 Shapeクラスのコンストラクタで生成します。コンストラクタの前にnewをつける必要はありません。 addChildTo(this)で現在のSceneに追加します。thisはMainSceneを指しています。 this.addChild(shape) としても同じですし var" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-add-shape.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/10/01/phina-add-shape" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/10/01/phina-add-shape"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

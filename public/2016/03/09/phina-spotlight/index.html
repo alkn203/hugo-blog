@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="スポットライトを作ってみた" />
+  <meta name="og:description" content="サンプル スポットライト的なエフェクトのサンプルです。 ドラッグして移動することができます。 マスク用のShapeを土台にして、canvasのclear（矩形クリア）とarcを使ってスポットを作っています。 [runstantで開く] コード phina.globalize(); // アセット var ASSETS = { // 画像 image: { &#39;logo&#39;: &#39;https://raw.githubusercontent.com/phi-jp/phina.js/develop/logo.png&#39;, }, }; // 定数 LOGO_SIZE = 512; PART_SIZE = 128; // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit({ // 画面サイズ指定 width: LOGO_SIZE, height: LOGO_SIZE, }); // 背景色 this.backgroundColor = &#39;skyblue&#39;; // 中心座標 var cx = this.gridX.center(); var cy = this.gridY.center(); // ロゴ追加 var logo = Sprite(&#39;logo&#39;).addChildTo(this).setPosition(cx, cy); // スポットライト var spot = SpotShape({ width: LOGO_SIZE * 2, height: LOGO_SIZE * 2, spotRadius: 64, alpha: 0.75, }).addChildTo(this).setPosition(cx, cy); // ドラッグ可能にする Draggable().attachTo(spot); }, }); // phina.define(&#39;SpotShape&#39;, { superClass: &#39;Shape&#39;, // コンストラクタ init: function(options) { // 親クラス初期化 this.superInit({ width: options.width, height: options.height, backgroundColor: options.fill || &#39;black&#39;, }); // 透明度 if (options.alpha) { this.alpha = options.alpha; } // スポット半径 this.spotRadius = options.spotRadius ?" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/03/09/phina-spotlight" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/03/09/phina-spotlight"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

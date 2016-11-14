@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="グローバル座標とローカル座標を使ったサンプル" />
+  <meta name="og:description" content="はじめに phina.jsでは、オブジェクトにオブジェクトを追加すると親子関係が成立します。子オブジェクトは親オブジェクトに追従するようになり、まとめて移動する必要がある時などに便利です。 この際に注意するべきことは、子オブジェクトの座標は親オブジェクトの中心からの相対座標になるという点です。 従って、子オブジェクトとの当たり判定などを行う時は、親のグローバル座標と子のローカル座標について把握しておく必要があります。 サンプル 子オブジェクトとの当たり判定のサンプルです。 当たり判定処理では、子オブジェクトの座標値はそのまま使えませんので 親のx座標 &#43; 子のx座標（相対値） 親のy座標 &#43; 子のy座標（相対値） で補正した値を元に位置情報だけのRect（矩形）を作り、Collisionクラスを使ってそのRectと当たり判定を行っています。 [runstantで開く] コード phina.globalize(); // 定数 var SCREEN_RECT = Rect(0, 0, 640, 960); // 画面サイズのRect // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景 this.backgroundColor = &#39;black&#39;; Label({ text: &#39;Touch To Shot&#39;, fontSize: 48, fill: &#39;lime&#39;, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(2)); // ショットグループ var shotGroup = DisplayElement().addChildTo(this); // 敵子供グループ var pitGroup = DisplayElement().addChildTo(this);" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/03/05/parent-and-children" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/03/05/parent-and-children"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

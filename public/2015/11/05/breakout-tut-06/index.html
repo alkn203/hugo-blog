@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（ブロック崩し）第6回＝Tweenerアニメーション＝" />
+  <meta name="og:description" content="はじめに 前回は、ブロックの消去処理を追加しました。 今回は、ゲームとしての見栄えを良くするために、ブロックがアニメーションして消えるようにしたいと思います。 Tweenerを使ったアニメーション処理 phina.jsにはTweenerという機能があり、オブジェクトに対して移動、拡大・縮小、回転などといったアニメーションを簡単に設定することができます。 今回は、ブロックが縮小して消えるようにしてみます。 アニメーション用ダミーブロックの作成 ブロックそのものにTweenerを設定しても良いのですが、消去アニメーション中も当たり判定が有効だと予期しない動作を招きかねないので、アニメーション用のダミーブロックを別途作成してから、それにTweenerを設定する方法をとります。 コードは以下のとおりです。 // グローバルに展開 phina.globalize(); /* * 定数 */ var BLOCK_WIDTH = 40 * 2; var BLOCK_HEIGHT = 60 / 2; var PADDLE_WIDTH = BLOCK_WIDTH * 1.5; var PADDLE_HEIGHT = BLOCK_HEIGHT; var BALL_RADIUS = BLOCK_WIDTH / 8; /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // ブロックグループ this.blockGroup" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/breakout-tut-05.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2015/11/05/breakout-tut-06" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2015/11/05/breakout-tut-06"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

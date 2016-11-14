@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="オブジェクトのグループ間移動のサンプル" />
+  <meta name="og:description" content="はじめに phina.jsにおいて複数のオブジェクトを取り扱う時には、自ずとグループ管理が必須になってきます。 グループ管理には、DisplayElement(旧CanvasElement)を活用しますが、例えば、AグループとBグループがあった場合 Aグループの要素.addChildTo(Bグループ); とすることで、要素はAグループからBグループへ移動します。今回のサンプルでは、この仕様を利用して落下するオブジェクトと固定されたオブジェクトの当たり判定を行っています。 サンプル [runstantで開く] コード phina.globalize(); // 定数 var SCREEN_HEIGHT = 960; // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;gray&#39;; // 落下グループ this.dynamicGroup = DisplayElement().addChildTo(this); // 固定グループ this.staticGroup = DisplayElement().addChildTo(this); }, // 毎フレーム更新 update: function(app) { // 一定フレーム毎にブロック作成 if (app.frame % 50 === 0) { Block().addChildTo(this.dynamicGroup) .setPosition(this.gridX.center(Random.randint(-1, 1)), 0) .physical.gravity.set(0, 0.25); } var self = this;" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/02/18/phina-group-change" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/02/18/phina-group-change"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

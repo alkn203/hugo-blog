@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（ブロック崩し）第5回＝ボールとブロックの反射＝" />
+  <meta name="og:description" content="はじめに 前回は、ボールと画面端、ボールとパドルの反射処理を実装しました。 今回は、ボールとブロックの反射処理、そしてブロックの消去処理を追加したいと思います。 ボールとブロックの反射処理 ボールがブロックに当たると反射するようにします。まず、反射のパターンを整理したいと思います。 そこで、ボールとブロックとの当たり判定を以下のパターンに分けてみました。 ブロックの左上角 ・・・左上に跳ね返す ブロックの右上角 ・・・右上に跳ね返す ブロックの左下角 ・・・左下に跳ね返す ブロックの右下角 ・・・右下に跳ね返す ブロックの上面と下面 ・・・縦移動を反転させる ブロックの左側面と右側面 ・・・横移動を反転させる コードは以下のとおりです。 // グローバルに展開 phina.globalize(); /* * 定数 */ var BLOCK_WIDTH = 40 * 2; var BLOCK_HEIGHT = 60 / 2; var PADDLE_WIDTH = BLOCK_WIDTH * 1.5; var PADDLE_HEIGHT = BLOCK_HEIGHT; var BALL_RADIUS = BLOCK_WIDTH / 8; /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { //" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/breakout-tut-05.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2015/11/02/breakout-tut-05" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2015/11/02/breakout-tut-05"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="フレームアニメーションのスプライトシートをコード内で定義する方法" />
+  <meta name="og:description" content="はじめに 現在、Qiitaでphina.js Advent Calendar 2015が盛り上がってます。（私も微力ながら3つ登録しました。） そこで、個人的に側面からも盛り上げるべく、phina.jsに関するTipsなどをこの時期に合わせて紹介したいと思います。 今回のネタ 今回は、画像を使ったゲーム作りには欠かせないフレームアニメーションの小ネタを紹介します。 フレームアニメーションについては、以下のエントリーがとても参考になります。 [phina.js]SpriteSheetを使ってみよう！ by minimo氏 上の記事に書いてあるように、フレームアニメーションで使用するスプライトシートは、基本的には外部のファイルにJSON形式で定義して、phina.jsからASSETとして読み込みます。これは、複数のキャラ毎にフレームアニメーションを設定する際には必須と言えます。 一方、phina.jsのソースを読むと分かりますが、スプライトシートの定義はjsのコード内に直接書くこともできます。 方法は、以下のようにASSETのスプライトシートの該当箇所にJSONファイルの中身を書くだけです。 この手法は、取り急ぎ１キャラずつフレームアニメーションの確認や調整をしたい場合に便利かと思います。また、jsのコード内なので、コメントを付すこともできます。 var ASSETS = { image: { &#39;explosion&#39;: &#39;https://rawgit.com/alkn203/radar_touch/gh-pages/assets/explosion.png&#39;, }, spritesheet: { &#39;explosion_ss&#39;: { &quot;frame&quot;: { &quot;width&quot;: 80, &quot;height&quot;: 80, &quot;cols&quot;: 8, &quot;rows&quot;: 1, }, // アニメーション &quot;animations&quot; : { &quot;start&quot;: { &quot;frames&quot;: [0,1,2,3,4,5,6,7], &quot;next&quot;: &quot;end&quot;, &quot;frequency&quot;: 2, }, &quot;end&quot;: { &quot;frames&quot;: [5,6,7], &quot;next&quot;: &quot;end&quot;, &quot;frequency&quot;: 5, } } }, } }; 動作サンプル [runstantで開く] まとめ" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2015/12/20/frameanimation" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2015/12/20/frameanimation"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

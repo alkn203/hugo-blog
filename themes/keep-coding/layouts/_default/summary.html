@@ -3,7 +3,7 @@
     <tr>
       {{ $link := .Permalink }}
       {{ with .Params.eyecatch }}<td rowspan="2"><a href="{{ $link }}"><img src="{{ . }}" width="32" height="32"></a></td>{{ end }}
-      <td><h2><a href="{{ $link }}">{{ .Title }} {{ if .Draft }}:: DRAFT{{end}}</a></h2></td>
+      <td><h2><a href="{{ $link }}">{{ .Title }} </a></h2></td>
     </tr>
     <tr><td>
       <div class="meta">

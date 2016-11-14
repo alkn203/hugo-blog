@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="phina.jsの基本テンプレートについて" />
+  <meta name="og:description" content="phina.jsの基本テンプレート 自分自身の復習のためにも、私が普段１からコーディングをする時に使用しているテンプレートを紹介します。 実行結果は以下のように黒い画面が表示されるだけです。 [runstantで実行] コード説明 // グローバルに展開 phina.globalize(); /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // 初期化 init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // 以下にコードを書いていく }, }); /* * メイン処理 */ phina.main(function() { // アプリケーションを生成 var app = GameApp({ // MainScene から開始 startLabel: &#39;main&#39;, }); // fps表示 //app.enableStats(); // 実行 app.run(); }); 基本的には、MainSceneのinit関数内に自分のコードを書いていきます。 this.backgroundColorで背景色を指定しないと、デフォルトでは白になります。 main関数内のGameApp関数では、startLabelをmainとしていますが、これは実行結果をすぐに確認するためにタイトル画面をスキップしたいからです。 main関数内のenableStats関数は、画面左上にfpsを常時表示する便利な機能ですが、処理が重くなるので一旦コメントアウトしています。" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-template.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/09/29/phina-template" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/09/29/phina-template"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（15パズル）（その５）【tweenerで移動処理】" />
+  <meta name="og:description" content="前回 前回の【phina.js】ゲーム作成チュートリアル（15パズル）（その４）【ピースの移動】では、ピースをタッチで移動できるようにしました。 今回の目標 phina.jsの目玉機能の1つであるtweenerを使ってピースの移動を滑らかにしてみます。 まずは以下で動きを確認してみてください。 前回までに比べて移動が滑らかになったかと思います。 phina.jsでは、このような動きをtweenerという機能で実現できます。 コード説明 movePiece関数を以下のように変更します。 // ピースの移動処理 movePiece: function(piece) { // 空白ピースを得る var blank = this.getBlankPiece(); // x, yの座標差の絶対値 var dx = Math.abs(piece.x - blank.x); var dy = Math.abs(piece.y - blank.y); // 隣り合わせの判定 if ((piece.x === blank.x &amp;&amp; dy === GRID_SIZE) || (piece.y === blank.y &amp;&amp; dx === GRID_SIZE)) { // タッチされたピース位置を記憶 var touchX = piece.x; var touchY = piece.y; // tweenerで移動処理 piece.tweener.clear() .to({x: blank.x, y: blank.y}, 200, &quot;easeOutCubic&quot;) .call(function() { // 空白ピースをタッチされたピースの位置へ blank.setPosition(touchX, touchY); }); } }, tweenerの設定部分を説明します。 最初にclearで設定をリセットします。 piece.tweener.clear() 見やすいように改行していますが、次にさせたい処理をチェインメソッドで繋げます。 .to({x: blank.x, y: blank.y}, 200, &quot;easeOutCubic&quot;) toの{}内にパラメータを設定します。今回は指定の位置（空白ピース）へ移動と設定しています。その他、拡大縮小、回転といったパラメータが同時に設定可能です。 次の200という数字は、{}内の処理をどれくらいの時間をかけて行うかの設定です。単位はミリ秒（1000分の1秒）です。 最後のeaseOutCubicは、イージングといって、動きにエフェクトをかけることができます。tweenerの使い方については、simiraaaaさんの記事[phina.js] Tweenerを使いこなそう!" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

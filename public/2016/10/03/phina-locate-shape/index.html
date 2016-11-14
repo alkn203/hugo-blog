@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="002-Shapeの位置指定" />
+  <meta name="og:description" content="内容 Shapeの位置を以下のように指定します。 コード // グローバルに展開 phina.globalize(); /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // 初期化 init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // Shapeを作成してシーンに追加 var shape = Shape().addChildTo(this); // 移動 shape.x = 320; shape.y = 480; }, }); /* * メイン処理 */ phina.main(function() { // アプリケーションを生成 var app = GameApp({ // MainScene から開始 startLabel: &#39;main&#39;, }); // fps表示 //app.enableStats(); // 実行 app.run(); });" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-locate-shape.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/10/03/phina-locate-shape" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/10/03/phina-locate-shape"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

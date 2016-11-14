@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="ゲーム作成チュートリアル（マインスイーパー）（その４）【パネルを連鎖で開く】" />
+  <meta name="og:description" content="今回の目標 前回はパネルを開くと周りにある爆弾の数が表示されるようにしました。 今回は、周りに爆弾がない場合にパネルを連鎖で開くようにします。 コード説明 openPanel関数 // パネルを開く処理 openPanel: function(panel) { (略) // パネルに数を表示 panel.num = bombs === 0 ? &#39;&#39; : bombs; Label({ text: panel.num, fill: &#39;white&#39;, }).addChildTo(panel); panel.fill = &#39;gray&#39;; // 周りに爆弾がなければ再帰的に調べる if (bombs === 0) { indexs.each(function(i) { indexs.each(function(j) { var pos = Vector2(panel.x &#43; i * GRID_SIZE, panel.y &#43; j * GRID_SIZE); var target = self.getPanel(pos); target &amp;&amp; self.openPanel(target); }); }); } }, 周りに爆弾がない場合、現在のパネルを起点にしてgetPanelを再帰呼び出しします。 今回の変更点はこれだけです。 今回はここまで ここまでで、パネルを連鎖で開くことができるようになりました。" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/07/06/minesweeper-tut-04" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/07/06/minesweeper-tut-04"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

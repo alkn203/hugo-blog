@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="フレームアニメーション関係Tips" />
+  <meta name="og:description" content="今回のTips 以前にも紹介したように、phina.jsにはFrameAnimationという便利な機能があります。 今回はより便利に使うための2つのTipsを紹介します。 スプライトのサイズがスプライトシートに定義されたサイズにフィットしないようにする フレームアニメーションを使うためには、SpriteSheetを定義する必要がありますが デフォルトだと実際のコード中でスプライトのサイズを変えてもスプライトシート(json)に書かれたwidthとheightに 戻ってしまい、スプライトを拡大して表示したい時に意図した結果になりません。 // スプライトシート spritesheet: { &#39;explosion_ss&#39;: { &quot;frame&quot;: { &quot;width&quot;: 20, // ←この値にフィットされる &quot;height&quot;: 20,// ←この値にフィットされる &quot;cols&quot;: 16, &quot;rows&quot;: 1, }, これを回避するためには、FrameAnimationクラスのプロパティfitをfalseにします。 これで実際に変更したサイズで正しく表示されるようになります。 サンプルでは20X20で切り出した画像を5倍で表示しています。 // 親クラスの初期化 this.superInit(&#39;explosion&#39;, 20, 20); // ←実際の画像の切り取りサイズ // SpriteSheetをスプライトにアタッチ var anim = FrameAnimation(&#39;explosion_ss&#39;).attachTo(this); // スプライトシートのサイズにフィットさせない anim.fit = false; // ←ここ //アニメーションを再生する anim.gotoAndPlay(&#39;start&#39;); // サイズ変更 this.setSize(20*5, 20*5); // ←サイズ変更 フレームアニメーションの終了を検知する ゲーム作成において、フレームアニメーションが終了した後に何か処理をしたい時があるかと思いまます。 この場合、FrameAnimationクラスのfinishedプロパティの値がtrueかどうかを調べると便利です。 サンプルでは爆発アニメーションが終了したら、自身を消去するようにしています。（consoleに結果表示） // 毎フレーム処理 update: function() { // アニメーションが終わったら自身を消去 if" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/06/11/frameanimation-tips" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/06/11/frameanimation-tips"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

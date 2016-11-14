@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="ゲーム作成チュートリアル（マインスイーパー）（その３）【パネルを開く】" />
+  <meta name="og:description" content="今回の目標 前回はランダムに爆弾を配置しました。 今回はパネルを開いて周りにある爆弾の数が表示されるようにします。 コード説明 MainScene init関数 init: function() { (略) var self = this; // ピース配置 PANEL_NUM_XY.times(function(spanX) { PANEL_NUM_XY.times(function(spanY) { (略) // 開かれているかどうか panel.isOpen = false; // タッチ有効化 panel.setInteractive(true); // パネルタッチ時 panel.onpointstart = function() { self.openPanel(panel); }; (略) }); }); // 参照用 this.panelGroup = panelGroup; }, 後にMainSceneをthisとして参照するために、selfに代入しています。 パネルが既に開かれているかどうかのフラグ変数isOpenを作成しています。 パネルをタッチできるようにsetInteractive(true)としています。 パネルのタッチイベントonpointstartが発生した際にopenPanel関数を呼び出すようにしています。 最後にpanelGroupを別の関数からも参照できるようにthis.panelGroupに代入しています。 openPanel関数(新規追加) // パネルを開く処理 openPanel: function(panel) { // 既に開かれていた何もしない if (panel.isOpen) return; // 開いたとフラグを立てる panel.isOpen = true; // タッチ不可にする panel.setInteractive(false); パネルを開いた直後の処理です。既に開かれていたら以降の処理をパスします。 フラグを変更して、setInteractive(false)でタッチ不可にします。 var bombs = 0; var indexs = [-1, 0, 1]; var self = this; // 周りのパネルの爆弾数をカウント indexs.each(function(i) { indexs.each(function(j) { var pos = Vector2(panel.x &#43; i * GRID_SIZE, panel.y &#43; j * GRID_SIZE); var target = self.getPanel(pos); if (target &amp;&amp; target.isBomb) bombs&#43;&#43;; }); }); // パネルに数を表示 panel.num = bombs === 0 ?" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

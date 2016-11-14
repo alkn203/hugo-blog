@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="Physicalクラスを利用したジャンプアクションの基本サンプル" />
+  <meta name="og:description" content="はじめに phina.jsでゲームを作る際には、通常はSpriteやShapeを使うことになるでしょう。 しかし、phina.jsにはhtml5のcanvasを機能的にラップしたphina.graphics.Canvasという便利なクラスがあります。 今回は、そのCanvasクラスとShapeを組み合わせたサンプルを紹介したいと思います。 サンプル 画面をタッチするとキャラクターがジャンプします。 Physicalクラスのvelocityとgravityの使い分けがポイントです。 [runstantで開く] ソースコード phina.globalize(); // アセット var ASSETS = { // 画像 image: { &#39;tomapiko&#39;: &#39;https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;, }, // フレームアニメーション情報 spritesheet: { &#39;tomapiko_ss&#39;: &#39;https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss&#39;, }, }; // 定数 var JUMP_POWOR = 10; // ジャンプ力 var GRAVITY = 0.5; // 重力 // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;CanvasScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景 this.backgroundColor = &#39;skyblue&#39;; Label({ text: &#39;Touch To Jump&#39;, fontSize:" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/29/phina-jump" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/01/29/phina-jump"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

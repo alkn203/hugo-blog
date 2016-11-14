@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（ブロック崩し）第1回＝テンプレートから作成する＝" />
+  <meta name="og:description" content="はじめに 前回では、phina.jsについての簡単な説明と、作成するゲームの仕上がりをお見せしました。それでは、今回からステップ毎に説明を始めていきたいと思います。 phina.jsのテンプレート Runstantで用意したテンプレートを使います。後々の利便性を考え、リンクをブラウザの新しいタブで開いた方が良いでしょう。 // グローバルに展開 phina.globalize(); /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // 初期化 init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // 以下にコードを書いていく }, }); /* * メイン処理 */ phina.main(function() { // アプリケーションを生成 var app = GameApp({ // MainScene から開始 startLabel: &#39;main&#39;, }); // fps表示 //app.enableStats(); // 実行 app.run(); }); コード説明 グローバル展開 phina.globalize(); phina.game.GameAppのように階層的に定義されているクラスをGameAppだけで呼び出せるようにする処理などをしています。とりあえずは、必要なおまじないと覚えておいてください。 メインシーン phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;," />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-template.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2015/10/26/beakout-tut-01" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2015/10/26/beakout-tut-01"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

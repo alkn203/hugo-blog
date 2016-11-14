@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（15パズル）（その１）【ピースの配置】" />
+  <meta name="og:description" content="はじめに 以前にQiitaにtmlib.js ＝15パズル＝ チュートリアル編を投稿しましたが、今回は、これをphina.jsで作り直すのが目標です。 このチュートリアルでは、phina.jsの公式エディタであるrunstantを使っていきたいと思います。 それでは、早速作っていきます。 ひな形の用意 runstantで用意した以下のひな形をベースに作成していきます。 phina.globalize(); // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;CanvasScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); }, }); // メイン phina.main(function() { var app = GameApp({ startLabel: &#39;main&#39;, }); app.run(); }); コード説明 phina.globalize(); phina.game.GameAppのように階層的に定義されているクラスをGameAppだけで呼び出せるようにする処理などをしています。とりあえずは、必要なおまじないと覚えておいてください。 // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); }, }); phina.defineは、クラスを定義する関数です。 DisplaySceneMainScene**を定義しています。 init関数は、いわゆるコンストラクタです。 this.superInitで親クラスのコンストラクタを呼び出しています。この後に、実際のゲーム処理コードを書いていくことになります。 // メイン phina.main(function() { var app = GameApp({ startLabel:" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/15puzzle-tut-1.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-01"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

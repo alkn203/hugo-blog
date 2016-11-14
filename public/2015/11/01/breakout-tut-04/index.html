@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（ブロック崩し）第4回＝ボールの作成＝" />
+  <meta name="og:description" content="はじめに 前回は、プレイヤーが操作するパドルを作成しました。 今回は、ブロック崩しの肝とも言えるボールを作成したいと思います。 コードは以下のとおりです。 // グローバルに展開 phina.globalize(); /* * 定数 */ var BLOCK_WIDTH = 40 * 2; var BLOCK_HEIGHT = 60 / 2; var PADDLE_WIDTH = BLOCK_WIDTH * 1.5; var PADDLE_HEIGHT = BLOCK_HEIGHT; var BALL_RADIUS = BLOCK_WIDTH / 8; /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // ブロックグループ this.blockGroup = DisplayElement().addChildTo(this); // 位置判定用のRect var" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/breakout-tut-04.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2015/11/01/breakout-tut-04" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2015/11/01/breakout-tut-04"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

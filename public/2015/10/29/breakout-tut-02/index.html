@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（ブロック崩し）第2回＝ブロックの配置＝" />
+  <meta name="og:description" content="目的 前回は、phina.jsのテンプレートからゲーム作成の下準備をしました。今回からゲーム内容のコーディングをしていきます。 まず最初に以下のようにブロックを配置したいと思います。 定数とBlockクラスを定義する ゲーム内で使用する定数は通常のvarで、Blockクラスはphina.defineを使って定義します。コードは以下のとおりです。 phina.globalize(); /* * 定数 */ var BLOCK_WIDTH = 40 * 2; var BLOCK_HEIGHT = 60 / 2; /* * メインシーン */ phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; }, }); /* * ブロッククラス */ phina.define(&#39;Block&#39;, { // 親クラス指定 superClass: &#39;RectangleShape&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit({ width: BLOCK_WIDTH, height: BLOCK_HEIGHT, }); }, });" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/breakout-tut-02.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2015/10/29/breakout-tut-02" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2015/10/29/breakout-tut-02"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="ShapeとCanvas描画を組み合わせたサンプル" />
+  <meta name="og:description" content="はじめに phina.jsでゲームを作る際には、通常はSpriteやShapeを使うことになるでしょう。 しかし、phina.jsにはhtml5のcanvasを機能的にラップしたphina.graphics.Canvasという便利なクラスがあります。 今回は、このCanvasクラスの機能とShapeを組み合わせたサンプルを紹介します。 サンプル 矩形をドラッグして離すと画面中央にバネのような動きをして戻ります。 線描画用として、画面と同じ広さを持つ空のShapeを作ってシーンに重ね合わせています。 Shapeのcanvasに線を描画して、矩形から線が出ているように位置を合わせています。 Shapeのcanvasの描画内容を毎フレーム更新して、線が矩形に追従するようにしています。 [runstantで開く] ソースコード phina.globalize(); // 定数 var SCREEN_WIDTH = 640; var SCREEN_HEIGHT = 960; var CENTER_X = SCREEN_WIDTH / 2; var CENTER_Y = SCREEN_HEIGHT / 2; // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;CanvasScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; Label({ text: &#39;Drag and Release&#39;, fontSize: 48, fill: &#39;yellow&#39;, }).addChildTo(this).setPosition(CENTER_X, this.gridY.span(2)); // ロープを作成 var rope = Rope({" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/31/phina-canvas" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/01/31/phina-canvas"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

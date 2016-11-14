@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="ゲーム作成チュートリアル（マインスイーパー）（その５）【ゲームオーバーとクリア処理】" />
+  <meta name="og:description" content="今回の目標 前回はパネルが連鎖で開かれるようにしました。 今回は、ゲームオーバーとクリア処理を追加します。 コード説明 ゲームオーバー処理 openPanel関数 // パネルを開く処理 openPanel: function(panel) { // 爆弾ならゲームオーバー if (panel.isBomb) { Explosion().addChildTo(panel); this.showAllBombs(); return; } // 既に開かれていた何もしない （略） }, 開いたパネルが爆弾だった場合、爆発を表示して、全ての爆弾を表示します。 ExplosionクラスとshowAllBombs関数については後述します。 Explosionクラス // 爆発クラス phina.define(&#39;Explosion&#39;, { // StarShapeを継承 superClass: &#39;StarShape&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit({ radius: (PANEL_SIZE &#43; 5) / 2, sides: 10, sideIndent: 0.75, rotation: 15, fill: &quot;red&quot;, stroke: &quot;yellow&quot;, }); }, }); StarShapeのパラメータを変えて爆発のように見せています。 パラメータを変えることで、このような一風違った表現も可能です。 showAllBombs関数 // 爆弾を全て表示する showAllBombs: function() {" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/07/11/minesweeper-tut-05" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/07/11/minesweeper-tut-05"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">

@@ -9,6 +9,14 @@
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="【phina.js】ゲーム作成チュートリアル（15パズル）（その４）【ピースの移動】" />
+  <meta name="og:description" content="前回 前回の【phina.js】ゲーム作成チュートリアル（15パズル）（その３）【ピースのタッチ】では、15パズルのピースをタッチできるようにしました。 今回の目標 以下のように、ピースをタッチで移動できるようにします。まずは、動作確認してみて下さい。 ピース移動の考え方 15パズルにおいて移動できるピースは、空白と隣り合わせのピースだけです。よって、タッチされたピースと空白の位置を入れ替えることが移動とみなせます。これまで、空白をあえて見えない16番ピースにしたのは、このためです。 隣り合わせについては、x座標が同じでy座標の差の絶対値がグリッド1個分のサイズ*、またはその逆パターンの時で判定しています。 以下のバージョンでは、判定の様子がコンソールに出力されるようにしています。試しにピースをタッチしてみてください。 コード説明 ピースの移動処理 まず、見えない16番ピースを返すだけのgetBlankPiece関数をMainSceneに追加します。コードは以下のとおりです。 // 16番ピース（空白）を取得 getBlankPiece: function() { var result = null; this.pieceGroup.children.some(function(piece) { // 16番ピースを結果に格納 if (piece.num === 16) { result = piece; return true; } }); return result; }, pieceGroupの子要素配列をsome関数でループして、16番ピースがあったらreturn trueとしてループを抜けるようにしています。 次に、ピースの移動処理を行うmovePiece関数をMainSceneに追加します。コードは以下のとおりです。 // ピースの移動処理 movePiece: function(piece) { // 空白ピースを得る var blank = this.getBlankPiece(); // x, yの座標差の絶対値 var dx = Math.abs(piece.x - blank.x); var dy = Math.abs(piece.y - blank.y); // 隣り合わせの判定" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
   <link rel="canonical" href="https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">
