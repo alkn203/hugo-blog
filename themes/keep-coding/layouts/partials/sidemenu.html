@@ -19,14 +19,14 @@
     </div>
   <!-- Sections -->
   <div class="article-header light-gray"><h1>Sections</h1></div>
-  <ul>
+  <ul class="none-ul">
     <li><a href="/tutorials/">Tutorials</a></li>
     <li><a href="/tips/">Tips</a></li>
     <li><a href="/works/">Works</a></li>
   </ul>
   <!-- Tags -->
   <div class="article-header light-gray"><h1>Tags</h1></div>
-    <ul>
+    <ul class="none-ul">
       {{ range $name, $value := $.Site.Taxonomies.tags }}
         <li>
           <a href="{{ $.Site.BaseURL }}/tags/{{ $name }}/">

@@ -52,6 +52,10 @@ aside table {
   margin-right: auto;
 }
 
+.none-ul li {
+  list-style: none;
+}
+
 .twitter {
   color: #55acee;
 }

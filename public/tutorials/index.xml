@@ -1140,21 +1140,137 @@ checkPiecePosition: function() {
       <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05</guid>
       <description>
 
-&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+&lt;h2 id=&#34;前回&#34;&gt;前回&lt;/h2&gt;
 
 &lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その４）【ピースの移動】&lt;/a&gt;では、ピースをタッチで移動できるようにしました。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の目玉機能の1つである&lt;strong&gt;tweener&lt;/strong&gt;を使ってピースの移動を滑らかにしてみます。
-まずは以下で動きを確認してみてください。&lt;/p&gt;
+&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/15puzzle-tut-4-1.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/y8M1QA&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;p&gt;コードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    var self = this;
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // 番号
+        var num = spanY * PIECE_NUM_XY + spanX + 1;
+        // ピース作成
+        var piece = Piece(num).addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+        // タッチを有効にする
+        piece.setInteractive(true);
+        // タッチされた時の処理
+        piece.onpointend = function() {
+          // ピース移動処理
+          self.movePiece(this);
+        };
+        // 16番のピースは非表示
+        if (num === 16) piece.hide();
+      });
+    });
+    // 参照用
+    this.pieceGroup = pieceGroup;
+  },
+  // 16番ピース（空白）を取得
+  getBlankPiece: function() {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 16番ピースを結果に格納
+      if (piece.num === 16) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースの移動処理
+  movePiece: function(piece) {
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // x, yの座標差の絶対値
+    var dx = Math.abs(piece.x - blank.x);
+    var dy = Math.abs(piece.y - blank.y);
+    // 隣り合わせの判定
+    if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) || 
+        (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+      // タッチされたピース位置を記憶
+      var touchX = piece.x;
+      var touchY = piece.y;
+      // tweenerで移動処理
+      piece.tweener.clear()
+                   .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+                   .call(function() {
+                     // 空白ピースをタッチされたピースの位置へ
+                     blank.setPosition(touchX, touchY);
+                   });
+    }
+  },
+});
+// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a12dc827&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;前回までに比べて移動が滑らかになったかと思います。
 &lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;では、このような動きを&lt;strong&gt;tweener&lt;/strong&gt;という機能で実現できます。&lt;/p&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;movePiece&lt;/strong&gt;関数を以下のように変更します。&lt;/p&gt;
 
@@ -1215,7 +1331,7 @@ movePiece: function(piece) {
 
 &lt;p&gt;以上をまとめると、&lt;strong&gt;タッチされたピースを空白ピースの場所に移動させた後、空白ピースをタッチされたピースの元位置に移動（入れ替え）&lt;/strong&gt;という一連の処理になります。書き方に多少慣れが必要ですが、より複雑な動きも&lt;strong&gt;tweener&lt;/strong&gt;なら手軽に設定することができます。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ここまでで、&lt;strong&gt;tweener&lt;/strong&gt;を使ってピースが滑らかに移動できるようになりました。
 次回は&lt;strong&gt;ゲーム的要素の追加&lt;/strong&gt;で、よりゲームらしくしていきます。&lt;/p&gt;
@@ -1230,17 +1346,129 @@ movePiece: function(piece) {
       <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-04</guid>
       <description>
 
-&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+&lt;h2 id=&#34;前回&#34;&gt;前回&lt;/h2&gt;
 
 &lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その３）【ピースのタッチ】&lt;/a&gt;では、15パズルのピースをタッチできるようにしました。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
-&lt;p&gt;以下のように、ピースをタッチで移動できるようにします。まずは、動作確認してみて下さい。&lt;/p&gt;
+&lt;p&gt;ピースをタッチで移動できるようにします。
+&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/15puzzle-tut-4-1.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;
+コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/63h9GZ&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    var self = this;
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // 番号
+        var num = spanY * PIECE_NUM_XY + spanX + 1;
+        // ピース作成
+        var piece = Piece(num).addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+        // タッチを有効にする
+        piece.setInteractive(true);
+        // タッチされた時の処理
+        piece.onpointend = function() {
+          // ピース移動処理
+          self.movePiece(this);
+        };
+        // 16番のピースは非表示
+        if (num === 16) piece.hide();
+      });
+    });
+    // 参照用
+    this.pieceGroup = pieceGroup;
+  },
+  // 16番ピース（空白）を取得
+  getBlankPiece: function() {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 16番ピースを結果に格納
+      if (piece.num === 16) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースの移動処理
+  movePiece: function(piece) {
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // x, yの座標差の絶対値
+    var dx = Math.abs(piece.x - blank.x);
+    var dy = Math.abs(piece.y - blank.y);
+    // 隣り合わせの判定
+    if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) ||
+        (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+      // 一時変数に待避
+      var tmpX = blank.x;
+      var tmpY = blank.y;
+      // 位置入れ換え
+      blank.setPosition(piece.x, piece.y);
+      piece.setPosition(tmpX, tmpY);
+    }
+  },
+});
+// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;ピース移動の考え方&#34;&gt;ピース移動の考え方&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/c7da26e6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ピース移動の考え方&#34;&gt;ピース移動の考え方&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;15パズルにおいて移動できるピースは、空白と隣り合わせのピースだけです。よって、&lt;strong&gt;タッチされたピースと空白の位置を入れ替える&lt;/strong&gt;ことが移動とみなせます。これまで、空白をあえて&lt;strong&gt;見えない16番ピース&lt;/strong&gt;にしたのは、このためです。&lt;/p&gt;&lt;/li&gt;
@@ -1248,11 +1476,7 @@ movePiece: function(piece) {
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;隣り合わせ&lt;/strong&gt;については、&lt;strong&gt;x座標が同じでy座標の差の絶対値がグリッド1個分のサイズ*、またはその逆パターンの時&lt;/strong&gt;で判定しています。&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;以下のバージョンでは、判定の様子がコンソールに出力されるようにしています。試しにピースをタッチしてみてください。&lt;/p&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/fg9O2l&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;h3 id=&#34;ピースの移動処理&#34;&gt;ピースの移動処理&lt;/h3&gt;
 
@@ -1340,7 +1564,7 @@ this.pieceGroup = pieceGroup;
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;pieceGroup&lt;/strong&gt;を&lt;strong&gt;MainScene&lt;/strong&gt;全体から参照できるように&lt;strong&gt;this.pieceGroup&lt;/strong&gt;という変数に代入しています。&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ここまでで、ピースが移動できるようになりました。書き方にもよりますが、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;だと&lt;strong&gt;100行程度&lt;/strong&gt;でここまで作ることができるのがお分かり頂けたかと思います。
 次回は、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の目玉機能の一つである&lt;strong&gt;tweener&lt;/strong&gt;で&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/&#34;&gt;ピースの動きを滑らかに&lt;/a&gt;してみます。&lt;/p&gt;
@@ -1355,21 +1579,99 @@ this.pieceGroup = pieceGroup;
       <guid>https://alkn203.github.io/blog/2016/01/01/15puzzle-tut-03</guid>
       <description>
 
-&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+&lt;h2 id=&#34;前回&#34;&gt;前回&lt;/h2&gt;
 
 &lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2015/12/31/15puzzle-tut-02/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その２）【数字の表示】&lt;/a&gt;では、15パズルのピースに数字を表示させました。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
-&lt;p&gt;見た目の変化はありませんが、ピースにタッチイベントを追加して、結果が分かるようにコンソールに出力させます。&lt;/p&gt;
+&lt;p&gt;見た目の変化はありませんが、ピースにタッチイベントを追加して、結果が分かるようにコンソールに出力させます。
+&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/15puzzle-tut-2.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;
+コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/YnrdZj&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // 番号
+        var num = spanY * PIECE_NUM_XY + spanX + 1;
+        // ピース作成
+        var piece = Piece(num).addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+        // タッチを有効にする
+        piece.setInteractive(true);
+        // タッチされた時の処理
+        piece.onpointend = function() {
+          console.log(this.num);
+        };
+        // 16番のピースは非表示
+        if (num === 16) piece.hide();
+      });
+    });
+  },
+});
+// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/dea18292&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;h3 id=&#34;タッチイベントの追加&#34;&gt;タッチイベントの追加&lt;/h3&gt;
 
-&lt;p&gt;ピース作成時の処理を以下のように変更します。&lt;/p&gt;
+&lt;p&gt;ピース作成時の処理を以下のように変更します。u&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ピース配置
 PIECE_NUM_XY.times(function(spanX) {
@@ -1397,10 +1699,13 @@ PIECE_NUM_XY.times(function(spanX) {
 
 &lt;p&gt;タッチを有効にしましたが、通常プログラムで使うためにはタッチイベントを拾う必要があります。そこで、ピースに対して&lt;strong&gt;onpointend&lt;/strong&gt;関数を追加し、タッチ時の処理を記述します。今回は動作確認用にタッチされたピースの数字をコンソールに出力するようにしています。&lt;/p&gt;
 
-&lt;p&gt;良く使うタッチイベントは、以下の3種類があります。それぞれ書き換えてみて動作確認すると、違いが分かるかと思います。
-* &lt;strong&gt;onpointstart&lt;/strong&gt;　&amp;mdash; タッチ開始時
-* &lt;strong&gt;onpointmove&lt;/strong&gt;　 &amp;mdash; タッチ中（移動含む）
-* &lt;strong&gt;onpointgend&lt;/strong&gt;　 &amp;mdash; タッチが離れた時&lt;/p&gt;
+&lt;p&gt;良く使うタッチイベントは、以下の3種類があります。それぞれ書き換えてみて動作確認すると、違いが分かるかと思います。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;onpointstart&lt;/strong&gt;　&amp;mdash; タッチ開始時&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;onpointmove&lt;/strong&gt;　 &amp;mdash; タッチ中（移動含む）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;onpointgend&lt;/strong&gt;　 &amp;mdash; タッチが離れた時&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
 
