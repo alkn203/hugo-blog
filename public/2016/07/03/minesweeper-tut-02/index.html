@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="ゲーム作成チュートリアル（マインスイーパー）（その２）【爆弾の配置】" />
   <meta name="og:description" content="今回の目標 前回はパネルをグリッド状に配置しました。 今回はマインスイーパーの主役とも言える爆弾を配置します。爆弾はランダムな場所に配置されるようにします。 今回のコード phina.globalize(); // 定数 var SCREEN_WIDTH = 640; // 画面横サイズ var PANEL_NUM_XY = 9; // 縦横のパネル数 var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ var PANEL_OFFSET = (GRID_SIZE &#43; 10) / 2; // オフセット値 var BOMB_NUM = 10; // 爆弾数 // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init:" />
-  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/minesweeper-tut-2.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
@@ -96,8 +96,6 @@
 <ul>
 <li>
 <ul>
-<li>
-<ul>
 <li><a href="#今回の目標">今回の目標</a></li>
 <li><a href="#今回のコード">今回のコード</a></li>
 <li><a href="#コード説明">コード説明</a>
@@ -108,22 +106,20 @@
 <li><a href="#爆弾クラス">爆弾クラス</a></li>
 </ul></li>
 <li><a href="#今回はここまで">今回はここまで</a></li>
-<li><a href="#runstantプロジェクトへのリンク">runstantプロジェクトへのリンク</a></li>
-</ul></li>
 </ul></li>
 </ul>
 </nav>
       
       
 
-<h3 id="今回の目標">今回の目標</h3>
+<h2 id="今回の目標">今回の目標</h2>
 
 <p><a href="http://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01/">前回</a>はパネルをグリッド状に配置しました。
 今回はマインスイーパーの主役とも言える爆弾を配置します。爆弾はランダムな場所に配置されるようにします。</p>
 
-<div class='runstant'><iframe src='http://runstant.com/alkn203/projects/a24d063d/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+<p><center><img src="https://alkn203.github.io/blog/images/minesweeper-tut-2.png" alt="15puzzle-tut-2" /></center></p>
 
-<h3 id="今回のコード">今回のコード</h3>
+<h2 id="今回のコード">今回のコード</h2>
 
 <pre><code class="language-js">phina.globalize();
 // 定数
@@ -227,9 +223,11 @@ phina.main(function() {
 });
 </code></pre>
 
-<h3 id="コード説明">コード説明</h3>
+<p><a href="http://runstant.com/alkn203/projects/a24d063d" target="_blank">[runstantで確認]</a></p>
 
-<h4 id="定数の定義">定数の定義</h4>
+<h2 id="コード説明">コード説明</h2>
+
+<h3 id="定数の定義">定数の定義</h3>
 
 <pre><code class="language-js">// 定数
 （略）
@@ -238,7 +236,7 @@ var BOMB_NUM = 10; // 爆弾数
 
 <p>設置する爆弾数を定義します。</p>
 
-<h4 id="爆弾位置情報の作成">爆弾位置情報の作成</h4>
+<h3 id="爆弾位置情報の作成">爆弾位置情報の作成</h3>
 
 <pre><code class="language-js">init: function() {
   （略）
@@ -255,7 +253,7 @@ var BOMB_NUM = 10; // 爆弾数
 <li>一旦<strong>false</strong>で埋めて、先頭の10個まで<strong>true</strong>に置き換えてから<strong>shuffle</strong>関数で要素をランダムに並び替えています。</li>
 </ul>
 
-<h4 id="爆弾位置情報をパネルに紐づける">爆弾位置情報をパネルに紐づける</h4>
+<h3 id="爆弾位置情報をパネルに紐づける">爆弾位置情報をパネルに紐づける</h3>
 
 <pre><code class="language-js">  // ピース配置
   PANEL_NUM_XY.times(function(spanX) {
@@ -275,7 +273,7 @@ var BOMB_NUM = 10; // 爆弾数
 <li><strong>isBomb</strong>プロパティが<strong>true</strong>なら、爆弾を配置します。</li>
 </ul>
 
-<h4 id="爆弾クラス">爆弾クラス</h4>
+<h3 id="爆弾クラス">爆弾クラス</h3>
 
 <pre><code class="language-js">// 爆弾クラス
 phina.define('Bomb', {
@@ -314,14 +312,10 @@ phina.define('Bomb', {
 <li>導線は本体の少し上になるようにy座標を指定しています。この場合、親から見た<strong>相対座標</strong>になるということに注意してください。</li>
 </ul>
 
-<h3 id="今回はここまで">今回はここまで</h3>
+<h2 id="今回はここまで">今回はここまで</h2>
 
 <p>ここまでで、爆弾をランダムに配置することができました。読み込まれる度に配置が異なることが確認できるかと思います。
 次回は、パネルを開く処理を追加します。</p>
-
-<h3 id="runstantプロジェクトへのリンク">runstantプロジェクトへのリンク</h3>
-
-<p><a href="http://runstant.com/alkn203/projects/a24d063d">http://runstant.com/alkn203/projects/a24d063d</a></p>
 
     </article>
 
@@ -382,7 +376,7 @@ phina.define('Bomb', {
   <div id="profile" style="text-align: center;">
     <div><img src="https://alkn203.github.io/blog/images/alkn203.png" width="64" height="64"></div>
     <div>alkn203</div>
-    <div id="profile-text">javascript製のゲームライブラリphina.jsを愛用している趣味プログラマ。ファミコン世代。 Hobbyist programmer/javascript/phina.js/retro games</div>
+    <div id="profile-text">javascript製のゲームライブラリphina.jsを愛用している趣味プログラマ。ファミコン世代。Hobbyist programmer/javascript/phina.js/retro games</div>
   </div>
   
     <div id="social">
@@ -424,6 +418,30 @@ phina.define('Bomb', {
         </li>
       
         <li>
+          <a href="https://alkn203.github.io/blog//tags/canvas/">
+          <div>canvas&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/collision/">
+          <div>collision&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/event/">
+          <div>event&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/flow/">
+          <div>flow&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
           <a href="https://alkn203.github.io/blog//tags/frameanimation/">
           <div>frameanimation&nbsp;(2)</div>
           </a>
@@ -437,13 +455,19 @@ phina.define('Bomb', {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(5)</div>
+          <div>shape&nbsp;(6)</div>
           </a>
         </li>
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/sprite/">
           <div>sprite&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/static/">
+          <div>static&nbsp;(1)</div>
           </a>
         </li>
       
@@ -455,7 +479,7 @@ phina.define('Bomb', {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/tips/">
-          <div>tips&nbsp;(16)</div>
+          <div>tips&nbsp;(20)</div>
           </a>
         </li>
       

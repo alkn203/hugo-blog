@@ -379,18 +379,176 @@ panel.onpointstart = function() {
       <guid>https://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03</guid>
       <description>
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/&#34;&gt;前回&lt;/a&gt;はランダムに爆弾を配置しました。
 今回はパネルを開いて周りにある爆弾の数が表示されるようにします。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/4edca5d9/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/minesweeper-tut-3.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;h2 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h2&gt;
 
-&lt;h4 id=&#34;mainscene&#34;&gt;MainScene&lt;/h4&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640; // 画面横サイズ
+var PANEL_NUM_XY = 9; // 縦横のパネル数
+var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
+var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
+var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
+var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
+var BOMB_NUM = 10; // 爆弾数
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: SCREEN_WIDTH,
+      height: SCREEN_HEIGHT,
+    });
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
+    // グループ
+    var panelGroup = DisplayElement().addChildTo(this);
+    // 爆弾位置をランダムに決めた配列を作成
+    var bombs = [];
+    (PANEL_NUM_XY * PANEL_NUM_XY).times(function() {
+      bombs.push(false);
+    });
+    bombs.fill(true, 0, 10).shuffle();
 
-&lt;h4 id=&#34;init関数&#34;&gt;init関数&lt;/h4&gt;
+    var self = this;
+    // ピース配置
+    PANEL_NUM_XY.times(function(spanX) {
+      PANEL_NUM_XY.times(function(spanY) {
+        // パネル作成
+        var panel = Panel().addChildTo(panelGroup);
+        // Gridを利用して配置
+        panel.x = grid.span(spanX) + PANEL_OFFSET;
+        panel.y = grid.span(spanY) + PANEL_OFFSET;
+        // パネルに爆弾情報を紐づける
+        panel.isBomb = bombs[spanX * PANEL_NUM_XY + spanY];
+        // 開かれているかどうか
+        panel.isOpen = false;
+        // タッチ有効化
+        panel.setInteractive(true);
+        // パネルタッチ時
+        panel.onpointstart = function() {
+          self.openPanel(panel);
+        };
+        // 爆弾なら表示
+        if (panel.isBomb) Bomb().addChildTo(panel);
+      });
+    });
+    // 参照用
+    this.panelGroup = panelGroup;
+  },
+  // パネルを開く処理
+  openPanel: function(panel) {
+    // 既に開かれていた何もしない
+    if (panel.isOpen) return;
+    // 開いたとフラグを立てる
+    panel.isOpen = true;
+    // タッチ不可にする
+    panel.setInteractive(false);
+    
+    var bombs = 0;
+    var indexs = [-1, 0, 1];
+    var self = this;
+    // 周りのパネルの爆弾数をカウント
+    indexs.each(function(i) {
+      indexs.each(function(j) {
+        var pos = Vector2(panel.x + i * GRID_SIZE, panel.y + j * GRID_SIZE);
+        var target = self.getPanel(pos);
+        if (target &amp;amp;&amp;amp; target.isBomb) bombs++;
+      });
+    });
+    // パネルに数を表示
+    panel.num = bombs === 0 ? &#39;&#39; : bombs;
+    Label({
+      text: panel.num,
+      fill: &#39;white&#39;,
+    }).addChildTo(panel);
+    panel.fill = &#39;gray&#39;;
+  },
+  // 指定された位置のパネルを得る
+  getPanel: function(pos) {
+    var result = null;
+    
+    this.panelGroup.children.some(function(panel) {
+      if (panel.position.equals(pos)) {
+        result = panel;
+        return true;
+      } 
+    });
+    return result;
+  },
+});
+// パネルクラス
+phina.define(&#39;Panel&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PANEL_SIZE,
+        height: PANEL_SIZE,
+        fill: &#39;silver&#39;, // 塗りつぶし色
+        stroke: &#39;white&#39;, // 枠の色
+        cornerRadius: 2, // 角の丸み
+      });
+    },
+});
+// 爆弾クラス
+phina.define(&#39;Bomb&#39;, {
+  // Shapeを継承
+  superClass: &#39;Shape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: GRID_SIZE,
+        height: GRID_SIZE,
+        backgroundColor: &#39;transparent&#39;,
+      });
+      // 導線
+      RectangleShape({
+        width: PANEL_SIZE / 8,
+        height: PANEL_SIZE / 8,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+        y: -20,
+      }).addChildTo(this);
+      // 本体
+      CircleShape({
+        radius: PANEL_SIZE / 4,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;, // メイン画面からスタート
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4edca5d9&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;mainscene&#34;&gt;MainScene&lt;/h3&gt;
+
+&lt;h3 id=&#34;init関数&#34;&gt;init関数&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  init: function() {
     (略)
@@ -424,7 +582,7 @@ panel.onpointstart = function() {
 &lt;br /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;openpanel関数-新規追加&#34;&gt;openPanel関数(新規追加)&lt;/h4&gt;
+&lt;h3 id=&#34;openpanel関数-新規追加&#34;&gt;openPanel関数(新規追加)&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // パネルを開く処理
   openPanel: function(panel) {
@@ -470,7 +628,7 @@ panel.onpointstart = function() {
 &lt;br /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;getpanel関数-新規追加&#34;&gt;getPanel関数（新規追加）&lt;/h4&gt;
+&lt;h3 id=&#34;getpanel関数-新規追加&#34;&gt;getPanel関数（新規追加）&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 指定された位置のパネルを得る  
   getPanel: function(pos) {
@@ -491,14 +649,10 @@ panel.onpointstart = function() {
 &lt;li&gt;&lt;strong&gt;some&lt;/strong&gt;を使って条件が合ったらループを抜けるようにしています。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ここまでで、パネルを開いて爆弾数を表示することが出来ました。
 次回は、再帰処理を使ってパネルが連鎖で開くようにします。&lt;/p&gt;
-
-&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34;&gt;http://runstant.com/alkn203/projects/a24d063d&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -510,14 +664,14 @@ panel.onpointstart = function() {
       <guid>https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02</guid>
       <description>
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01/&#34;&gt;前回&lt;/a&gt;はパネルをグリッド状に配置しました。
 今回はマインスイーパーの主役とも言える爆弾を配置します。爆弾はランダムな場所に配置されるようにします。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/a24d063d/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/minesweeper-tut-2.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h3&gt;
+&lt;h2 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
 // 定数
@@ -621,9 +775,11 @@ phina.main(function() {
 });
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
-&lt;h4 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h4&gt;
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
 （略）
@@ -632,7 +788,7 @@ var BOMB_NUM = 10; // 爆弾数
 
 &lt;p&gt;設置する爆弾数を定義します。&lt;/p&gt;
 
-&lt;h4 id=&#34;爆弾位置情報の作成&#34;&gt;爆弾位置情報の作成&lt;/h4&gt;
+&lt;h3 id=&#34;爆弾位置情報の作成&#34;&gt;爆弾位置情報の作成&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;init: function() {
   （略）
@@ -649,7 +805,7 @@ var BOMB_NUM = 10; // 爆弾数
 &lt;li&gt;一旦&lt;strong&gt;false&lt;/strong&gt;で埋めて、先頭の10個まで&lt;strong&gt;true&lt;/strong&gt;に置き換えてから&lt;strong&gt;shuffle&lt;/strong&gt;関数で要素をランダムに並び替えています。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;爆弾位置情報をパネルに紐づける&#34;&gt;爆弾位置情報をパネルに紐づける&lt;/h4&gt;
+&lt;h3 id=&#34;爆弾位置情報をパネルに紐づける&#34;&gt;爆弾位置情報をパネルに紐づける&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピース配置
   PANEL_NUM_XY.times(function(spanX) {
@@ -669,7 +825,7 @@ var BOMB_NUM = 10; // 爆弾数
 &lt;li&gt;&lt;strong&gt;isBomb&lt;/strong&gt;プロパティが&lt;strong&gt;true&lt;/strong&gt;なら、爆弾を配置します。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;爆弾クラス&#34;&gt;爆弾クラス&lt;/h4&gt;
+&lt;h3 id=&#34;爆弾クラス&#34;&gt;爆弾クラス&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 爆弾クラス
 phina.define(&#39;Bomb&#39;, {
@@ -708,14 +864,10 @@ phina.define(&#39;Bomb&#39;, {
 &lt;li&gt;導線は本体の少し上になるようにy座標を指定しています。この場合、親から見た&lt;strong&gt;相対座標&lt;/strong&gt;になるということに注意してください。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ここまでで、爆弾をランダムに配置することができました。読み込まれる度に配置が異なることが確認できるかと思います。
 次回は、パネルを開く処理を追加します。&lt;/p&gt;
-
-&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34;&gt;http://runstant.com/alkn203/projects/a24d063d&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -727,17 +879,18 @@ phina.define(&#39;Bomb&#39;, {
       <guid>https://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01</guid>
       <description>
 
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/a533b1264b912dec9590&#34;&gt;tmlib.js ＝マインスイーパー＝ チュートリアル編（目次）&lt;/a&gt;を投稿しましたが、今回は、これを&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;で作り直すのが目標です。なお、本ブログのこれまでのチュートリアルを見て、「&lt;strong&gt;phina.js&lt;/strong&gt;でのゲーム作り」を少しは知っているということを前提にしています。
 このチュートリアルでは、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の公式開発環境として更に便利になった&lt;a href=&#34;http://runstant.com/&#34;&gt;runstant&lt;/a&gt;を使っていきたいと思います。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
-&lt;p&gt;以下のようにパネルを並べます。
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/ada3aa47/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;p&gt;以下のようにパネルを並べます。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h3&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/minesweeper-tut-1.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
 // 定数
@@ -802,9 +955,11 @@ phina.main(function() {
 });
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/ada3aa47&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
-&lt;h4 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h4&gt;
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
 var SCREEN_WIDTH = 640; // 画面横サイズ
@@ -822,7 +977,7 @@ var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
 &lt;li&gt;パネルを正しい位置に配置できるようにオフセット値を計算しています。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;panelクラス&#34;&gt;Panelクラス&lt;/h4&gt;
+&lt;h3 id=&#34;panelクラス&#34;&gt;Panelクラス&lt;/h3&gt;
 
 &lt;p&gt;メイン処理の前にパネルクラスについて説明します。&lt;/p&gt;
 
@@ -851,7 +1006,7 @@ phina.define(&#39;Panel&#39;, {
 &lt;li&gt;&lt;strong&gt;cornerRadius&lt;/strong&gt;は角の丸みを指定します。（tmlib.jsではRoundRectangleShape）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;メインシーン&#34;&gt;メインシーン&lt;/h4&gt;
+&lt;h3 id=&#34;メインシーン&#34;&gt;メインシーン&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// コンストラクタ
 init: function() {
@@ -902,14 +1057,10 @@ init: function() {
 &lt;li&gt;最後にパネルの位置を指定します。&lt;strong&gt;span&lt;/strong&gt;にインデックス値を指定することで、グリッド状に綺麗に配置することが出来ます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ここまでで、パネルを配置することができました。
 次回は、&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/&#34;&gt;爆弾の配置&lt;/a&gt;です。&lt;/p&gt;
-
-&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/ada3aa47&#34;&gt;http://runstant.com/alkn203/projects/ada3aa47&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -921,11 +1072,11 @@ init: function() {
       <guid>https://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06</guid>
       <description>
 
-&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+&lt;h2 id=&#34;前回&#34;&gt;前回&lt;/h2&gt;
 
 &lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その５）【tweenerで移動処理】&lt;/a&gt;では、&lt;strong&gt;tweener&lt;/strong&gt;を使ってピースをアニメーション移動させました。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
 &lt;p&gt;今回は、もう少しゲームらしくするために以下の要素を追加したいと思います。&lt;/p&gt;
 
@@ -934,12 +1085,184 @@ init: function() {
 &lt;li&gt;クリア判定&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;ピースのシャッフル&#34;&gt;ピースのシャッフル&lt;/h3&gt;
+&lt;h2 id=&#34;ピースのシャッフル&#34;&gt;ピースのシャッフル&lt;/h2&gt;
 
-&lt;p&gt;まずは以下で動きを確認してみてください。
-&lt;strong&gt;SHUFFLE&lt;/strong&gt;ボタンをタッチすると、ピースがシャッフルされます。&lt;/p&gt;
+&lt;p&gt;ピースをシャッフルするボタンを追加します。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/HIgbx1&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/15puzzle-tut-6.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;コードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    var self = this;
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // 番号
+        var num = spanY * PIECE_NUM_XY + spanX + 1;
+        // ピース作成
+        var piece = Piece(num).addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+        // タッチを有効にする
+        piece.setInteractive(true);
+        // タッチされた時の処理
+        piece.onpointend = function() {
+          // ピース移動処理
+          self.movePiece(this);
+        };
+        // 16番のピースは非表示
+        if (num === 16) piece.hide();
+      });
+    });
+    // シャッフルボタン
+    var shuffleButton = Button({
+      text: &#39;SHUFFLE&#39;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(13));
+    // ボタンプッシュ時処理
+    shuffleButton.onpush = function() {
+      // ピースをシャッフル
+      (100).times(function() {
+        self.shufflePieces();  
+      });
+    };
+    // 参照用
+    this.pieceGroup = pieceGroup;
+    this.shuffleButton = shuffleButton;
+  },
+  // 16番ピース（空白）を取得
+  getBlankPiece: function() {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 16番ピースを結果に格納
+      if (piece.num === 16) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースの移動処理
+  movePiece: function(piece, isInstantly) {
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 即入れ替え
+    if (isInstantly) {
+      var tmpX = piece.x;
+      var tmpY = piece.y;
+      piece.setPosition(blank.x, blank.y);
+      blank.setPosition(tmpX, tmpY);
+      return;
+    }
+    // x, yの座標差の絶対値
+    var dx = Math.abs(piece.x - blank.x);
+    var dy = Math.abs(piece.y - blank.y);
+    // 隣り合わせの判定
+    if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) || 
+        (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+      // タッチされたピース位置を記憶
+      var touchX = piece.x;
+      var touchY = piece.y;
+      var self = this;
+      // tweenerで移動処理
+      piece.tweener.clear()
+                   .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+                   .call(function() {
+                     // 空白ピースをタッチされたピースの位置へ
+                     blank.setPosition(touchX, touchY);
+                   });
+    }
+  },
+  // 指定の位置のピースを返す
+  getPieceByXY: function(x, y) {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 指定した座標なら
+      if (piece.x === x &amp;amp;&amp;amp; piece.y === y) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースをシャッフルする
+  shufflePieces: function() {
+    var self = this;
+    // 隣接ピース格納用
+    var pieces = [];
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 上下左右隣りのピースがあれば配列に追加
+    [1, 0, -1].each(function(i) {
+      [1, 0, -1].each(function(j) {
+        if (i != j) {
+          var x = blank.x + i * GRID_SIZE;
+          var y = blank.y + j * GRID_SIZE;
+          var target = self.getPieceByXY(x, y);
+          if (target) pieces.push(target);
+        }
+      });
+    });
+    // 隣接ピースからランダムに選択して空白ピースと入れ替える
+    this.movePiece(pieces.random(), &#39;instantly&#39;);
+    pieces.clear();
+  },
+});
+// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9322fad6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
 
@@ -1044,14 +1367,184 @@ shuffleButton.onpush = function() {
 &lt;li&gt;15パズルのシャッフルのポイントは、実際に可能な移動をさせるという点です。そうすればパズルが解けなくなるという心配もありません。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h3&gt;
+&lt;h2 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h2&gt;
 
 &lt;p&gt;15パズルにおけるクリアとは、言うまでもなく&lt;strong&gt;全てのピースが正しい位置に収まった時&lt;/strong&gt;です。
-以下で動作を確認してみて下さい。シャッフルボタンを押した後にピースを正しい位置に揃えると、リザルトシーンに移行します。（確認しやすいようにシャッフル回数を2回にしています。）&lt;/p&gt;
+シャッフルボタンを押した後にピースを正しい位置に揃えると、リザルトシーンに移行するようにします。
+コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/TLD1J6&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    var self = this;
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // 番号
+        var num = spanY * PIECE_NUM_XY + spanX + 1;
+        // ピース作成
+        var piece = Piece(num).addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+        // タッチを有効にする
+        piece.setInteractive(true);
+        // タッチされた時の処理
+        piece.onpointend = function() {
+          // ピース移動処理
+          self.movePiece(this);
+        };
+        // 16番のピースは非表示
+        if (num === 16) piece.hide();
+      });
+    });
+    // シャッフルボタン
+    var shuffleButton = Button({
+      text: &#39;SHUFFLE&#39;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(13));
+    // ボタンプッシュ時処理
+    shuffleButton.onpush = function() {
+      // ピースをシャッフル
+      (100).times(function() {
+        self.shufflePieces();  
+      });
+    };
+    // 参照用
+    this.pieceGroup = pieceGroup;
+    this.shuffleButton = shuffleButton;
+  },
+  // 16番ピース（空白）を取得
+  getBlankPiece: function() {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 16番ピースを結果に格納
+      if (piece.num === 16) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースの移動処理
+  movePiece: function(piece, isInstantly) {
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 即入れ替え
+    if (isInstantly) {
+      var tmpX = piece.x;
+      var tmpY = piece.y;
+      piece.setPosition(blank.x, blank.y);
+      blank.setPosition(tmpX, tmpY);
+      return;
+    }
+    // x, yの座標差の絶対値
+    var dx = Math.abs(piece.x - blank.x);
+    var dy = Math.abs(piece.y - blank.y);
+    // 隣り合わせの判定
+    if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) || 
+        (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+      // タッチされたピース位置を記憶
+      var touchX = piece.x;
+      var touchY = piece.y;
+      var self = this;
+      // tweenerで移動処理
+      piece.tweener.clear()
+                   .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+                   .call(function() {
+                     // 空白ピースをタッチされたピースの位置へ
+                     blank.setPosition(touchX, touchY);
+                   });
+    }
+  },
+  // 指定の位置のピースを返す
+  getPieceByXY: function(x, y) {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 指定した座標なら
+      if (piece.x === x &amp;amp;&amp;amp; piece.y === y) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースをシャッフルする
+  shufflePieces: function() {
+    var self = this;
+    // 隣接ピース格納用
+    var pieces = [];
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 上下左右隣りのピースがあれば配列に追加
+    [1, 0, -1].each(function(i) {
+      [1, 0, -1].each(function(j) {
+        if (i != j) {
+          var x = blank.x + i * GRID_SIZE;
+          var y = blank.y + j * GRID_SIZE;
+          var target = self.getPieceByXY(x, y);
+          if (target) pieces.push(target);
+        }
+      });
+    });
+    // 隣接ピースからランダムに選択して空白ピースと入れ替える
+    this.movePiece(pieces.random(), &#39;instantly&#39;);
+    pieces.clear();
+  },
+});
+// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;以下が主な変更点です。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/90d6fc13&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// Gridを利用して配置
 piece.x = grid.span(spanX) + PIECE_OFFSET;
@@ -1120,15 +1613,9 @@ checkPiecePosition: function() {
 &lt;li&gt;全て正しい位置なら、残りステップ数を&lt;strong&gt;score&lt;/strong&gt;に渡して&lt;strong&gt;exit&lt;/strong&gt;でリザルトシーンに遷移させます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;今回で&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;を使った15パズル作成のチュートリアルは終わりです。分かりづらい部分も多々あったかと思いますが、少しでも&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;を使ったゲーム作りのヒントになれば幸いです。最後まで読んで頂きありがとうございました。&lt;/p&gt;
-
-&lt;h3 id=&#34;完成版&#34;&gt;完成版&lt;/h3&gt;
-
-&lt;p&gt;最後にシャッフル回数を通常に戻した完成版を掲載します。&lt;/p&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Tsxuak&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
 </description>
     </item>
     

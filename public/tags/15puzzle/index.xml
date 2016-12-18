@@ -17,11 +17,11 @@
       <guid>https://alkn203.github.io/blog/2016/01/05/15puzzle-tut-06</guid>
       <description>
 
-&lt;h3 id=&#34;前回&#34;&gt;前回&lt;/h3&gt;
+&lt;h2 id=&#34;前回&#34;&gt;前回&lt;/h2&gt;
 
 &lt;p&gt;前回の&lt;a href=&#34;http://alkn203.github.io/blog/2016/01/01/15puzzle-tut-05/&#34;&gt;【phina.js】ゲーム作成チュートリアル（15パズル）（その５）【tweenerで移動処理】&lt;/a&gt;では、&lt;strong&gt;tweener&lt;/strong&gt;を使ってピースをアニメーション移動させました。&lt;/p&gt;
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
 &lt;p&gt;今回は、もう少しゲームらしくするために以下の要素を追加したいと思います。&lt;/p&gt;
 
@@ -30,12 +30,184 @@
 &lt;li&gt;クリア判定&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;ピースのシャッフル&#34;&gt;ピースのシャッフル&lt;/h3&gt;
+&lt;h2 id=&#34;ピースのシャッフル&#34;&gt;ピースのシャッフル&lt;/h2&gt;
 
-&lt;p&gt;まずは以下で動きを確認してみてください。
-&lt;strong&gt;SHUFFLE&lt;/strong&gt;ボタンをタッチすると、ピースがシャッフルされます。&lt;/p&gt;
+&lt;p&gt;ピースをシャッフルするボタンを追加します。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/HIgbx1&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/15puzzle-tut-6.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;コードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    var self = this;
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // 番号
+        var num = spanY * PIECE_NUM_XY + spanX + 1;
+        // ピース作成
+        var piece = Piece(num).addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+        // タッチを有効にする
+        piece.setInteractive(true);
+        // タッチされた時の処理
+        piece.onpointend = function() {
+          // ピース移動処理
+          self.movePiece(this);
+        };
+        // 16番のピースは非表示
+        if (num === 16) piece.hide();
+      });
+    });
+    // シャッフルボタン
+    var shuffleButton = Button({
+      text: &#39;SHUFFLE&#39;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(13));
+    // ボタンプッシュ時処理
+    shuffleButton.onpush = function() {
+      // ピースをシャッフル
+      (100).times(function() {
+        self.shufflePieces();  
+      });
+    };
+    // 参照用
+    this.pieceGroup = pieceGroup;
+    this.shuffleButton = shuffleButton;
+  },
+  // 16番ピース（空白）を取得
+  getBlankPiece: function() {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 16番ピースを結果に格納
+      if (piece.num === 16) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースの移動処理
+  movePiece: function(piece, isInstantly) {
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 即入れ替え
+    if (isInstantly) {
+      var tmpX = piece.x;
+      var tmpY = piece.y;
+      piece.setPosition(blank.x, blank.y);
+      blank.setPosition(tmpX, tmpY);
+      return;
+    }
+    // x, yの座標差の絶対値
+    var dx = Math.abs(piece.x - blank.x);
+    var dy = Math.abs(piece.y - blank.y);
+    // 隣り合わせの判定
+    if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) || 
+        (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+      // タッチされたピース位置を記憶
+      var touchX = piece.x;
+      var touchY = piece.y;
+      var self = this;
+      // tweenerで移動処理
+      piece.tweener.clear()
+                   .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+                   .call(function() {
+                     // 空白ピースをタッチされたピースの位置へ
+                     blank.setPosition(touchX, touchY);
+                   });
+    }
+  },
+  // 指定の位置のピースを返す
+  getPieceByXY: function(x, y) {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 指定した座標なら
+      if (piece.x === x &amp;amp;&amp;amp; piece.y === y) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースをシャッフルする
+  shufflePieces: function() {
+    var self = this;
+    // 隣接ピース格納用
+    var pieces = [];
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 上下左右隣りのピースがあれば配列に追加
+    [1, 0, -1].each(function(i) {
+      [1, 0, -1].each(function(j) {
+        if (i != j) {
+          var x = blank.x + i * GRID_SIZE;
+          var y = blank.y + j * GRID_SIZE;
+          var target = self.getPieceByXY(x, y);
+          if (target) pieces.push(target);
+        }
+      });
+    });
+    // 隣接ピースからランダムに選択して空白ピースと入れ替える
+    this.movePiece(pieces.random(), &#39;instantly&#39;);
+    pieces.clear();
+  },
+});
+// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9322fad6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
 
@@ -140,14 +312,184 @@ shuffleButton.onpush = function() {
 &lt;li&gt;15パズルのシャッフルのポイントは、実際に可能な移動をさせるという点です。そうすればパズルが解けなくなるという心配もありません。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h3&gt;
+&lt;h2 id=&#34;クリア判定&#34;&gt;クリア判定&lt;/h2&gt;
 
 &lt;p&gt;15パズルにおけるクリアとは、言うまでもなく&lt;strong&gt;全てのピースが正しい位置に収まった時&lt;/strong&gt;です。
-以下で動作を確認してみて下さい。シャッフルボタンを押した後にピースを正しい位置に揃えると、リザルトシーンに移行します。（確認しやすいようにシャッフル回数を2回にしています。）&lt;/p&gt;
+シャッフルボタンを押した後にピースを正しい位置に揃えると、リザルトシーンに移行するようにします。
+コードは以下のとおりです。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/TLD1J6&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;            // 画面横サイズ
+var SCREEN_HEIGHT = 960;           // 画面縦サイズ
+var GRID_SIZE = SCREEN_WIDTH / 4;  // グリッドのサイズ
+var PIECE_SIZE = GRID_SIZE * 0.95; // ピースの大きさ
+var PIECE_NUM_XY = 4;              // 縦横のピース数
+var PIECE_OFFSET = GRID_SIZE / 2;  // オフセット値
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(SCREEN_WIDTH, PIECE_NUM_XY);
+    // ピースグループ
+    var pieceGroup = DisplayElement().addChildTo(this);
+    var self = this;
+    // ピース配置
+    PIECE_NUM_XY.times(function(spanX) {
+      PIECE_NUM_XY.times(function(spanY) {
+        // 番号
+        var num = spanY * PIECE_NUM_XY + spanX + 1;
+        // ピース作成
+        var piece = Piece(num).addChildTo(pieceGroup);
+        // Gridを利用して配置
+        piece.x = grid.span(spanX) + PIECE_OFFSET;
+        piece.y = grid.span(spanY) + PIECE_OFFSET;
+        // タッチを有効にする
+        piece.setInteractive(true);
+        // タッチされた時の処理
+        piece.onpointend = function() {
+          // ピース移動処理
+          self.movePiece(this);
+        };
+        // 16番のピースは非表示
+        if (num === 16) piece.hide();
+      });
+    });
+    // シャッフルボタン
+    var shuffleButton = Button({
+      text: &#39;SHUFFLE&#39;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(13));
+    // ボタンプッシュ時処理
+    shuffleButton.onpush = function() {
+      // ピースをシャッフル
+      (100).times(function() {
+        self.shufflePieces();  
+      });
+    };
+    // 参照用
+    this.pieceGroup = pieceGroup;
+    this.shuffleButton = shuffleButton;
+  },
+  // 16番ピース（空白）を取得
+  getBlankPiece: function() {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 16番ピースを結果に格納
+      if (piece.num === 16) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースの移動処理
+  movePiece: function(piece, isInstantly) {
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 即入れ替え
+    if (isInstantly) {
+      var tmpX = piece.x;
+      var tmpY = piece.y;
+      piece.setPosition(blank.x, blank.y);
+      blank.setPosition(tmpX, tmpY);
+      return;
+    }
+    // x, yの座標差の絶対値
+    var dx = Math.abs(piece.x - blank.x);
+    var dy = Math.abs(piece.y - blank.y);
+    // 隣り合わせの判定
+    if ((piece.x === blank.x &amp;amp;&amp;amp; dy === GRID_SIZE) || 
+        (piece.y === blank.y &amp;amp;&amp;amp; dx === GRID_SIZE)) {
+      // タッチされたピース位置を記憶
+      var touchX = piece.x;
+      var touchY = piece.y;
+      var self = this;
+      // tweenerで移動処理
+      piece.tweener.clear()
+                   .to({x: blank.x, y: blank.y}, 200, &amp;quot;easeOutCubic&amp;quot;)
+                   .call(function() {
+                     // 空白ピースをタッチされたピースの位置へ
+                     blank.setPosition(touchX, touchY);
+                   });
+    }
+  },
+  // 指定の位置のピースを返す
+  getPieceByXY: function(x, y) {
+    var result = null;
+    this.pieceGroup.children.some(function(piece) {
+      // 指定した座標なら
+      if (piece.x === x &amp;amp;&amp;amp; piece.y === y) {
+        result = piece;
+        return true;
+      }
+    });
+    return result;
+  },
+  // ピースをシャッフルする
+  shufflePieces: function() {
+    var self = this;
+    // 隣接ピース格納用
+    var pieces = [];
+    // 空白ピースを得る
+    var blank = this.getBlankPiece();
+    // 上下左右隣りのピースがあれば配列に追加
+    [1, 0, -1].each(function(i) {
+      [1, 0, -1].each(function(j) {
+        if (i != j) {
+          var x = blank.x + i * GRID_SIZE;
+          var y = blank.y + j * GRID_SIZE;
+          var target = self.getPieceByXY(x, y);
+          if (target) pieces.push(target);
+        }
+      });
+    });
+    // 隣接ピースからランダムに選択して空白ピースと入れ替える
+    this.movePiece(pieces.random(), &#39;instantly&#39;);
+    pieces.clear();
+  },
+});
+// ピースクラス
+phina.define(&#39;Piece&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;phina.display.RectangleShape&#39;,
+    // コンストラクタ
+    init: function(num) {
+      // 親クラス初期化
+      this.superInit({
+        width: PIECE_SIZE,
+        height: PIECE_SIZE,
+        cornerRadius: 10,
+        fill: &#39;silver&#39;,
+        stroke: &#39;white&#39;,
+      });
+      // 数字
+      this.num = num;
+      // 数字表示用ラベル
+      this.label = Label({
+        text: this.num + &#39;&#39;,
+        fontSize: PIECE_SIZE * 0.8,
+        fill: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;以下が主な変更点です。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/90d6fc13&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// Gridを利用して配置
 piece.x = grid.span(spanX) + PIECE_OFFSET;
@@ -216,15 +558,9 @@ checkPiecePosition: function() {
 &lt;li&gt;全て正しい位置なら、残りステップ数を&lt;strong&gt;score&lt;/strong&gt;に渡して&lt;strong&gt;exit&lt;/strong&gt;でリザルトシーンに遷移させます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;まとめ&#34;&gt;まとめ&lt;/h3&gt;
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;今回で&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;を使った15パズル作成のチュートリアルは終わりです。分かりづらい部分も多々あったかと思いますが、少しでも&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;を使ったゲーム作りのヒントになれば幸いです。最後まで読んで頂きありがとうございました。&lt;/p&gt;
-
-&lt;h3 id=&#34;完成版&#34;&gt;完成版&lt;/h3&gt;
-
-&lt;p&gt;最後にシャッフル回数を通常に戻した完成版を掲載します。&lt;/p&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Tsxuak&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
 </description>
     </item>
     

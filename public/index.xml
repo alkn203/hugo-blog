@@ -6,8 +6,634 @@
     <description>Recent content on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 13 Nov 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 16 Dec 2016 00:01:08 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Collisionクラスを使った当たり判定</title>
+      <link>https://alkn203.github.io/blog/2016/12/16/phina-advent-16th</link>
+      <pubDate>Fri, 16 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/16/phina-advent-16th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の16日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;15日目：&lt;a href=&#34;http://qiita.com/minimo/items/8aca8ee80196ad045b87&#34;&gt;phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;collisionクラスについて&#34;&gt;Collisionクラスについて&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.geom.Collision&lt;/strong&gt;は、当たり判定を行うためのクラスです。
+&lt;strong&gt;phina.js&lt;/strong&gt;の当たり判定で良く使うのは、&lt;strong&gt;phina.app.Object2d&lt;/strong&gt;クラスの&lt;strong&gt;hitTest&lt;/strong&gt;メソッドかと思いますが、このメソッドを使うためには以下のようにインスタンス経由となります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;obj.hitTest(target);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;対して、&lt;strong&gt;Collision&lt;/strong&gt;クラスのメソッドは全て&lt;strong&gt;static&lt;/strong&gt;なメソッドとなっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;Collision.メソッド名(引数1, 引数2);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;collisionクラスのメソッド&#34;&gt;Collisionクラスのメソッド&lt;/h2&gt;
+
+&lt;h3 id=&#34;testcirclecircle&#34;&gt;testCircleCircle&lt;/h3&gt;
+
+&lt;p&gt;円同士が重なっているかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testrectrect&#34;&gt;testRectRect&lt;/h3&gt;
+
+&lt;p&gt;矩形同士が重なっているかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testcirclerect&#34;&gt;testCircleRect&lt;/h3&gt;
+
+&lt;p&gt;円と矩形が重なってるかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testcircleline&#34;&gt;testCircleLine&lt;/h3&gt;
+
+&lt;p&gt;円と線分が重なってるかを判定します。&lt;/p&gt;
+
+&lt;h2 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h2&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-16th.png&#34; alt=&#34;phina-advent-16th&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ラベル1
+    this.label1 = Label({
+      text: &#39;図形をドラッグして重ねよう&#39;,
+      fill: &#39;white&#39;,
+      fontSize: 48,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-6));
+    // ラベル2
+    this.label2 = Label({
+      fill: &#39;white&#39;,
+      fontSize: 48,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(6));
+    // 円1
+    var circle1 = CircleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-2));
+    // ドラッグ可能にする
+    Draggable().attachTo(circle1);
+    // 円2
+    var circle2 = CircleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(2));
+    // ドラッグ可能にする
+    Draggable().attachTo(circle2); 
+    // 矩形1
+    var rect1 = RectangleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(-3), this.gridY.center());
+    Draggable().attachTo(rect1);
+    // 矩形2
+    var rect2 = RectangleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(3), this.gridY.center());
+    Draggable().attachTo(rect2);
+    // canvas要素描画用
+    var elem  = PlainElement({
+      width: this.gridX.width,
+      height: this.gridY.width, 
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+    // canvasパラメータ指定
+    elem.canvas.context.strokeStyle = &#39;white&#39;;
+    elem.canvas.context.lineWidth = 4;
+    // 線分の両端の座標
+    this.points = [Vector2(this.gridX.center(-3), this.gridY.center(-3)),
+                   Vector2(this.gridX.center(3), this.gridY.center(3))];
+    
+    var p1 = this.points[0];
+    var p2 = this.points[1];
+    // 線を引く
+    elem.canvas.drawLine(p1.x, p1.y, p2.x, p2.y);
+    // 参照用
+    this.circle1 = circle1;
+    this.circle2 = circle2;
+    this.rect1 = rect1;
+    this.rect2 = rect2;
+  },
+
+  update: function() {
+    var c1 = this.circle1;
+    var c2 = this.circle2;
+    var r1 = this.rect1;
+    var r2 = this.rect2;
+    // 円同士の当たり判定
+    if (Collision.testCircleCircle(c1, c2)) {
+      this.label2.text = &#39;Circle And Circle&#39;;
+      return;
+    }
+    // 矩形同士の当たり判定
+    if (Collision.testRectRect(r1, r2)) {
+      this.label2.text = &#39;Rect And Rect&#39;;
+      return;  
+    }
+    // 円と矩形の当たり判定
+    if (Collision.testCircleRect(c1, r1) || Collision.testCircleRect(c1, r2) ||
+        Collision.testCircleRect(c2, r1) || Collision.testCircleRect(c2, r2)) {
+          this.label2.text = &#39;Circle And Rect&#39;;
+          return;  
+    }
+
+    var p1 = this.points[0];
+    var p2 = this.points[1];
+    var bc1 = Circle(c1.x, c1.y, c1.radius);
+    var bc2 = Circle(c2.x, c2.y, c2.radius);
+    // 円と線分の当たり判定
+    if (Collision.testCircleLine(bc1, p1, p2) ||
+        Collision.testCircleLine(bc2, p1, p2)) {
+          this.label2.text = &#39;Circle And Line&#39;;
+          return;  
+    }
+    
+    this.label2.text = &#39;&#39;;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9872a6f6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;現在の&lt;strong&gt;Collision&lt;/strong&gt;クラスで大体の当たり判定の処理はできるかと思いますが、&lt;strong&gt;線分と線分&lt;/strong&gt;、&lt;strong&gt;矩形と線分&lt;/strong&gt;、&lt;strong&gt;多角形と多角形&lt;/strong&gt;といった当たり判定を追加しても良いかもしれません。ライブラリ開発に少しでもコントリビュートしていけるのが&lt;strong&gt;phina.js&lt;/strong&gt;の醍醐味でもあります。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Flowを使った非同期処理の基本</title>
+      <link>https://alkn203.github.io/blog/2016/12/12/phina-advent-12th</link>
+      <pubDate>Mon, 12 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/12/phina-advent-12th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の12日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;11日目：&lt;a href=&#34;http://qiita.com/tamochu3141/items/8094aec3348dc9a6ae9d&#34;&gt;phina.jsでの多人数参加型ゲームの作製 by tamochu3141さん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;13日目：&lt;a href=&#34;http://qiita.com/minimo/items/27020fdb66375f1f868b&#34;&gt;phina.jsでGamePadを使う by minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;非同期処理&#34;&gt;非同期処理&lt;/h2&gt;
+
+&lt;p&gt;基本的にプログラムはソースに書かれたの順序で実行されます。これは一般的に&lt;strong&gt;同期処理&lt;/strong&gt;と呼んでいます。
+一方で、処理の一部を特定の処理が終わるまで待ってから実行するなど、書かれた順序に依存しない処理を&lt;strong&gt;非同期処理&lt;/strong&gt;と呼んでおり、時間のかかる処理をバックグランドで実行させておく場合になどによく使用されます。&lt;/p&gt;
+
+&lt;h2 id=&#34;flowとは&#34;&gt;Flowとは&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;には、&lt;strong&gt;Flow&lt;/strong&gt;という非同期処理を実装するためのクラスが用意されています。&lt;strong&gt;javascript&lt;/strong&gt;に詳しい人なら、&lt;strong&gt;EcmaScript6&lt;/strong&gt;の&lt;strong&gt;Promise&lt;/strong&gt;と言えばピンと来るかもしれません。(そう言う私もそれほど詳しくありませんが）
+&lt;strong&gt;Flow&lt;/strong&gt;はその&lt;strong&gt;Promise&lt;/strong&gt;と基本的に同じ機能を&lt;strong&gt;phina.js&lt;/strong&gt;で実装したものです。&lt;strong&gt;tmlib.js&lt;/strong&gt;時代も&lt;strong&gt;Flow&lt;/strong&gt;というクラス自体はありましたが、中身は大幅に違っています。&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-12th.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;flowの使い方&#34;&gt;Flowの使い方&lt;/h2&gt;
+
+&lt;p&gt;では、早速使い方を見ていきましょう。
+以下がサンプルコードです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+  
+    var self = this;
+    var duration = 2000;
+    // flow設定
+    var flow = Flow(function(resolve) {
+      RectangleShape()
+        .addChildTo(self)
+        .setPosition(self.gridX.center(), 0)
+        .tweener.to({y: self.gridY.center()}, duration)
+        .call(function() {
+          resolve();
+        });
+    });
+
+    var rect = RectangleShape().addChildTo(this);
+    rect.setPosition(self.gridX.center(1), self.gridY.center(1));
+    // 非同期処理(resoveで呼ばれる)
+    flow.then(function() {
+      rect.tweener.to({y: self.gridY.width}, duration).play();
+    });
+    // 同期処理
+    RectangleShape()
+      .addChildTo(self)
+      .setPosition(self.gridX.center(-1), self.gridY.center(1))
+      .tweener.to({y: self.gridY.width}, duration);
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/017e556a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;実行すると、左下の矩形は実行と同時に下に移動しますが、右下の矩形は上の矩形が止まってから移動を開始します。&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;flowの設定&#34;&gt;Flowの設定&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// flow設定
+var flow = Flow(function(resolve) {
+  RectangleShape()
+    .addChildTo(self)
+    .setPosition(self.gridX.center(), 0)
+    .tweener.to({y: self.gridY.center()}, duration)
+    .call(function() {
+      resolve(&#39;flow done&#39;);
+      console.log(message);
+    }).play();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;非同期で実行したい処理を&lt;strong&gt;Flow&lt;/strong&gt;内に記述します。&lt;/li&gt;
+&lt;li&gt;処理が終わった後は、&lt;strong&gt;resolve&lt;/strong&gt;を呼び出します。&lt;/li&gt;
+&lt;li&gt;上の例では、&lt;strong&gt;tweener&lt;/strong&gt;を使って一定時間かけて画面中央まで移動した後に、&lt;strong&gt;resolve&lt;/strong&gt;をコールするようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;後処理の記述&#34;&gt;後処理の記述&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// resoveで実行される
+flow.then(function() {
+  rect.tweener.to({y: self.gridY.width}, duration).play();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;resolve&lt;/strong&gt;が呼ばれると、&lt;strong&gt;Flow&lt;/strong&gt;クラスのメソッド&lt;strong&gt;then&lt;/strong&gt;が実行されるため、この中に後から実行したい処理を記述します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;複数のflowを取り扱う&#34;&gt;複数のFlowを取り扱う&lt;/h3&gt;
+
+&lt;p&gt;これまでは1つの&lt;strong&gt;Flow&lt;/strong&gt;オブジェクトを取り扱ってきました。
+1つであれば&lt;strong&gt;tweener&lt;/strong&gt;を使えば似たような処理が出来なくもないですが、さらに&lt;strong&gt;Flow&lt;/strong&gt;では複数の非同期処理をウォッチすることができます。
+サンプルコードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+  
+    var self = this;
+    var flows = [];
+    
+    (10).times(function(i) {
+      // flow作成
+      var flow = Flow(function(resolve) {
+        var x = Random.randint(64, self.gridX.width - 64);
+        var y = Random.randint(64, self.gridY.width - 64);
+        var duration = Random.randint(500, 5000); 
+        // ランダムな位置に円を作成
+        CircleShape()
+          .addChildTo(self)
+          .setPosition(x, y)
+          .tweener.fadeOut(duration) // フェードアウト
+          .call(function() {
+            resolve(i + &#39;done&#39;);
+          }).play();
+        });
+        // 配列に追加
+        flows.push(flow);
+    });
+    // 全てのflow実行後
+    Flow.all(flows).then(function(messages) {
+      console.log(&#39;all done!&#39;, messages);
+    });
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9665202b&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;実行すると、ランダムな位置に円が表示されランダムな時間でフェードアウトします。&lt;/li&gt;
+&lt;li&gt;最後の円がフェードアウトしてから、メッセージがコンソールに表示されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;flowの配列を作って追加する&#34;&gt;Flowの配列を作って追加する&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var flows = [];
+
+(10).times(function(i) {
+  // flow作成
+  var flow = Flow(function(resolve) {
+    var x = Random.randint(64, self.gridX.width - 64);
+    var y = Random.randint(64, self.gridY.width - 64);
+    var duration = Random.randint(500, 5000); 
+    // ランダムな位置に円を作成
+    CircleShape()
+      .addChildTo(self)
+      .setPosition(x, y)
+      .tweener.fadeOut(duration) // フェードアウト
+      .call(function() {
+        resolve(i + &#39;done&#39;);
+      }).play();
+    });
+    // 配列に追加
+    flows.push(flow);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Flow&lt;/strong&gt;を格納する配列を作って&lt;strong&gt;push&lt;/strong&gt;しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;flow-allで全てのflowをウォッチ&#34;&gt;Flow.allで全てのFlowをウォッチ&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 全てのflow実行後
+Flow.all(flows).then(function(messages) {
+  console.log(&#39;all done!&#39;, messages);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Flow.all&lt;/strong&gt;の引数にウォッチしたい&lt;strong&gt;Flow&lt;/strong&gt;の配列を代入すると、与えれられた全ての非同期処理の終了をウォッチすることができます。&lt;/li&gt;
+&lt;li&gt;今回は配列でまとめて代入しましたが、個々に&lt;strong&gt;Flow&lt;/strong&gt;を作成して代入することもできます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;説明不足のところもあるかもしれませんが、今回紹介した&lt;strong&gt;Flow&lt;/strong&gt;を使うことによって、&lt;strong&gt;phina.js&lt;/strong&gt;における非同期処理をよりスマートにコーディングすることができると思いますので、皆も色々と試してみて下さい。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>PlainElementでCanvas描画</title>
+      <link>https://alkn203.github.io/blog/2016/12/05/phina-advent-5th</link>
+      <pubDate>Mon, 05 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/05/phina-advent-5th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/tamochu3141/items/8094aec3348dc9a6ae9d&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の5日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;4日目：&lt;a href=&#34;http://qiita.com/tamochu3141/items/8094aec3348dc9a6ae9d&#34;&gt;phina.jsでの多人数参加型ゲームの作製 by tamochu3141さん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;6日目：&lt;a href=&#34;http://qiita.com/simiraaaa/items/ba1f1648a6d0451b5abc&#34;&gt;Shapeを画像として使う by simiraaaaさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;phina-jsの描画機能&#34;&gt;phina.jsの描画機能&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;の描画機能は、&lt;strong&gt;HTML5 Canvas&lt;/strong&gt;がベースになっています。&lt;strong&gt;Canvas&lt;/strong&gt;をある程度知っている人は、&lt;strong&gt;phina.js&lt;/strong&gt;を使ってみてピンと来るところがあると思います。加えて、&lt;strong&gt;phina.js&lt;/strong&gt;にはデフォルトの&lt;strong&gt;Canvas&lt;/strong&gt;の機能を拡張した&lt;a href=&#34;https://github.com/phi-jp/phina.js/blob/develop/src/graphics/canvas.js&#34;&gt;&lt;strong&gt;phina.graphics.Canvas&lt;/strong&gt;&lt;/a&gt;というクラスが用意されており、デフォルトのメソッドに加え、簡単に線を描画できる&lt;strong&gt;drawLine&lt;/strong&gt;など便利なメソッド群が追加で実装されています。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;で&lt;strong&gt;Canvas&lt;/strong&gt;のメソッドを使用したい場合は、&lt;strong&gt;phina.graphics.Canvas&lt;/strong&gt;のインスタンスを作ってそこに描画する方法がありますが、多少手間がかかるところがありますので、今回は手軽に&lt;strong&gt;Canvas&lt;/strong&gt;の機能が使える&lt;strong&gt;PlainElement&lt;/strong&gt;というクラスを紹介したいと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;plainelementクラス&#34;&gt;PlainElementクラス&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.display.PlainElement&lt;/strong&gt;は、内部に&lt;strong&gt;Canvas&lt;/strong&gt;クラスを持っているだけのシンプルなクラスで、&lt;strong&gt;Shape&lt;/strong&gt;の親クラスとして位置付けられています。
+内部に&lt;strong&gt;Canvas&lt;/strong&gt;を持っているので、&lt;strong&gt;Canvas&lt;/strong&gt;で使えるメソッドは一通り使うことができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;plainelementクラスの使用例-簡単なお絵描き風プログラム&#34;&gt;PlainElementクラスの使用例（簡単なお絵描き風プログラム）&lt;/h2&gt;
+
+&lt;p&gt;お絵描きと呼べる程ではありませんが、今回は、マウスドラッグで線が引けるだけの簡単なサンプルを作ってみました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-5th.png&#34; alt=&#34;phina-advent-5th&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;コードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // canvas要素描画用
+    var elem  = PlainElement({
+      width: this.gridX.width,
+      height: this.gridY.width, 
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+    // canvasパラメータ指定
+    elem.canvas.context.strokeStyle = &#39;white&#39;;
+    elem.canvas.context.lineWidth = 4;
+    // 参照用
+    this.elem = elem;
+  },
+  // タッチ開始
+  onpointstart: function(e) {
+    // タッチされた位置を記憶
+    this.prev = Vector2(e.pointer.x, e.pointer.y);
+  },
+  // タッチ移動中
+  onpointmove: function(e) {
+    // 現在のタッチ位置を記憶
+    var current = Vector2(e.pointer.x, e.pointer.y);
+    // 前の位置から現在の位置まで線を引く
+    this.elem.canvas.drawLine(this.prev.x, this.prev.y, current.x, current.y);
+    // 前の位置を現在の位置に更新
+    this.prev = current;
+  },
+  // タッチ終了
+  onpointend: function() {
+    // 位置情報をクリア
+    this.prev = null;  
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/783bf264&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;plainelementの追加&#34;&gt;PlainElementの追加&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // canvas要素描画用
+    var elem  = PlainElement({
+      width: this.gridX.width,
+      height: this.gridY.width, 
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;PlainElement&lt;/strong&gt;を作成して、&lt;strong&gt;Scene&lt;/strong&gt;に追加しています。&lt;/li&gt;
+&lt;li&gt;コンストラクでは、横と縦のサイズを指定します。今回は、画面と同じサイズにして重ねています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;canvasのcontext指定&#34;&gt;canvasのcontext指定&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// canvasパラメータ指定
+elem.canvas.context.strokeStyle = &#39;white&#39;;
+elem.canvas.context.lineWidth = 4;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;PlainElement&lt;/strong&gt;内部の&lt;strong&gt;Canvas&lt;/strong&gt;には、&lt;strong&gt;canvas&lt;/strong&gt;プロパティでアクセスできます。&lt;/li&gt;
+&lt;li&gt;ここでは&lt;strong&gt;canvas&lt;/strong&gt;の&lt;strong&gt;context&lt;/strong&gt;を経由して、線の色と幅を指定しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;タッチ開始時処理&#34;&gt;タッチ開始時処理&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// タッチ開始
+onpointstart: function(e) {
+  // タッチされた位置を記憶
+  this.prev = Vector2(e.pointer.x, e.pointer.y);
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;イベントからマウスが押された位置を取得します。&lt;/li&gt;
+&lt;li&gt;線の始点の座標を&lt;strong&gt;Vector2&lt;/strong&gt;クラスを使って記憶します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;タッチ移動時処理&#34;&gt;タッチ移動時処理&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// タッチ移動中
+onpointmove: function(e) {
+  // 現在のタッチ位置を記憶
+  var current = Vector2(e.pointer.x, e.pointer.y);
+  // 前の位置から現在の位置まで線を引く
+  this.elem.canvas.drawLine(this.prev.x, this.prev.y, current.x, current.y);
+  // 前の位置を更新
+  this.prev = current;
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;現在のタッチ位置を線の終点として記憶します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;canvas&lt;/strong&gt;の&lt;strong&gt;drawLine&lt;/strong&gt;メソッドで線を引きます。&lt;/li&gt;
+&lt;li&gt;最後の前の位置を現在の位置に更新します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;タッチ終了時処理&#34;&gt;タッチ終了時処理&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// タッチ終了
+onpointend: function() {
+  // 位置情報をクリア
+  this.prev = null;  
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;線を引き終わった後は、始点の位置情報をクリアします。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;補足&#34;&gt;補足&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phinajs&lt;/strong&gt;には他に&lt;strong&gt;PathShape&lt;/strong&gt;というクラスがあります。線の描画に特化したクラスで、座標値データ群を与えるだけでその点を結んだ線を自動で描画してくれる優れものです。こちらはまた別の機会に紹介したいと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;でゲームを作るときは&lt;strong&gt;Sprite&lt;/strong&gt;画像を使うことが多いかもしれませんが、上で説明した&lt;strong&gt;PlainElement&lt;/strong&gt;、つまり、&lt;strong&gt;Canvas&lt;/strong&gt;の機能を併用することで、よりゲームの表現性が増すのではないでしょうか。可能であれば、今回のアドベントカレンダーの期間内で簡単なサンプルゲームを作ってみたいと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>006-Shapeの更新イベント処理</title>
+      <link>https://alkn203.github.io/blog/2016/11/29/phina-update-shape</link>
+      <pubDate>Tue, 29 Nov 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/11/29/phina-update-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対してフレーム更新処理を登録する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-update-shape.png&#34; alt=&#34;phina-invisible-shape&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;更新イベント処理-update&#34;&gt;更新イベント処理（update）&lt;/h2&gt;
+
+&lt;p&gt;更新処理を登録するためには、&lt;strong&gt;shape&lt;/strong&gt;の&lt;strong&gt;update&lt;/strong&gt;関数を実装します。
+&lt;strong&gt;update&lt;/strong&gt;関数が実装されていると、その内容が毎フレーム実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
+shape.update = function() {
+  // 移動
+  shape.moveBy(1, 1);  
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d709760f&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;更新イベント処理-on-enterframe&#34;&gt;更新イベント処理（on + enterframe）&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;では1つのメソッドしか登録できません。一方、&lt;strong&gt;on&lt;/strong&gt;と&lt;strong&gt;enterframe&lt;/strong&gt;を組み合わせると複数のメソッドを登録可能で、その内容が並行して実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
+shape.on(&#39;enterframe&#39;, function() {
+  // 移動
+  shape.moveBy(1, 1);  
+});
+// 毎フレーム更新処理
+shape.on(&#39;enterframe&#39;, function() {
+  // 回転
+  shape.rotation++;  
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/0705ecfc&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>005-Shapeを透明化する</title>
@@ -779,18 +1405,176 @@ panel.onpointstart = function() {
       <guid>https://alkn203.github.io/blog/2016/07/04/minesweeper-tut-03</guid>
       <description>
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/&#34;&gt;前回&lt;/a&gt;はランダムに爆弾を配置しました。
 今回はパネルを開いて周りにある爆弾の数が表示されるようにします。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/4edca5d9/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/minesweeper-tut-3.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;h2 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h2&gt;
 
-&lt;h4 id=&#34;mainscene&#34;&gt;MainScene&lt;/h4&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640; // 画面横サイズ
+var PANEL_NUM_XY = 9; // 縦横のパネル数
+var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
+var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
+var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
+var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
+var BOMB_NUM = 10; // 爆弾数
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      width: SCREEN_WIDTH,
+      height: SCREEN_HEIGHT,
+    });
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // グリッド
+    var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
+    // グループ
+    var panelGroup = DisplayElement().addChildTo(this);
+    // 爆弾位置をランダムに決めた配列を作成
+    var bombs = [];
+    (PANEL_NUM_XY * PANEL_NUM_XY).times(function() {
+      bombs.push(false);
+    });
+    bombs.fill(true, 0, 10).shuffle();
 
-&lt;h4 id=&#34;init関数&#34;&gt;init関数&lt;/h4&gt;
+    var self = this;
+    // ピース配置
+    PANEL_NUM_XY.times(function(spanX) {
+      PANEL_NUM_XY.times(function(spanY) {
+        // パネル作成
+        var panel = Panel().addChildTo(panelGroup);
+        // Gridを利用して配置
+        panel.x = grid.span(spanX) + PANEL_OFFSET;
+        panel.y = grid.span(spanY) + PANEL_OFFSET;
+        // パネルに爆弾情報を紐づける
+        panel.isBomb = bombs[spanX * PANEL_NUM_XY + spanY];
+        // 開かれているかどうか
+        panel.isOpen = false;
+        // タッチ有効化
+        panel.setInteractive(true);
+        // パネルタッチ時
+        panel.onpointstart = function() {
+          self.openPanel(panel);
+        };
+        // 爆弾なら表示
+        if (panel.isBomb) Bomb().addChildTo(panel);
+      });
+    });
+    // 参照用
+    this.panelGroup = panelGroup;
+  },
+  // パネルを開く処理
+  openPanel: function(panel) {
+    // 既に開かれていた何もしない
+    if (panel.isOpen) return;
+    // 開いたとフラグを立てる
+    panel.isOpen = true;
+    // タッチ不可にする
+    panel.setInteractive(false);
+    
+    var bombs = 0;
+    var indexs = [-1, 0, 1];
+    var self = this;
+    // 周りのパネルの爆弾数をカウント
+    indexs.each(function(i) {
+      indexs.each(function(j) {
+        var pos = Vector2(panel.x + i * GRID_SIZE, panel.y + j * GRID_SIZE);
+        var target = self.getPanel(pos);
+        if (target &amp;amp;&amp;amp; target.isBomb) bombs++;
+      });
+    });
+    // パネルに数を表示
+    panel.num = bombs === 0 ? &#39;&#39; : bombs;
+    Label({
+      text: panel.num,
+      fill: &#39;white&#39;,
+    }).addChildTo(panel);
+    panel.fill = &#39;gray&#39;;
+  },
+  // 指定された位置のパネルを得る
+  getPanel: function(pos) {
+    var result = null;
+    
+    this.panelGroup.children.some(function(panel) {
+      if (panel.position.equals(pos)) {
+        result = panel;
+        return true;
+      } 
+    });
+    return result;
+  },
+});
+// パネルクラス
+phina.define(&#39;Panel&#39;, {
+  // RectangleShapeを継承
+  superClass: &#39;RectangleShape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: PANEL_SIZE,
+        height: PANEL_SIZE,
+        fill: &#39;silver&#39;, // 塗りつぶし色
+        stroke: &#39;white&#39;, // 枠の色
+        cornerRadius: 2, // 角の丸み
+      });
+    },
+});
+// 爆弾クラス
+phina.define(&#39;Bomb&#39;, {
+  // Shapeを継承
+  superClass: &#39;Shape&#39;,
+    // コンストラクタ
+    init: function() {
+      // 親クラス初期化
+      this.superInit({
+        width: GRID_SIZE,
+        height: GRID_SIZE,
+        backgroundColor: &#39;transparent&#39;,
+      });
+      // 導線
+      RectangleShape({
+        width: PANEL_SIZE / 8,
+        height: PANEL_SIZE / 8,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+        y: -20,
+      }).addChildTo(this);
+      // 本体
+      CircleShape({
+        radius: PANEL_SIZE / 4,
+        fill: &amp;quot;navy&amp;quot;,
+        stroke: &#39;white&#39;,
+      }).addChildTo(this);
+    },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;, // メイン画面からスタート
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4edca5d9&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;mainscene&#34;&gt;MainScene&lt;/h3&gt;
+
+&lt;h3 id=&#34;init関数&#34;&gt;init関数&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  init: function() {
     (略)
@@ -824,7 +1608,7 @@ panel.onpointstart = function() {
 &lt;br /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;openpanel関数-新規追加&#34;&gt;openPanel関数(新規追加)&lt;/h4&gt;
+&lt;h3 id=&#34;openpanel関数-新規追加&#34;&gt;openPanel関数(新規追加)&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // パネルを開く処理
   openPanel: function(panel) {
@@ -870,7 +1654,7 @@ panel.onpointstart = function() {
 &lt;br /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;getpanel関数-新規追加&#34;&gt;getPanel関数（新規追加）&lt;/h4&gt;
+&lt;h3 id=&#34;getpanel関数-新規追加&#34;&gt;getPanel関数（新規追加）&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 指定された位置のパネルを得る  
   getPanel: function(pos) {
@@ -891,14 +1675,10 @@ panel.onpointstart = function() {
 &lt;li&gt;&lt;strong&gt;some&lt;/strong&gt;を使って条件が合ったらループを抜けるようにしています。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ここまでで、パネルを開いて爆弾数を表示することが出来ました。
 次回は、再帰処理を使ってパネルが連鎖で開くようにします。&lt;/p&gt;
-
-&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34;&gt;http://runstant.com/alkn203/projects/a24d063d&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -910,14 +1690,14 @@ panel.onpointstart = function() {
       <guid>https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02</guid>
       <description>
 
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
+&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01/&#34;&gt;前回&lt;/a&gt;はパネルをグリッド状に配置しました。
 今回はマインスイーパーの主役とも言える爆弾を配置します。爆弾はランダムな場所に配置されるようにします。&lt;/p&gt;
 
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/a24d063d/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/minesweeper-tut-2.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h3&gt;
+&lt;h2 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
 // 定数
@@ -1021,9 +1801,11 @@ phina.main(function() {
 });
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
-&lt;h4 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h4&gt;
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
 （略）
@@ -1032,7 +1814,7 @@ var BOMB_NUM = 10; // 爆弾数
 
 &lt;p&gt;設置する爆弾数を定義します。&lt;/p&gt;
 
-&lt;h4 id=&#34;爆弾位置情報の作成&#34;&gt;爆弾位置情報の作成&lt;/h4&gt;
+&lt;h3 id=&#34;爆弾位置情報の作成&#34;&gt;爆弾位置情報の作成&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;init: function() {
   （略）
@@ -1049,7 +1831,7 @@ var BOMB_NUM = 10; // 爆弾数
 &lt;li&gt;一旦&lt;strong&gt;false&lt;/strong&gt;で埋めて、先頭の10個まで&lt;strong&gt;true&lt;/strong&gt;に置き換えてから&lt;strong&gt;shuffle&lt;/strong&gt;関数で要素をランダムに並び替えています。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;爆弾位置情報をパネルに紐づける&#34;&gt;爆弾位置情報をパネルに紐づける&lt;/h4&gt;
+&lt;h3 id=&#34;爆弾位置情報をパネルに紐づける&#34;&gt;爆弾位置情報をパネルに紐づける&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピース配置
   PANEL_NUM_XY.times(function(spanX) {
@@ -1069,7 +1851,7 @@ var BOMB_NUM = 10; // 爆弾数
 &lt;li&gt;&lt;strong&gt;isBomb&lt;/strong&gt;プロパティが&lt;strong&gt;true&lt;/strong&gt;なら、爆弾を配置します。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;爆弾クラス&#34;&gt;爆弾クラス&lt;/h4&gt;
+&lt;h3 id=&#34;爆弾クラス&#34;&gt;爆弾クラス&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 爆弾クラス
 phina.define(&#39;Bomb&#39;, {
@@ -1108,464 +1890,10 @@ phina.define(&#39;Bomb&#39;, {
 &lt;li&gt;導線は本体の少し上になるようにy座標を指定しています。この場合、親から見た&lt;strong&gt;相対座標&lt;/strong&gt;になるということに注意してください。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
+&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
 
 &lt;p&gt;ここまでで、爆弾をランダムに配置することができました。読み込まれる度に配置が異なることが確認できるかと思います。
 次回は、パネルを開く処理を追加します。&lt;/p&gt;
-
-&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34;&gt;http://runstant.com/alkn203/projects/a24d063d&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ゲーム作成チュートリアル（マインスイーパー）（その１）【パネルの配置】</title>
-      <link>https://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01</link>
-      <pubDate>Thu, 30 Jun 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;以前にQiitaに&lt;a href=&#34;http://qiita.com/alkn203/items/a533b1264b912dec9590&#34;&gt;tmlib.js ＝マインスイーパー＝ チュートリアル編（目次）&lt;/a&gt;を投稿しましたが、今回は、これを&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;で作り直すのが目標です。なお、本ブログのこれまでのチュートリアルを見て、「&lt;strong&gt;phina.js&lt;/strong&gt;でのゲーム作り」を少しは知っているということを前提にしています。
-このチュートリアルでは、&lt;a href=&#34;http://phinajs.com/&#34;&gt;phina.js&lt;/a&gt;の公式開発環境として更に便利になった&lt;a href=&#34;http://runstant.com/&#34;&gt;runstant&lt;/a&gt;を使っていきたいと思います。&lt;/p&gt;
-
-&lt;h3 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h3&gt;
-
-&lt;p&gt;以下のようにパネルを並べます。
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/ada3aa47/full&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640; // 画面横サイズ
-var PANEL_NUM_XY = 9; // 縦横のパネル数
-var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
-var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
-var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
-var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit({
-      width: SCREEN_WIDTH,
-      height: SCREEN_HEIGHT,
-    });
-    // 背景色
-    this.backgroundColor = &#39;gray&#39;;
-    // グリッド
-    var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
-    // グループ
-    var panelGroup = DisplayElement().addChildTo(this);
-    // ピース配置
-    PANEL_NUM_XY.times(function(spanX) {
-      PANEL_NUM_XY.times(function(spanY) {
-        // パネル作成
-        var panel = Panel().addChildTo(panelGroup);
-        // Gridを利用して配置
-        panel.x = grid.span(spanX) + PANEL_OFFSET;
-        panel.y = grid.span(spanY) + PANEL_OFFSET;
-      });
-    });
-  },
-});
-// パネルクラス
-phina.define(&#39;Panel&#39;, {
-  // RectangleShapeを継承
-  superClass: &#39;RectangleShape&#39;,
-    // コンストラクタ
-    init: function() {
-      // 親クラス初期化
-      this.superInit({
-        width: PANEL_SIZE,
-        height: PANEL_SIZE,
-        fill: &#39;silver&#39;, // 塗りつぶし色
-        stroke: &#39;white&#39;, // 枠の色
-        cornerRadius: 2, // 角の丸み
-      });
-    },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;, // メイン画面からスタート
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;コード説明&#34;&gt;コード説明&lt;/h3&gt;
-
-&lt;h4 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
-var SCREEN_WIDTH = 640; // 画面横サイズ
-var PANEL_NUM_XY = 9; // 縦横のパネル数
-var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
-var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
-var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
-var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;ゲームに必要な各種定数を定義しています。&lt;/li&gt;
-&lt;li&gt;グリッドのサイズは、出来るだけ大きいサイズでパネル数で分割出来るように計算で求めています。&lt;/li&gt;
-&lt;li&gt;パネルの大きさをグリッドサイズより少し小さくしてるのは、配置するときに隙間を開けるためです。&lt;/li&gt;
-&lt;li&gt;パネルを正しい位置に配置できるようにオフセット値を計算しています。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;panelクラス&#34;&gt;Panelクラス&lt;/h4&gt;
-
-&lt;p&gt;メイン処理の前にパネルクラスについて説明します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// パネルクラス
-phina.define(&#39;Panel&#39;, {
-  // RectangleShapeを継承
-  superClass: &#39;RectangleShape&#39;,
-    // コンストラクタ
-    init: function() {
-      // 親クラス初期化
-      this.superInit({
-        width: PANEL_SIZE,
-        height: PANEL_SIZE,
-        fill: &#39;silver&#39;, // 塗りつぶし色
-        stroke: &#39;white&#39;, // 枠の色
-        cornerRadius: 2, // 角の丸み
-      });
-    },
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;phina.define&lt;/strong&gt;でクラスを定義します。&lt;/li&gt;
-&lt;li&gt;パネルは四角形なので&lt;strong&gt;RectangleShape&lt;/strong&gt;（矩形）クラスを継承します。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;this.superInit&lt;/strong&gt;で親クラスにパラメーターを与えて初期化します。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;cornerRadius&lt;/strong&gt;は角の丸みを指定します。（tmlib.jsではRoundRectangleShape）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;メインシーン&#34;&gt;メインシーン&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// コンストラクタ
-init: function() {
-  // 親クラス初期化
-  this.superInit({
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;画面サイズを反映させるためには、&lt;strong&gt;DisplayScene&lt;/strong&gt;の親クラスにも&lt;strong&gt;width&lt;/strong&gt;と&lt;strong&gt;height&lt;/strong&gt;を指定する必要があります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 背景色
-  this.backgroundColor = &#39;gray&#39;;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;Scene&lt;/strong&gt;の背景色を指定しています。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // グリッド
-  var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;Grid&lt;/strong&gt;クラスを使って、配置用の情報を生成しています。ここで1グリッドの大きさが決まります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // グループ
-  var panelGroup = DisplayElement().addChildTo(this);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;DisplayElement&lt;/strong&gt;を使ってパネルを格納するグループを作成しています。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピース配置
-  PANEL_NUM_XY.times(function(spanX) {
-    PANEL_NUM_XY.times(function(spanY) {
-      // パネル作成
-      var panel = Panel().addChildTo(panelGroup);
-      // Gridを利用して配置
-      panel.x = grid.span(spanX) + PANEL_OFFSET;
-      panel.y = grid.span(spanY) + PANEL_OFFSET;
-    });
-  });
-},
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;パネルをグリッド状に配置する処理です。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;関数は、&lt;strong&gt;phina.js&lt;/strong&gt;独自の仕様で、前に付いた値の回数だけ処理を繰り返します。ここでは、&lt;strong&gt;PANEL_NUM_XY&lt;/strong&gt;回、つまり9回の繰り返しです。入れ子にしてグリッド状に配置します。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Panel&lt;/strong&gt;を作成して&lt;strong&gt;panelGroup&lt;/strong&gt;に追加しています。&lt;/li&gt;
-&lt;li&gt;最後にパネルの位置を指定します。&lt;strong&gt;span&lt;/strong&gt;にインデックス値を指定することで、グリッド状に綺麗に配置することが出来ます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h3&gt;
-
-&lt;p&gt;ここまでで、パネルを配置することができました。
-次回は、&lt;a href=&#34;http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/&#34;&gt;爆弾の配置&lt;/a&gt;です。&lt;/p&gt;
-
-&lt;h3 id=&#34;runstantプロジェクトへのリンク&#34;&gt;runstantプロジェクトへのリンク&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/ada3aa47&#34;&gt;http://runstant.com/alkn203/projects/ada3aa47&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>フレームアニメーション関係Tips</title>
-      <link>https://alkn203.github.io/blog/2016/06/11/frameanimation-tips</link>
-      <pubDate>Sat, 11 Jun 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/06/11/frameanimation-tips</guid>
-      <description>
-
-&lt;h3 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h3&gt;
-
-&lt;p&gt;以前にも紹介したように、phina.jsには&lt;strong&gt;FrameAnimation&lt;/strong&gt;という便利な機能があります。
-今回はより便利に使うための2つのTipsを紹介します。&lt;/p&gt;
-
-&lt;h3 id=&#34;スプライトのサイズがスプライトシートに定義されたサイズにフィットしないようにする&#34;&gt;スプライトのサイズがスプライトシートに定義されたサイズにフィットしないようにする&lt;/h3&gt;
-
-&lt;p&gt;フレームアニメーションを使うためには、&lt;strong&gt;SpriteSheet&lt;/strong&gt;を定義する必要がありますが
-デフォルトだと実際のコード中でスプライトのサイズを変えてもスプライトシート(json)に書かれた&lt;strong&gt;width&lt;/strong&gt;と&lt;strong&gt;height&lt;/strong&gt;に
-戻ってしまい、スプライトを拡大して表示したい時に意図した結果になりません。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// スプライトシート
-spritesheet: {
-  &#39;explosion_ss&#39;:
-  {
-    &amp;quot;frame&amp;quot;: {
-      &amp;quot;width&amp;quot;: 20, // ←この値にフィットされる
-      &amp;quot;height&amp;quot;: 20,// ←この値にフィットされる
-      &amp;quot;cols&amp;quot;: 16,
-      &amp;quot;rows&amp;quot;: 1,
-    },
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;これを回避するためには、&lt;strong&gt;FrameAnimation&lt;/strong&gt;クラスのプロパティ&lt;strong&gt;fit&lt;/strong&gt;を&lt;strong&gt;false&lt;/strong&gt;にします。
-これで実際に変更したサイズで正しく表示されるようになります。
-サンプルでは20X20で切り出した画像を5倍で表示しています。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 親クラスの初期化
-this.superInit(&#39;explosion&#39;, 20, 20); // ←実際の画像の切り取りサイズ
-// SpriteSheetをスプライトにアタッチ
-var anim = FrameAnimation(&#39;explosion_ss&#39;).attachTo(this);
-// スプライトシートのサイズにフィットさせない
-anim.fit = false; // ←ここ
-//アニメーションを再生する
-anim.gotoAndPlay(&#39;start&#39;);
-// サイズ変更
-this.setSize(20*5, 20*5); // ←サイズ変更
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;フレームアニメーションの終了を検知する&#34;&gt;フレームアニメーションの終了を検知する&lt;/h3&gt;
-
-&lt;p&gt;ゲーム作成において、フレームアニメーションが終了した後に何か処理をしたい時があるかと思いまます。
-この場合、&lt;strong&gt;FrameAnimation&lt;/strong&gt;クラスの&lt;strong&gt;finished&lt;/strong&gt;プロパティの値が&lt;strong&gt;true&lt;/strong&gt;かどうかを調べると便利です。
-サンプルでは爆発アニメーションが終了したら、自身を消去するようにしています。（consoleに結果表示）&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム処理
-update: function() {
-  // アニメーションが終わったら自身を消去
-  if (this.anim.finished) { // ←ここで判定
-    this.remove();
-    console.log(&#39;removed&#39;);
-  }
-},
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;サンプル-runstant上&#34;&gt;サンプル(runstant上)&lt;/h4&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://runstant.com/alkn203/projects/e18e94bb&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ポーズ動作のサンプル</title>
-      <link>https://alkn203.github.io/blog/2016/04/23/pause</link>
-      <pubDate>Sat, 23 Apr 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/04/23/pause</guid>
-      <description>
-
-&lt;h3 id=&#34;サンプル&#34;&gt;サンプル&lt;/h3&gt;
-
-&lt;p&gt;ゲームでよくあるポーズ機能です。
-もっとスマートな方法があるかと思いますが、今回は&lt;strong&gt;update&lt;/strong&gt;関数の差し替えを活用しています。&lt;/p&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;
-&lt;iframe src=&#39;http://runstant.com/alkn203/projects/5b15c783&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-
-    var label = Label({
-      text: &#39;画面タッチでポーズ切り替え&#39;,
-      fontSize: 36,
-      fill: &#39;yellow&#39;,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-4));
-    label.alpha = 0.7;
-
-    var rect = RectangleShape().addChildTo(this);
-    rect.setPosition(this.gridX.center(), this.gridY.center());
-    this.rect = rect;
-    this.update = this.start;
-  },
-
-  start: function() {
-    this.rect.rotation += 8;
-  },
-  
-  onpointstart: function() {
-    this.update = this.update !== null ? null : this.start;
-  } 
-});
-
-// メイン
-phina.main(function() {
-  app = GameApp({
-    startLabel: &#39;main&#39;,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>スポットライトを作ってみた</title>
-      <link>https://alkn203.github.io/blog/2016/03/09/phina-spotlight</link>
-      <pubDate>Wed, 09 Mar 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/03/09/phina-spotlight</guid>
-      <description>
-
-&lt;h3 id=&#34;サンプル&#34;&gt;サンプル&lt;/h3&gt;
-
-&lt;p&gt;スポットライト的なエフェクトのサンプルです。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;ドラッグして移動することができます。&lt;/li&gt;
-&lt;li&gt;マスク用の&lt;strong&gt;Shape&lt;/strong&gt;を土台にして、&lt;strong&gt;canvas&lt;/strong&gt;の&lt;strong&gt;clear&lt;/strong&gt;（矩形クリア）と&lt;strong&gt;arc&lt;/strong&gt;を使ってスポットを作っています。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/idCD53&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;[&lt;a href=&#34;http://goo.gl/ZrpjNP&#34;&gt;runstantで開く&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// アセット
-var ASSETS = {
-  // 画像
-  image: {
-    &#39;logo&#39;: &#39;https://raw.githubusercontent.com/phi-jp/phina.js/develop/logo.png&#39;,
-  },
-};
-// 定数
-LOGO_SIZE = 512;
-PART_SIZE = 128;
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit({
-      // 画面サイズ指定
-      width: LOGO_SIZE,
-      height: LOGO_SIZE,
-    });
-    // 背景色
-    this.backgroundColor = &#39;skyblue&#39;;
-    // 中心座標
-    var cx = this.gridX.center();
-    var cy = this.gridY.center();
-    // ロゴ追加
-    var logo = Sprite(&#39;logo&#39;).addChildTo(this).setPosition(cx, cy);
-    // スポットライト
-    var spot = SpotShape({
-      width: LOGO_SIZE * 2,
-      height: LOGO_SIZE * 2,
-      spotRadius: 64,
-      alpha: 0.75,
-    }).addChildTo(this).setPosition(cx, cy);
-    // ドラッグ可能にする
-    Draggable().attachTo(spot);
-  },
-});
-//
-phina.define(&#39;SpotShape&#39;, {
-  superClass: &#39;Shape&#39;,
-  // コンストラクタ 
-  init: function(options) {
-    // 親クラス初期化
-    this.superInit({
-      width: options.width,
-      height: options.height,
-      backgroundColor: options.fill || &#39;black&#39;,
-    });
-    // 透明度
-    if (options.alpha) {
-      this.alpha = options.alpha;
-    }
-    // スポット半径
-    this.spotRadius = options.spotRadius ? options.spotRadius : 32;
-  },
-  // 描画
-   render: function(canvas) {
-      // クリアカラー
-      canvas.clearColor(this.backgroundColor);
-      // 中心に座標を移動
-      canvas.transformCenter();
-
-      var r = this.spotRadius;
-      var r2 = r * 2;
-      // 一旦矩形で切り抜き
-      canvas.clear(-r, -r, r2, r2);
-      canvas.fillStyle = this.backgroundColor;
-      // スポット円外側塗りつぶし
-      // 下部分
-      canvas.beginPath()
-            .arc(0, 0, r, 0, Math.degToRad(180), false)
-            .lineTo(-r, r).lineTo(r, r).lineTo(r, -r)
-            .fill();
-      // 上部分
-      canvas.beginPath()
-            .arc(0, 0, r, 0, Math.degToRad(180), true)
-            .lineTo(-r, -r).lineTo(r, -r).lineTo(r, -r)
-            .fill();      // 描画後処理
-      return this;
-    },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;,
-    // アセット読み込み
-    assets: ASSETS,
-    // 画面サイズ指定
-    width: LOGO_SIZE,
-    height: LOGO_SIZE,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

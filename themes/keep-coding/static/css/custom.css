@@ -87,3 +87,7 @@ aside table {
 .googleplus {
   color: #dd4b39;
 }
+
+.gist-data {
+  max-height: 400px;
+}

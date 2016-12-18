@@ -6,8 +6,634 @@
     <description>Recent content in Tips on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 13 Nov 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 16 Dec 2016 00:01:08 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Collisionクラスを使った当たり判定</title>
+      <link>https://alkn203.github.io/blog/2016/12/16/phina-advent-16th</link>
+      <pubDate>Fri, 16 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/16/phina-advent-16th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の16日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;15日目：&lt;a href=&#34;http://qiita.com/minimo/items/8aca8ee80196ad045b87&#34;&gt;phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;collisionクラスについて&#34;&gt;Collisionクラスについて&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.geom.Collision&lt;/strong&gt;は、当たり判定を行うためのクラスです。
+&lt;strong&gt;phina.js&lt;/strong&gt;の当たり判定で良く使うのは、&lt;strong&gt;phina.app.Object2d&lt;/strong&gt;クラスの&lt;strong&gt;hitTest&lt;/strong&gt;メソッドかと思いますが、このメソッドを使うためには以下のようにインスタンス経由となります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;obj.hitTest(target);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;対して、&lt;strong&gt;Collision&lt;/strong&gt;クラスのメソッドは全て&lt;strong&gt;static&lt;/strong&gt;なメソッドとなっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;Collision.メソッド名(引数1, 引数2);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;collisionクラスのメソッド&#34;&gt;Collisionクラスのメソッド&lt;/h2&gt;
+
+&lt;h3 id=&#34;testcirclecircle&#34;&gt;testCircleCircle&lt;/h3&gt;
+
+&lt;p&gt;円同士が重なっているかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testrectrect&#34;&gt;testRectRect&lt;/h3&gt;
+
+&lt;p&gt;矩形同士が重なっているかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testcirclerect&#34;&gt;testCircleRect&lt;/h3&gt;
+
+&lt;p&gt;円と矩形が重なってるかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testcircleline&#34;&gt;testCircleLine&lt;/h3&gt;
+
+&lt;p&gt;円と線分が重なってるかを判定します。&lt;/p&gt;
+
+&lt;h2 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h2&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-16th.png&#34; alt=&#34;phina-advent-16th&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ラベル1
+    this.label1 = Label({
+      text: &#39;図形をドラッグして重ねよう&#39;,
+      fill: &#39;white&#39;,
+      fontSize: 48,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-6));
+    // ラベル2
+    this.label2 = Label({
+      fill: &#39;white&#39;,
+      fontSize: 48,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(6));
+    // 円1
+    var circle1 = CircleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-2));
+    // ドラッグ可能にする
+    Draggable().attachTo(circle1);
+    // 円2
+    var circle2 = CircleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(2));
+    // ドラッグ可能にする
+    Draggable().attachTo(circle2); 
+    // 矩形1
+    var rect1 = RectangleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(-3), this.gridY.center());
+    Draggable().attachTo(rect1);
+    // 矩形2
+    var rect2 = RectangleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(3), this.gridY.center());
+    Draggable().attachTo(rect2);
+    // canvas要素描画用
+    var elem  = PlainElement({
+      width: this.gridX.width,
+      height: this.gridY.width, 
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+    // canvasパラメータ指定
+    elem.canvas.context.strokeStyle = &#39;white&#39;;
+    elem.canvas.context.lineWidth = 4;
+    // 線分の両端の座標
+    this.points = [Vector2(this.gridX.center(-3), this.gridY.center(-3)),
+                   Vector2(this.gridX.center(3), this.gridY.center(3))];
+    
+    var p1 = this.points[0];
+    var p2 = this.points[1];
+    // 線を引く
+    elem.canvas.drawLine(p1.x, p1.y, p2.x, p2.y);
+    // 参照用
+    this.circle1 = circle1;
+    this.circle2 = circle2;
+    this.rect1 = rect1;
+    this.rect2 = rect2;
+  },
+
+  update: function() {
+    var c1 = this.circle1;
+    var c2 = this.circle2;
+    var r1 = this.rect1;
+    var r2 = this.rect2;
+    // 円同士の当たり判定
+    if (Collision.testCircleCircle(c1, c2)) {
+      this.label2.text = &#39;Circle And Circle&#39;;
+      return;
+    }
+    // 矩形同士の当たり判定
+    if (Collision.testRectRect(r1, r2)) {
+      this.label2.text = &#39;Rect And Rect&#39;;
+      return;  
+    }
+    // 円と矩形の当たり判定
+    if (Collision.testCircleRect(c1, r1) || Collision.testCircleRect(c1, r2) ||
+        Collision.testCircleRect(c2, r1) || Collision.testCircleRect(c2, r2)) {
+          this.label2.text = &#39;Circle And Rect&#39;;
+          return;  
+    }
+
+    var p1 = this.points[0];
+    var p2 = this.points[1];
+    var bc1 = Circle(c1.x, c1.y, c1.radius);
+    var bc2 = Circle(c2.x, c2.y, c2.radius);
+    // 円と線分の当たり判定
+    if (Collision.testCircleLine(bc1, p1, p2) ||
+        Collision.testCircleLine(bc2, p1, p2)) {
+          this.label2.text = &#39;Circle And Line&#39;;
+          return;  
+    }
+    
+    this.label2.text = &#39;&#39;;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9872a6f6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;現在の&lt;strong&gt;Collision&lt;/strong&gt;クラスで大体の当たり判定の処理はできるかと思いますが、&lt;strong&gt;線分と線分&lt;/strong&gt;、&lt;strong&gt;矩形と線分&lt;/strong&gt;、&lt;strong&gt;多角形と多角形&lt;/strong&gt;といった当たり判定を追加しても良いかもしれません。ライブラリ開発に少しでもコントリビュートしていけるのが&lt;strong&gt;phina.js&lt;/strong&gt;の醍醐味でもあります。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Flowを使った非同期処理の基本</title>
+      <link>https://alkn203.github.io/blog/2016/12/12/phina-advent-12th</link>
+      <pubDate>Mon, 12 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/12/phina-advent-12th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の12日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;11日目：&lt;a href=&#34;http://qiita.com/tamochu3141/items/8094aec3348dc9a6ae9d&#34;&gt;phina.jsでの多人数参加型ゲームの作製 by tamochu3141さん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;13日目：&lt;a href=&#34;http://qiita.com/minimo/items/27020fdb66375f1f868b&#34;&gt;phina.jsでGamePadを使う by minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;非同期処理&#34;&gt;非同期処理&lt;/h2&gt;
+
+&lt;p&gt;基本的にプログラムはソースに書かれたの順序で実行されます。これは一般的に&lt;strong&gt;同期処理&lt;/strong&gt;と呼んでいます。
+一方で、処理の一部を特定の処理が終わるまで待ってから実行するなど、書かれた順序に依存しない処理を&lt;strong&gt;非同期処理&lt;/strong&gt;と呼んでおり、時間のかかる処理をバックグランドで実行させておく場合になどによく使用されます。&lt;/p&gt;
+
+&lt;h2 id=&#34;flowとは&#34;&gt;Flowとは&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;には、&lt;strong&gt;Flow&lt;/strong&gt;という非同期処理を実装するためのクラスが用意されています。&lt;strong&gt;javascript&lt;/strong&gt;に詳しい人なら、&lt;strong&gt;EcmaScript6&lt;/strong&gt;の&lt;strong&gt;Promise&lt;/strong&gt;と言えばピンと来るかもしれません。(そう言う私もそれほど詳しくありませんが）
+&lt;strong&gt;Flow&lt;/strong&gt;はその&lt;strong&gt;Promise&lt;/strong&gt;と基本的に同じ機能を&lt;strong&gt;phina.js&lt;/strong&gt;で実装したものです。&lt;strong&gt;tmlib.js&lt;/strong&gt;時代も&lt;strong&gt;Flow&lt;/strong&gt;というクラス自体はありましたが、中身は大幅に違っています。&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-12th.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;flowの使い方&#34;&gt;Flowの使い方&lt;/h2&gt;
+
+&lt;p&gt;では、早速使い方を見ていきましょう。
+以下がサンプルコードです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+  
+    var self = this;
+    var duration = 2000;
+    // flow設定
+    var flow = Flow(function(resolve) {
+      RectangleShape()
+        .addChildTo(self)
+        .setPosition(self.gridX.center(), 0)
+        .tweener.to({y: self.gridY.center()}, duration)
+        .call(function() {
+          resolve();
+        });
+    });
+
+    var rect = RectangleShape().addChildTo(this);
+    rect.setPosition(self.gridX.center(1), self.gridY.center(1));
+    // 非同期処理(resoveで呼ばれる)
+    flow.then(function() {
+      rect.tweener.to({y: self.gridY.width}, duration).play();
+    });
+    // 同期処理
+    RectangleShape()
+      .addChildTo(self)
+      .setPosition(self.gridX.center(-1), self.gridY.center(1))
+      .tweener.to({y: self.gridY.width}, duration);
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/017e556a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;実行すると、左下の矩形は実行と同時に下に移動しますが、右下の矩形は上の矩形が止まってから移動を開始します。&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;flowの設定&#34;&gt;Flowの設定&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// flow設定
+var flow = Flow(function(resolve) {
+  RectangleShape()
+    .addChildTo(self)
+    .setPosition(self.gridX.center(), 0)
+    .tweener.to({y: self.gridY.center()}, duration)
+    .call(function() {
+      resolve(&#39;flow done&#39;);
+      console.log(message);
+    }).play();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;非同期で実行したい処理を&lt;strong&gt;Flow&lt;/strong&gt;内に記述します。&lt;/li&gt;
+&lt;li&gt;処理が終わった後は、&lt;strong&gt;resolve&lt;/strong&gt;を呼び出します。&lt;/li&gt;
+&lt;li&gt;上の例では、&lt;strong&gt;tweener&lt;/strong&gt;を使って一定時間かけて画面中央まで移動した後に、&lt;strong&gt;resolve&lt;/strong&gt;をコールするようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;後処理の記述&#34;&gt;後処理の記述&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// resoveで実行される
+flow.then(function() {
+  rect.tweener.to({y: self.gridY.width}, duration).play();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;resolve&lt;/strong&gt;が呼ばれると、&lt;strong&gt;Flow&lt;/strong&gt;クラスのメソッド&lt;strong&gt;then&lt;/strong&gt;が実行されるため、この中に後から実行したい処理を記述します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;複数のflowを取り扱う&#34;&gt;複数のFlowを取り扱う&lt;/h3&gt;
+
+&lt;p&gt;これまでは1つの&lt;strong&gt;Flow&lt;/strong&gt;オブジェクトを取り扱ってきました。
+1つであれば&lt;strong&gt;tweener&lt;/strong&gt;を使えば似たような処理が出来なくもないですが、さらに&lt;strong&gt;Flow&lt;/strong&gt;では複数の非同期処理をウォッチすることができます。
+サンプルコードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+  
+    var self = this;
+    var flows = [];
+    
+    (10).times(function(i) {
+      // flow作成
+      var flow = Flow(function(resolve) {
+        var x = Random.randint(64, self.gridX.width - 64);
+        var y = Random.randint(64, self.gridY.width - 64);
+        var duration = Random.randint(500, 5000); 
+        // ランダムな位置に円を作成
+        CircleShape()
+          .addChildTo(self)
+          .setPosition(x, y)
+          .tweener.fadeOut(duration) // フェードアウト
+          .call(function() {
+            resolve(i + &#39;done&#39;);
+          }).play();
+        });
+        // 配列に追加
+        flows.push(flow);
+    });
+    // 全てのflow実行後
+    Flow.all(flows).then(function(messages) {
+      console.log(&#39;all done!&#39;, messages);
+    });
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9665202b&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;実行すると、ランダムな位置に円が表示されランダムな時間でフェードアウトします。&lt;/li&gt;
+&lt;li&gt;最後の円がフェードアウトしてから、メッセージがコンソールに表示されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;flowの配列を作って追加する&#34;&gt;Flowの配列を作って追加する&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var flows = [];
+
+(10).times(function(i) {
+  // flow作成
+  var flow = Flow(function(resolve) {
+    var x = Random.randint(64, self.gridX.width - 64);
+    var y = Random.randint(64, self.gridY.width - 64);
+    var duration = Random.randint(500, 5000); 
+    // ランダムな位置に円を作成
+    CircleShape()
+      .addChildTo(self)
+      .setPosition(x, y)
+      .tweener.fadeOut(duration) // フェードアウト
+      .call(function() {
+        resolve(i + &#39;done&#39;);
+      }).play();
+    });
+    // 配列に追加
+    flows.push(flow);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Flow&lt;/strong&gt;を格納する配列を作って&lt;strong&gt;push&lt;/strong&gt;しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;flow-allで全てのflowをウォッチ&#34;&gt;Flow.allで全てのFlowをウォッチ&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 全てのflow実行後
+Flow.all(flows).then(function(messages) {
+  console.log(&#39;all done!&#39;, messages);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Flow.all&lt;/strong&gt;の引数にウォッチしたい&lt;strong&gt;Flow&lt;/strong&gt;の配列を代入すると、与えれられた全ての非同期処理の終了をウォッチすることができます。&lt;/li&gt;
+&lt;li&gt;今回は配列でまとめて代入しましたが、個々に&lt;strong&gt;Flow&lt;/strong&gt;を作成して代入することもできます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;説明不足のところもあるかもしれませんが、今回紹介した&lt;strong&gt;Flow&lt;/strong&gt;を使うことによって、&lt;strong&gt;phina.js&lt;/strong&gt;における非同期処理をよりスマートにコーディングすることができると思いますので、皆も色々と試してみて下さい。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>PlainElementでCanvas描画</title>
+      <link>https://alkn203.github.io/blog/2016/12/05/phina-advent-5th</link>
+      <pubDate>Mon, 05 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/05/phina-advent-5th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/tamochu3141/items/8094aec3348dc9a6ae9d&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の5日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;4日目：&lt;a href=&#34;http://qiita.com/tamochu3141/items/8094aec3348dc9a6ae9d&#34;&gt;phina.jsでの多人数参加型ゲームの作製 by tamochu3141さん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;6日目：&lt;a href=&#34;http://qiita.com/simiraaaa/items/ba1f1648a6d0451b5abc&#34;&gt;Shapeを画像として使う by simiraaaaさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;phina-jsの描画機能&#34;&gt;phina.jsの描画機能&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;の描画機能は、&lt;strong&gt;HTML5 Canvas&lt;/strong&gt;がベースになっています。&lt;strong&gt;Canvas&lt;/strong&gt;をある程度知っている人は、&lt;strong&gt;phina.js&lt;/strong&gt;を使ってみてピンと来るところがあると思います。加えて、&lt;strong&gt;phina.js&lt;/strong&gt;にはデフォルトの&lt;strong&gt;Canvas&lt;/strong&gt;の機能を拡張した&lt;a href=&#34;https://github.com/phi-jp/phina.js/blob/develop/src/graphics/canvas.js&#34;&gt;&lt;strong&gt;phina.graphics.Canvas&lt;/strong&gt;&lt;/a&gt;というクラスが用意されており、デフォルトのメソッドに加え、簡単に線を描画できる&lt;strong&gt;drawLine&lt;/strong&gt;など便利なメソッド群が追加で実装されています。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;で&lt;strong&gt;Canvas&lt;/strong&gt;のメソッドを使用したい場合は、&lt;strong&gt;phina.graphics.Canvas&lt;/strong&gt;のインスタンスを作ってそこに描画する方法がありますが、多少手間がかかるところがありますので、今回は手軽に&lt;strong&gt;Canvas&lt;/strong&gt;の機能が使える&lt;strong&gt;PlainElement&lt;/strong&gt;というクラスを紹介したいと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;plainelementクラス&#34;&gt;PlainElementクラス&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.display.PlainElement&lt;/strong&gt;は、内部に&lt;strong&gt;Canvas&lt;/strong&gt;クラスを持っているだけのシンプルなクラスで、&lt;strong&gt;Shape&lt;/strong&gt;の親クラスとして位置付けられています。
+内部に&lt;strong&gt;Canvas&lt;/strong&gt;を持っているので、&lt;strong&gt;Canvas&lt;/strong&gt;で使えるメソッドは一通り使うことができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;plainelementクラスの使用例-簡単なお絵描き風プログラム&#34;&gt;PlainElementクラスの使用例（簡単なお絵描き風プログラム）&lt;/h2&gt;
+
+&lt;p&gt;お絵描きと呼べる程ではありませんが、今回は、マウスドラッグで線が引けるだけの簡単なサンプルを作ってみました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-5th.png&#34; alt=&#34;phina-advent-5th&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;コードは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // canvas要素描画用
+    var elem  = PlainElement({
+      width: this.gridX.width,
+      height: this.gridY.width, 
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+    // canvasパラメータ指定
+    elem.canvas.context.strokeStyle = &#39;white&#39;;
+    elem.canvas.context.lineWidth = 4;
+    // 参照用
+    this.elem = elem;
+  },
+  // タッチ開始
+  onpointstart: function(e) {
+    // タッチされた位置を記憶
+    this.prev = Vector2(e.pointer.x, e.pointer.y);
+  },
+  // タッチ移動中
+  onpointmove: function(e) {
+    // 現在のタッチ位置を記憶
+    var current = Vector2(e.pointer.x, e.pointer.y);
+    // 前の位置から現在の位置まで線を引く
+    this.elem.canvas.drawLine(this.prev.x, this.prev.y, current.x, current.y);
+    // 前の位置を現在の位置に更新
+    this.prev = current;
+  },
+  // タッチ終了
+  onpointend: function() {
+    // 位置情報をクリア
+    this.prev = null;  
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/783bf264&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+
+&lt;h3 id=&#34;plainelementの追加&#34;&gt;PlainElementの追加&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // canvas要素描画用
+    var elem  = PlainElement({
+      width: this.gridX.width,
+      height: this.gridY.width, 
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;PlainElement&lt;/strong&gt;を作成して、&lt;strong&gt;Scene&lt;/strong&gt;に追加しています。&lt;/li&gt;
+&lt;li&gt;コンストラクでは、横と縦のサイズを指定します。今回は、画面と同じサイズにして重ねています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;canvasのcontext指定&#34;&gt;canvasのcontext指定&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// canvasパラメータ指定
+elem.canvas.context.strokeStyle = &#39;white&#39;;
+elem.canvas.context.lineWidth = 4;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;PlainElement&lt;/strong&gt;内部の&lt;strong&gt;Canvas&lt;/strong&gt;には、&lt;strong&gt;canvas&lt;/strong&gt;プロパティでアクセスできます。&lt;/li&gt;
+&lt;li&gt;ここでは&lt;strong&gt;canvas&lt;/strong&gt;の&lt;strong&gt;context&lt;/strong&gt;を経由して、線の色と幅を指定しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;タッチ開始時処理&#34;&gt;タッチ開始時処理&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// タッチ開始
+onpointstart: function(e) {
+  // タッチされた位置を記憶
+  this.prev = Vector2(e.pointer.x, e.pointer.y);
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;イベントからマウスが押された位置を取得します。&lt;/li&gt;
+&lt;li&gt;線の始点の座標を&lt;strong&gt;Vector2&lt;/strong&gt;クラスを使って記憶します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;タッチ移動時処理&#34;&gt;タッチ移動時処理&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// タッチ移動中
+onpointmove: function(e) {
+  // 現在のタッチ位置を記憶
+  var current = Vector2(e.pointer.x, e.pointer.y);
+  // 前の位置から現在の位置まで線を引く
+  this.elem.canvas.drawLine(this.prev.x, this.prev.y, current.x, current.y);
+  // 前の位置を更新
+  this.prev = current;
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;現在のタッチ位置を線の終点として記憶します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;canvas&lt;/strong&gt;の&lt;strong&gt;drawLine&lt;/strong&gt;メソッドで線を引きます。&lt;/li&gt;
+&lt;li&gt;最後の前の位置を現在の位置に更新します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;タッチ終了時処理&#34;&gt;タッチ終了時処理&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// タッチ終了
+onpointend: function() {
+  // 位置情報をクリア
+  this.prev = null;  
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;線を引き終わった後は、始点の位置情報をクリアします。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;補足&#34;&gt;補足&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phinajs&lt;/strong&gt;には他に&lt;strong&gt;PathShape&lt;/strong&gt;というクラスがあります。線の描画に特化したクラスで、座標値データ群を与えるだけでその点を結んだ線を自動で描画してくれる優れものです。こちらはまた別の機会に紹介したいと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;でゲームを作るときは&lt;strong&gt;Sprite&lt;/strong&gt;画像を使うことが多いかもしれませんが、上で説明した&lt;strong&gt;PlainElement&lt;/strong&gt;、つまり、&lt;strong&gt;Canvas&lt;/strong&gt;の機能を併用することで、よりゲームの表現性が増すのではないでしょうか。可能であれば、今回のアドベントカレンダーの期間内で簡単なサンプルゲームを作ってみたいと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>006-Shapeの更新イベント処理</title>
+      <link>https://alkn203.github.io/blog/2016/11/29/phina-update-shape</link>
+      <pubDate>Tue, 29 Nov 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/11/29/phina-update-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対してフレーム更新処理を登録する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-update-shape.png&#34; alt=&#34;phina-invisible-shape&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;更新イベント処理-update&#34;&gt;更新イベント処理（update）&lt;/h2&gt;
+
+&lt;p&gt;更新処理を登録するためには、&lt;strong&gt;shape&lt;/strong&gt;の&lt;strong&gt;update&lt;/strong&gt;関数を実装します。
+&lt;strong&gt;update&lt;/strong&gt;関数が実装されていると、その内容が毎フレーム実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
+shape.update = function() {
+  // 移動
+  shape.moveBy(1, 1);  
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d709760f&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;更新イベント処理-on-enterframe&#34;&gt;更新イベント処理（on + enterframe）&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;では1つのメソッドしか登録できません。一方、&lt;strong&gt;on&lt;/strong&gt;と&lt;strong&gt;enterframe&lt;/strong&gt;を組み合わせると複数のメソッドを登録可能で、その内容が並行して実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
+shape.on(&#39;enterframe&#39;, function() {
+  // 移動
+  shape.moveBy(1, 1);  
+});
+// 毎フレーム更新処理
+shape.on(&#39;enterframe&#39;, function() {
+  // 回転
+  shape.rotation++;  
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/0705ecfc&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>005-Shapeを透明化する</title>
@@ -915,432 +1541,6 @@ phina.main(function() {
   app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ShapeとCanvas描画を組み合わせたサンプル（時計Shape）</title>
-      <link>https://alkn203.github.io/blog/2016/02/16/phina-canvas2</link>
-      <pubDate>Tue, 16 Feb 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/02/16/phina-canvas2</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;以前に&lt;strong&gt;tmlib.js&lt;/strong&gt;で作った物を&lt;strong&gt;phina.js&lt;/strong&gt;にリファクタリングしてみました。
-&lt;strong&gt;Shape&lt;/strong&gt;を通常の&lt;strong&gt;canvas&lt;/strong&gt;と見なせますので、今回の時計に限らず、&lt;strong&gt;canvas&lt;/strong&gt;で描けるものは全て&lt;strong&gt;Shape&lt;/strong&gt;として取り扱うことができます。&lt;/p&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/y3bhHM&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;[&lt;a href=&#34;http://goo.gl/hY3BcQ&#34;&gt;runstantで開く&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640;
-var SCREEN_HEIGHT = 960;
-var CENTER_X = SCREEN_WIDTH / 2;
-var CENTER_Y = SCREEN_HEIGHT / 2;
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;CanvasScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // 時計Shapeを作成
-    this.clock = ClockShape({
-      width: 320, // 幅
-      height: 320, // 高さ
-      fill: &amp;quot;silver&amp;quot;,
-      stroke: &amp;quot;gray&amp;quot;,
-    }).addChildTo(this).setPosition(320, 480);
-
-    this.clock.physical.gravity.y = 0.5;
-  },
-  // 毎フレーム更新
-  update: function() {
-    // canvasを再描画するようにフラグを立てる
-    this.clock._dirtyDraw = true;
-
-    if (this.clock.bottom &amp;gt; 960) {
-      this.clock.physical.force(0, -10);
-    }
-  },
-});
-// 時計クラス
-phina.define(&#39;ClockShape&#39;, {
-  // Shapeクラスを継承
-  superClass: &#39;Shape&#39;,
-  // コンストラクタ
-  init: function(options) {
-    this.superInit(options);
-    this.backgroundColor = &#39;transparent&#39;;
-  },
-  // 自身のcanvasの描画内容
-  render: function(canvas) {
-    // 描画領域クリア
-    canvas.clear();
-    // スタイル指定
-    canvas.fillStyle = this.fill;
-    canvas.strokeStyle = this.stroke;
-    // 半径
-    var radius = this.radius;
-    // canvasの中心
-    var cx = 0;
-    var cy = 0;
-    var baseW = radius / 50;
-    // 時計盤描画
-    canvas.fillCircle(cx, cy, radius);
-    canvas.lineWidth = baseW;
-    canvas.strokeCircle(cx, cy, radius - 2);
-    canvas.lineWidth = baseW * 2;
-    canvas.strokeCircle(cx, cy, radius * 9.0 / 10);
-    // 目盛終点
-    var tr = radius * 8.3 / 10;
-    // 角度
-    var deg = 0;
-    canvas.lineWidth = baseW;
-    // 繰り返し
-    (60).times(function(i) {
-      // 目盛始点（5分毎の目盛か判定）
-      var fr = deg % 30 === 0 ? radius * 7.5 / 10 : radius * 8.0 / 10;
-      // 目盛描画
-      var rad = Math.degToRad(deg);
-      var fromX = cx + fr * Math.cos(rad);
-      var fromY = cx + fr * Math.sin(rad);
-      var toX = cx + tr * Math.cos(rad);
-      var toY = cx + tr * Math.sin(rad);
-      canvas.drawLine(fromX, fromY, toX, toY);
-      // 角度を進める
-      deg += 6;
-    });
-    // 現在の時刻
-    var d = new Date();
-    // 時は12時間表記へ
-    var hour = d.getHours() - 12;
-    var minute = d.getMinutes();
-    var second = d.getSeconds();
-    // 短針の長さ
-    var hr = radius * 6.0 / 10;
-    // 長針、秒針の長さ
-    var sr = radius * 7.7 / 10;
-    // 角度補正値
-    var adj = 90;
-    // 短針描画
-    this.drawRadialLine(cx, cy, hr, hour * 30 + minute / 2 - adj);
-    // 長針描画
-    this.drawRadialLine(cx, cy, sr, minute * 6 - adj);
-    // 秒針描画
-    canvas.lineWidth = baseW / 2;
-    this.drawRadialLine(cx, cy, sr, second * 6 - adj);
-    this.drawRadialLine(cx, cy, -radius * 2.0 / 10, second * 6 - adj);
-    // 中央円
-    canvas.save();
-    canvas.fillStyle = canvas.strokeStyle;
-    canvas.fillCircle(cx, cy, radius * 0.4 / 10);
-    canvas.restore();
-  },
-  // 中心から放射状に線を描画
-  drawRadialLine: function(cx, cy, radius, deg) {
-    var rad = Math.degToRad(deg);
-    // 円周上の点計算
-    var toX = cx + radius * Math.cos(rad);
-    var toY = cy + radius * Math.sin(rad);
-    // 線描画
-    this.canvas.drawLine(cx, cy, toX, toY);
-  },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ShapeとCanvas描画を組み合わせたサンプル</title>
-      <link>https://alkn203.github.io/blog/2016/01/31/phina-canvas</link>
-      <pubDate>Sun, 31 Jan 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/01/31/phina-canvas</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;phina.jsでゲームを作る際には、通常は&lt;strong&gt;Sprite&lt;/strong&gt;や&lt;strong&gt;Shape&lt;/strong&gt;を使うことになるでしょう。
-しかし、phina.jsには&lt;strong&gt;html5&lt;/strong&gt;の&lt;strong&gt;canvas&lt;/strong&gt;を機能的にラップした&lt;strong&gt;phina.graphics.Canvas&lt;/strong&gt;という便利なクラスがあります。
-今回は、この&lt;strong&gt;Canvas&lt;/strong&gt;クラスの機能と&lt;strong&gt;Shape&lt;/strong&gt;を組み合わせたサンプルを紹介します。&lt;/p&gt;
-
-&lt;h3 id=&#34;サンプル&#34;&gt;サンプル&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;矩形をドラッグして離すと画面中央にバネのような動きをして戻ります。&lt;/li&gt;
-&lt;li&gt;線描画用として、画面と同じ広さを持つ空の&lt;strong&gt;Shape&lt;/strong&gt;を作ってシーンに重ね合わせています。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;の&lt;strong&gt;canvas&lt;/strong&gt;に線を描画して、矩形から線が出ているように位置を合わせています。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;の&lt;strong&gt;canvas&lt;/strong&gt;の描画内容を毎フレーム更新して、線が矩形に追従するようにしています。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/aaEsAL&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;[&lt;a href=&#34;http://goo.gl/BKLSjh&#34;&gt;runstantで開く&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h3 id=&#34;ソースコード&#34;&gt;ソースコード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640;
-var SCREEN_HEIGHT = 960;
-var CENTER_X = SCREEN_WIDTH / 2;
-var CENTER_Y = SCREEN_HEIGHT / 2;
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;CanvasScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-
-    Label({
-      text: &#39;Drag and Release&#39;,
-      fontSize: 48,
-      fill: &#39;yellow&#39;,
-    }).addChildTo(this).setPosition(CENTER_X, this.gridY.span(2));
-    // ロープを作成
-    var rope = Rope({
-      width: SCREEN_WIDTH, // 画面の幅
-      height: SCREEN_HEIGHT, // 画面の高さ
-      stroke: &#39;red&#39;,
-      strokeWidth: 8,
-    }).addChildTo(this);
-    // シーンに重ねるために原点を左上にする
-    rope.origin.set(0, 0);
-
-    var rect = RectangleShape().addChildTo(this)
-                               .setPosition(CENTER_X, CENTER_Y);
-    // ドラッグ可能にする
-    Draggable().attachTo(rect);
-    // リリースされたら
-    rect.onpointend = function() {
-      // 中心へ移動するアニメーション
-      rect.tweener.clear()
-                  .to({x: CENTER_X, y: CENTER_Y}, 1000, &#39;easeOutElastic&#39;);
-    };
-    // 毎フレーム更新
-    this.update = function() {
-      // 矩形の位置を引き渡す
-      rope.rect = rect;
-      // canvasを再描画するようにフラグを立てる
-      rope._dirtyDraw = true;
-    };
-  },
-});
-// ロープクラス
-phina.define(&#39;Rope&#39;, {
-  // Shapeクラスを継承
-  superClass: &#39;Shape&#39;,
-  // コンストラクタ
-  init: function(options) {
-    this.superInit(options);
-    // 矩形情報を内部で保持(最初はダミー値)
-    this.rect = Rect(100, 100, 100, 100);
-  },
-  // 自身のcanvasの描画内容
-  render: function(canvas) {
-    // スタイル指定
-    canvas.strokeStyle = this.stroke;
-    canvas.lineWidth = this.strokeWidth;
-    // ラインを引く
-    canvas.drawLine(CENTER_X, CENTER_Y, this.rect.x, this.rect.y);
-  },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Physicalクラスを利用したジャンプアクションの基本サンプル</title>
-      <link>https://alkn203.github.io/blog/2016/01/29/phina-jump</link>
-      <pubDate>Fri, 29 Jan 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/01/29/phina-jump</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;phina.jsでゲームを作る際には、通常は&lt;strong&gt;Sprite&lt;/strong&gt;や&lt;strong&gt;Shape&lt;/strong&gt;を使うことになるでしょう。
-しかし、phina.jsには&lt;strong&gt;html5&lt;/strong&gt;の&lt;strong&gt;canvas&lt;/strong&gt;を機能的にラップした&lt;strong&gt;phina.graphics.Canvas&lt;/strong&gt;という便利なクラスがあります。
-今回は、その&lt;strong&gt;Canvas&lt;/strong&gt;クラスと&lt;strong&gt;Shape&lt;/strong&gt;を組み合わせたサンプルを紹介したいと思います。&lt;/p&gt;
-
-&lt;h3 id=&#34;サンプル&#34;&gt;サンプル&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;画面をタッチするとキャラクターがジャンプします。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Physical&lt;/strong&gt;クラスの&lt;strong&gt;velocity&lt;/strong&gt;と&lt;strong&gt;gravity&lt;/strong&gt;の使い分けがポイントです。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/MejrGg&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;[&lt;a href=&#34;http://goo.gl/MejrGg&#34;&gt;runstantで開く&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h3 id=&#34;ソースコード&#34;&gt;ソースコード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// アセット
-var ASSETS = {
-  // 画像
-  image: {
-    &#39;tomapiko&#39;: &#39;https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
-  },
-  // フレームアニメーション情報
-  spritesheet: {
-    &#39;tomapiko_ss&#39;: &#39;https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss&#39;,
-  },
-};
-// 定数
-var JUMP_POWOR = 10; // ジャンプ力
-var GRAVITY = 0.5; // 重力
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;CanvasScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景
-    this.backgroundColor = &#39;skyblue&#39;;
-
-    Label({
-      text: &#39;Touch To Jump&#39;,
-      fontSize: 48,
-      fill: &#39;gray&#39;,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(3));
-    // 床
-    this.floor = RectangleShape({
-      width: this.gridX.width,
-      height: this.gridY.span(1),
-      fill: &#39;silver&#39;,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(2));
-    // プレイヤー作成
-    var player = Player(&#39;tomapiko&#39;).addChildTo(this);
-    // 初期位置
-    player.x = this.gridX.center();
-    player.bottom = this.floor.top;
-    // 画面タッチ時処理
-    this.onpointend = function() {
-      // 床の上なら
-      if (player.isOnFloor) {
-        // 上方向に速度を与える（ジャンプ）
-        player.physical.velocity.y = -JUMP_POWOR;
-        // 重力復活
-        player.physical.gravity.y = GRAVITY;
-        // フラグ変更
-        player.isOnFloor = false;
-        // アニメーション変更
-        player.anim.gotoAndPlay(&#39;fly&#39;);
-      }
-    };
-    // 参照用
-    this.player = player;
-  },
-  // 毎フレーム処理
-  update: function() {
-    var player = this.player;
-    // 床とヒットしたら
-    if (player.hitTestElement(this.floor)) {
-      // y方向の速度と重力を無効にする
-      player.physical.velocity.y = 0;
-      player.physical.gravity.y = 0;
-      // 位置調整
-      player.bottom = this.floor.top;
-      // フラグ立て
-      player.isOnFloor = true;
-      // アニメーション変更
-      player.anim.gotoAndPlay(&#39;left&#39;);
-    }
-  },
-});
-// プレイヤークラス
-phina.define(&#39;Player&#39;, {
-  superClass: &#39;Sprite&#39;,
-  // コンストラクタ
-  init: function(image) {
-    // 親クラス初期化
-    this.superInit(image);
-    // フレームアニメーションをアタッチ
-    this.anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(this);
-    // 初期アニメーション指定
-    this.anim.gotoAndPlay(&#39;left&#39;);
-    // 初速度を与える
-    this.physical.force(-2, 0);
-    // 床の上かどうか
-    this.isOnFloor = true;
-  },
-  // 毎フレーム処理
-  update: function() {
-    // 画面端で速度と向き反転
-    if (this.left &amp;lt; 0 || this.right &amp;gt; 640) {
-      this.physical.velocity.x *= -1;
-      this.scaleX *= -1;
-    }
-  },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    // アセット読み込み
-    assets: ASSETS,
-    startLabel: &#39;main&#39;,
-  });
-  app.run();
-});
-
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>phina.jsでテトリス風落ちものゲーム作ってみた</title>
-      <link>https://alkn203.github.io/blog/2016/01/24/phina-tetris</link>
-      <pubDate>Sun, 24 Jan 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/01/24/phina-tetris</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;Twitter上のアンケートの成り行きで、「300行でテトリス風落ち物ゲームを作る」という命題を自分に課していましたが、何とか形になりましたので公開したいと思います。結果的にコメントを含めて300行ジャストになりました。&lt;/p&gt;
-
-&lt;h3 id=&#34;作成したプログラム&#34;&gt;作成したプログラム&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;オーソドックスなテトリス風落ち物ゲームのプロトタイプです。&lt;/li&gt;
-&lt;li&gt;元ネタで行える操作をほぼ再現できたと思いますので、思い出しながら色々と試してみて下さい。&lt;/li&gt;
-&lt;li&gt;2次元配列を使わずに座標値情報だけでブロックを管理してみました。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;今後の予定&#34;&gt;今後の予定&lt;/h3&gt;
-
-&lt;p&gt;チュートリアルという形で作り方を説明していく予定です。&lt;/p&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://lite.runstant.com/?v=0.0.3#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&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
 </description>
     </item>
     

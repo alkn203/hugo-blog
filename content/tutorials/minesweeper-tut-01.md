@@ -4,17 +4,19 @@ draft = false
 slug = ""
 tags = ["tutorial", "minesweeper"]
 title = "ゲーム作成チュートリアル（マインスイーパー）（その１）【パネルの配置】"
+eyecatch = "/images/minesweeper-tut-1.png"
 +++
 
-### はじめに
+## はじめに
 以前にQiitaに[tmlib.js ＝マインスイーパー＝ チュートリアル編（目次）](http://qiita.com/alkn203/items/a533b1264b912dec9590)を投稿しましたが、今回は、これを[phina.js](http://phinajs.com/)で作り直すのが目標です。なお、本ブログのこれまでのチュートリアルを見て、「**phina.js**でのゲーム作り」を少しは知っているということを前提にしています。
 このチュートリアルでは、[phina.js](http://phinajs.com/)の公式開発環境として更に便利になった[runstant](http://runstant.com/)を使っていきたいと思います。
 
-### 今回の目標
+## 今回の目標
 以下のようにパネルを並べます。
-<div class='runstant'><iframe src='http://runstant.com/alkn203/projects/ada3aa47/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
 
-### 今回のコード
+<center>![15puzzle-tut-2](/images/minesweeper-tut-1.png)</center>
+
+## 今回のコード
 ```js
 phina.globalize();
 // 定数
@@ -78,8 +80,11 @@ phina.main(function() {
   app.run();
 });
 ```
-### コード説明
-#### 定数の定義
+
+<a href="http://runstant.com/alkn203/projects/ada3aa47" target="_blank">[runstantで確認]</a>
+
+## コード説明
+### 定数の定義
 ```js
 // 定数
 var SCREEN_WIDTH = 640; // 画面横サイズ
@@ -94,7 +99,7 @@ var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
 * パネルの大きさをグリッドサイズより少し小さくしてるのは、配置するときに隙間を開けるためです。
 * パネルを正しい位置に配置できるようにオフセット値を計算しています。
 
-#### Panelクラス
+### Panelクラス
 メイン処理の前にパネルクラスについて説明します。
 ```js
 // パネルクラス
@@ -119,7 +124,7 @@ phina.define('Panel', {
 * **this.superInit**で親クラスにパラメーターを与えて初期化します。
 * **cornerRadius**は角の丸みを指定します。（tmlib.jsではRoundRectangleShape）
 
-#### メインシーン
+### メインシーン
 ```js
 // コンストラクタ
 init: function() {
@@ -172,9 +177,6 @@ init: function() {
 * **Panel**を作成して**panelGroup**に追加しています。
 * 最後にパネルの位置を指定します。**span**にインデックス値を指定することで、グリッド状に綺麗に配置することが出来ます。
 
-### 今回はここまで
+## 今回はここまで
 ここまでで、パネルを配置することができました。
 次回は、[爆弾の配置](http://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02/)です。
-
-### runstantプロジェクトへのリンク
-http://runstant.com/alkn203/projects/ada3aa47

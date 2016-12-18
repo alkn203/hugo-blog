@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Collision on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/collision/</link>
+    <description>Recent content in Collision on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Fri, 16 Dec 2016 00:01:08 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/collision/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Collisionクラスを使った当たり判定</title>
+      <link>https://alkn203.github.io/blog/2016/12/16/phina-advent-16th</link>
+      <pubDate>Fri, 16 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/16/phina-advent-16th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の16日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;15日目：&lt;a href=&#34;http://qiita.com/minimo/items/8aca8ee80196ad045b87&#34;&gt;phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;collisionクラスについて&#34;&gt;Collisionクラスについて&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.geom.Collision&lt;/strong&gt;は、当たり判定を行うためのクラスです。
+&lt;strong&gt;phina.js&lt;/strong&gt;の当たり判定で良く使うのは、&lt;strong&gt;phina.app.Object2d&lt;/strong&gt;クラスの&lt;strong&gt;hitTest&lt;/strong&gt;メソッドかと思いますが、このメソッドを使うためには以下のようにインスタンス経由となります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;obj.hitTest(target);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;対して、&lt;strong&gt;Collision&lt;/strong&gt;クラスのメソッドは全て&lt;strong&gt;static&lt;/strong&gt;なメソッドとなっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;Collision.メソッド名(引数1, 引数2);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;collisionクラスのメソッド&#34;&gt;Collisionクラスのメソッド&lt;/h2&gt;
+
+&lt;h3 id=&#34;testcirclecircle&#34;&gt;testCircleCircle&lt;/h3&gt;
+
+&lt;p&gt;円同士が重なっているかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testrectrect&#34;&gt;testRectRect&lt;/h3&gt;
+
+&lt;p&gt;矩形同士が重なっているかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testcirclerect&#34;&gt;testCircleRect&lt;/h3&gt;
+
+&lt;p&gt;円と矩形が重なってるかを判定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;testcircleline&#34;&gt;testCircleLine&lt;/h3&gt;
+
+&lt;p&gt;円と線分が重なってるかを判定します。&lt;/p&gt;
+
+&lt;h2 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h2&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-16th.png&#34; alt=&#34;phina-advent-16th&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // ラベル1
+    this.label1 = Label({
+      text: &#39;図形をドラッグして重ねよう&#39;,
+      fill: &#39;white&#39;,
+      fontSize: 48,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-6));
+    // ラベル2
+    this.label2 = Label({
+      fill: &#39;white&#39;,
+      fontSize: 48,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(6));
+    // 円1
+    var circle1 = CircleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-2));
+    // ドラッグ可能にする
+    Draggable().attachTo(circle1);
+    // 円2
+    var circle2 = CircleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(2));
+    // ドラッグ可能にする
+    Draggable().attachTo(circle2); 
+    // 矩形1
+    var rect1 = RectangleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(-3), this.gridY.center());
+    Draggable().attachTo(rect1);
+    // 矩形2
+    var rect2 = RectangleShape({
+      fill: null,
+    }).addChildTo(this).setPosition(this.gridX.center(3), this.gridY.center());
+    Draggable().attachTo(rect2);
+    // canvas要素描画用
+    var elem  = PlainElement({
+      width: this.gridX.width,
+      height: this.gridY.width, 
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+    // canvasパラメータ指定
+    elem.canvas.context.strokeStyle = &#39;white&#39;;
+    elem.canvas.context.lineWidth = 4;
+    // 線分の両端の座標
+    this.points = [Vector2(this.gridX.center(-3), this.gridY.center(-3)),
+                   Vector2(this.gridX.center(3), this.gridY.center(3))];
+    
+    var p1 = this.points[0];
+    var p2 = this.points[1];
+    // 線を引く
+    elem.canvas.drawLine(p1.x, p1.y, p2.x, p2.y);
+    // 参照用
+    this.circle1 = circle1;
+    this.circle2 = circle2;
+    this.rect1 = rect1;
+    this.rect2 = rect2;
+  },
+
+  update: function() {
+    var c1 = this.circle1;
+    var c2 = this.circle2;
+    var r1 = this.rect1;
+    var r2 = this.rect2;
+    // 円同士の当たり判定
+    if (Collision.testCircleCircle(c1, c2)) {
+      this.label2.text = &#39;Circle And Circle&#39;;
+      return;
+    }
+    // 矩形同士の当たり判定
+    if (Collision.testRectRect(r1, r2)) {
+      this.label2.text = &#39;Rect And Rect&#39;;
+      return;  
+    }
+    // 円と矩形の当たり判定
+    if (Collision.testCircleRect(c1, r1) || Collision.testCircleRect(c1, r2) ||
+        Collision.testCircleRect(c2, r1) || Collision.testCircleRect(c2, r2)) {
+          this.label2.text = &#39;Circle And Rect&#39;;
+          return;  
+    }
+
+    var p1 = this.points[0];
+    var p2 = this.points[1];
+    var bc1 = Circle(c1.x, c1.y, c1.radius);
+    var bc2 = Circle(c2.x, c2.y, c2.radius);
+    // 円と線分の当たり判定
+    if (Collision.testCircleLine(bc1, p1, p2) ||
+        Collision.testCircleLine(bc2, p1, p2)) {
+          this.label2.text = &#39;Circle And Line&#39;;
+          return;  
+    }
+    
+    this.label2.text = &#39;&#39;;
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9872a6f6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;現在の&lt;strong&gt;Collision&lt;/strong&gt;クラスで大体の当たり判定の処理はできるかと思いますが、&lt;strong&gt;線分と線分&lt;/strong&gt;、&lt;strong&gt;矩形と線分&lt;/strong&gt;、&lt;strong&gt;多角形と多角形&lt;/strong&gt;といった当たり判定を追加しても良いかもしれません。ライブラリ開発に少しでもコントリビュートしていけるのが&lt;strong&gt;phina.js&lt;/strong&gt;の醍醐味でもあります。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
