@@ -6,8 +6,275 @@
     <description>Recent content in Tips on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Fri, 16 Dec 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 23 Dec 2016 00:01:08 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>クラス継承をしてみよう</title>
+      <link>https://alkn203.github.io/blog/2016/12/23/phina-advent-23th</link>
+      <pubDate>Fri, 23 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/23/phina-advent-23th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の23日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;22日目：&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;Three.jsとPhina.js使った何か by kjunichiさん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;24日目：&lt;a href=&#34;http://qiita.com/emadurandal/items/63e262df75b279dda253&#34;&gt;phina.jsとGLBoostの連携について by emadurandalさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;クラス継承&#34;&gt;クラス継承&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;を使い慣れてくると、&lt;strong&gt;既存のクラスに機能を追加&lt;/strong&gt;したいと思うことがあります。もちろんイチから作るのもありですが、ちょっとした機能追加であれば既存のクラスを継承したクラスを作った方が効率的です。今回は&lt;strong&gt;Button&lt;/strong&gt;クラスを例にその方法を説明します。&lt;/p&gt;
+
+&lt;h2 id=&#34;animatebuttonクラスを作る&#34;&gt;AnimateButtonクラスを作る&lt;/h2&gt;
+
+&lt;p&gt;現在の&lt;strong&gt;Button&lt;/strong&gt;クラスの仕様はシンプルで、最低限の機能しかありません。今回はこの&lt;strong&gt;Button&lt;/strong&gt;クラスを継承して&lt;strong&gt;AnimateButton&lt;/strong&gt;というクラスを新しく作りたいと思います。追加する仕様は単純で、&lt;strong&gt;「ボタンを押している間は縮小して押しているように見せる」&lt;/strong&gt;です。（下のボタンは画像なので押せません）&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-23th.png&#34; alt=&#34;phina-advent-23th&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;手順１-buttonクラスのソースをコピーする&#34;&gt;手順１ Buttonクラスのソースをコピーする&lt;/h3&gt;
+
+&lt;p&gt;本来であれば、&lt;strong&gt;ローカル環境にソースをダウンロード→エディタで編集→ビルド→テスト&lt;/strong&gt;というのが手順かもしれませんが、今回は簡単な継承例ということでソースを丸ごとコピーして、&lt;strong&gt;runstant&lt;/strong&gt;上で作業します。コピー場所はコードの冒頭にします。(phina.globalize()よりも前)&lt;/p&gt;
+
+&lt;p&gt;以下が&lt;strong&gt;Button&lt;/strong&gt;クラスのソースです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
+ * @class phina.ui.Button
+ * Button
+ */
+phina.define(&#39;phina.ui.Button&#39;, {
+  superClass: &#39;phina.display.Shape&#39;,
+  /**
+   * @constructor
+   */
+  init: function(options) {
+    options = (options || {}).$safe(phina.ui.Button.defaults);
+    this.superInit(options);
+
+    this.cornerRadius = options.cornerRadius;
+    this.text         = options.text;
+    this.fontColor    = options.fontColor;
+    this.fontSize     = options.fontSize;
+    this.fontWeight     = options.fontWeight;
+    this.fontFamily   = options.fontFamily;
+
+    this.setInteractive(true);
+    this.on(&#39;pointend&#39;, function() {
+      this.flare(&#39;push&#39;);
+    });
+  },
+  prerender: function(canvas) {
+    canvas.roundRect(-this.width/2, -this.height/2, this.width, this.height, this.cornerRadius);
+  },
+
+  postrender: function(canvas) {
+    var context = canvas.context;
+    // text
+    var font = &amp;quot;{fontWeight} {fontSize}px {fontFamily}&amp;quot;.format(this);
+    context.font = font;
+    context.textAlign = &#39;center&#39;;
+    context.textBaseline = &#39;middle&#39;;
+    context.fillStyle = this.fontColor;
+    context.fillText(this.text, 0, 0);
+  },
+
+  _static: {
+    defaults: {
+      width: 200,
+      height: 80,
+      backgroundColor: &#39;transparent&#39;,
+      fill: &#39;hsl(200, 80%, 60%)&#39;,
+      stroke: null,
+
+      cornerRadius: 8,
+      text: &#39;Hello&#39;,
+      fontColor: &#39;white&#39;,
+      fontSize: 32,
+      fontWeight: &#39;&#39;,
+      fontFamily: &amp;quot;&#39;HiraKakuProN-W3&#39;&amp;quot;, // Hiragino or Helvetica,
+    },
+  },
+
+  _defined: function() {
+    phina.display.Shape.watchRenderProperty.call(this, &#39;cornerRadius&#39;);
+    phina.display.Shape.watchRenderProperty.call(this, &#39;text&#39;);
+    phina.display.Shape.watchRenderProperty.call(this, &#39;fontColor&#39;);
+    phina.display.Shape.watchRenderProperty.call(this, &#39;fontSize&#39;);
+    phina.display.Shape.watchRenderProperty.call(this, &#39;fontFamily&#39;);
+  },
+
+});
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;手順２-クラス名を変更し-不要な部分を削除する&#34;&gt;手順２ クラス名を変更し、不要な部分を削除する&lt;/h3&gt;
+
+&lt;p&gt;クラス名を変更し、更に&lt;strong&gt;phina.ui.Button&lt;/strong&gt;を継承するように変更します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
+   * @class phina.ui.AnimateButton
+   * AnimateButton
+   */
+  phina.define(&#39;phina.ui.AnimateButton&#39;, {
+    superClass: &#39;phina.ui.Button&#39;,
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;見た目や基本動作は&lt;strong&gt;Button&lt;/strong&gt;クラスのものを使うので基底クラスに関する部分は削除し、以下のようにスッキリさせます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
+   * @class phina.ui.AnimateButton
+   * AnimateButton
+   */
+  phina.define(&#39;phina.ui.AnimateButton&#39;, {
+    superClass: &#39;phina.ui.Button&#39;,
+    /**
+     * @constructor
+     */
+    init: function(options) {
+      options = (options || {}).$safe(phina.ui.Button.defaults);
+      this.superInit(options);
+    },
+    
+    _static: {
+      defaults: {
+      },
+    },
+  });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;手順３-押している間の見た目を変更する&#34;&gt;手順３　押している間の見た目を変更する&lt;/h3&gt;
+
+&lt;p&gt;押している間は少し縮小させたいので、&lt;strong&gt;pointstay&lt;/strong&gt;イベント内に処理を書きます。
+&lt;strong&gt;scaleMin&lt;/strong&gt;は後のプロパティ設定で説明します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// プッシュ時の処理を追加
+this.on(&#39;pointstay&#39;, function() {
+  // 少し縮小
+  this.setScale(scaleMin, scaleMin);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;押し終わった後は元のサイズに戻さないといけないので、&lt;strong&gt;pointend&lt;/strong&gt;イベント内に処理を書きます。
+&lt;strong&gt;1.0&lt;/strong&gt;が元のサイズです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;this.on(&#39;pointend&#39;, function() {
+  // 元に戻す
+  this.setScale(1.0, 1.0);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;オプション-クラス特有プロパティを設定できるようにする&#34;&gt;オプション　クラス特有プロパティを設定できるようにする&lt;/h3&gt;
+
+&lt;p&gt;折角ですので、&lt;strong&gt;AnimateButton&lt;/strong&gt;クラス特有のプロパティをコンストラクタで指定できるようにします。
+今回は、縮小サイズを指定できるようにしたいと思います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;init: function(options) {
+  options = (options || {}).$safe(phina.ui.AnimateButton.defaults);
+  this.superInit(options);
+  // 独自プロパティ
+  var scaleMin = options.scaleMin;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;$safe&lt;/strong&gt;はプロパティ（連想配列）をマージする関数で、&lt;strong&gt;options&lt;/strong&gt;で与えられた値とデフォルトで定義されている値を結合します。
+プロパティ名がバッティングした場合、&lt;strong&gt;options&lt;/strong&gt;で与えられた値をデフォルトの値で上書きすることはありません。&lt;/p&gt;
+
+&lt;p&gt;独自プロパティの値は、&lt;strong&gt;options&lt;/strong&gt;からもらいます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;_static: {
+  defaults: {
+    scaleMin: 0.95,
+  },
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;独自プロパティのデフォルト値は、上のように書きます。これで、コンストラクタで値を渡して指定できるようになります。&lt;/p&gt;
+
+&lt;h2 id=&#34;完成コード&#34;&gt;完成コード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
+ * @class phina.ui.AnimateButton
+ * AnimateButton
+ */
+phina.define(&#39;phina.ui.AnimateButton&#39;, {
+  superClass: &#39;phina.ui.Button&#39;,
+  /**
+   * @constructor
+   */
+  init: function(options) {
+    options = (options || {}).$safe(phina.ui.AnimateButton.defaults);
+    this.superInit(options);
+    // 独自プロパティ
+    var scaleMin = options.scaleMin;
+    // プッシュ時の処理を追加
+    this.on(&#39;pointstay&#39;, function() {
+      // 少し縮小
+      this.setScale(scaleMin, scaleMin);
+    });
+    this.on(&#39;pointend&#39;, function() {
+      // 元に戻す
+      this.setScale(1.0, 1.0);
+    });
+  },
+  
+  _static: {
+    defaults: {
+      scaleMin: 0.95,
+    },
+  },
+});
+// グローバルに展開
+phina.globalize();
+/*
+* メインシーン
+*/
+phina.define(&amp;quot;MainScene&amp;quot;, {
+// 継承
+superClass: &#39;DisplayScene&#39;,
+// 初期化
+init: function() {
+  // 親クラス初期化
+  this.superInit();
+  
+  var txt = &#39;Push me&#39;;
+  // デフォルトのボタン
+  Button({text: txt}).addChildTo(this)
+          .setPosition(this.gridX.center(), this.gridY.center(-2))
+          .onpush = function() {
+            console.log(&#39;Default&#39;);  
+          };
+  // 拡張ボタン
+  AnimateButton({text: txt}).addChildTo(this)
+                 .setPosition(this.gridX.center(), this.gridY.center(2))
+                 .onpush = function() {
+                   console.log(&#39;Animate&#39;);
+                 };
+},
+});
+/*
+* メイン処理
+*/
+phina.main(function() {
+// アプリケーションを生成
+var app = GameApp({
+  // MainScene から開始
+  startLabel: &#39;main&#39;,
+});
+// 実行
+app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9c1f8097&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;説明をだいぶ端折ってしまいましたが、&lt;strong&gt;phina.js&lt;/strong&gt;でのクラス継承についての説明は以上です。このように拡張したクラスは自分専用に使っても良いですし、他のユーザーにも使ってもらいたいということであれば、&lt;a href=&#34;https://github.com/phi-jp/phina.js&#34;&gt;Github&lt;/a&gt;でプルリクエストをしても良いでしょう。&lt;strong&gt;phina.js&lt;/strong&gt;への理解も深まりますので、お勧めです。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Collisionクラスを使った当たり判定</title>
@@ -23,6 +290,7 @@
 
 &lt;ul&gt;
 &lt;li&gt;15日目：&lt;a href=&#34;http://qiita.com/minimo/items/8aca8ee80196ad045b87&#34;&gt;phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;17日目：&lt;a href=&#34;http://qiita.com/minimo/items/b55b792c2fa19964acb4&#34;&gt;phina.jsでTiledMapEditorを利用するy minimoさん&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&#34;collisionクラスについて&#34;&gt;Collisionクラスについて&lt;/h2&gt;
@@ -1434,109 +1702,6 @@ phina.main(function() {
   var app = GameApp({
     startLabel: &#39;main&#39;,
     title: &#39;Hit test children&#39;,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>オブジェクトのグループ間移動のサンプル</title>
-      <link>https://alkn203.github.io/blog/2016/02/18/phina-group-change</link>
-      <pubDate>Thu, 18 Feb 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/02/18/phina-group-change</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;において複数のオブジェクトを取り扱う時には、自ずとグループ管理が必須になってきます。
-グループ管理には、&lt;strong&gt;DisplayElement&lt;/strong&gt;(旧CanvasElement)を活用しますが、例えば、AグループとBグループがあった場合&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;Aグループの要素.addChildTo(Bグループ);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;とすることで、&lt;strong&gt;要素はAグループからBグループへ移動&lt;/strong&gt;します。今回のサンプルでは、この仕様を利用して&lt;strong&gt;落下するオブジェクトと固定されたオブジェクトの当たり判定&lt;/strong&gt;を行っています。&lt;/p&gt;
-
-&lt;h3 id=&#34;サンプル&#34;&gt;サンプル&lt;/h3&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/Hg1w0z&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;[&lt;a href=&#34;http://goo.gl/Hg1w0z&#34;&gt;runstantで開く&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// 定数
-var SCREEN_HEIGHT = 960;
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;gray&#39;;
-    // 落下グループ
-    this.dynamicGroup = DisplayElement().addChildTo(this);
-    // 固定グループ
-    this.staticGroup = DisplayElement().addChildTo(this);
-  },
-  // 毎フレーム更新
-  update: function(app) {
-    // 一定フレーム毎にブロック作成
-    if (app.frame % 50 === 0) {
-      Block().addChildTo(this.dynamicGroup)
-             .setPosition(this.gridX.center(Random.randint(-1, 1)), 0)
-             .physical.gravity.set(0, 0.25);
-    }
-
-    var self = this;
-    // 画面下との当たり判定
-    this.dynamicGroup.children.each(function(block) {
-      if (block.bottom &amp;gt; SCREEN_HEIGHT) {
-        block.disable();
-        // 位置補正
-        block.bottom = SCREEN_HEIGHT;
-        // 固定グループへ移動
-        block.addChildTo(self.staticGroup);
-      }  
-    });
-    // 固定ブロックとの当たり判定
-    this.dynamicGroup.children.each(function(block) {
-      self.staticGroup.children.each(function(target) {
-        if (block.hitTestElement(target)) {
-          block.disable();
-          block.bottom = target.top;
-          block.addChildTo(self.staticGroup);
-        }  
-      });
-    });
-  },
-});
-// ブロッククラス
-phina.define(&#39;Block&#39;, {
-  // RectangleShapeクラスを継承
-  superClass: &#39;RectangleShape&#39;,
-  // コンストラクタ
-  init: function() {
-    this.superInit({
-      width: 40,
-    });
-  },
-  // 固定ブロック仕様にする
-  disable: function() {
-    this.physical.gravity.y = 0;
-    this.physical.velocity.y = 0;
-    this.fill = &#39;silver&#39;;
-  },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;,
   });
   app.run();
 });

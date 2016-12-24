@@ -4,7 +4,7 @@ draft = false
 slug = ""
 tags = ["tips", "frameanimation", "sprite"]
 title = "フレームアニメーションのスプライトシートをコード内で定義する方法"
-
+eyecatch = "/images/frameanimation.png"
 +++
 
 ### はじめに
@@ -56,9 +56,9 @@ var ASSETS = {
 ```
 ### 動作サンプル
 
-<div class='runstant'><iframe src='http://goo.gl/c8NG6s' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+<center>![phina-advent-23th](/images/frameanimation.png)</center>
 
-[[runstantで開く]](http://goo.gl/c8NG6s)
+<a href="http://runstant.com/alkn203/projects/3a8e13fb" target="_blank">[runstantで確認]</a>
 
 ### まとめ
 今回は、フレームアニメーションの小ネタについて書かせて頂きました。使い勝手が良いかは微妙なところですが、こういう手法もあるということで参考程度に受け止めて頂ければ幸いです。

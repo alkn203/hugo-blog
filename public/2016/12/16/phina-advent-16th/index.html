@@ -11,7 +11,7 @@
   
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="Collisionクラスを使った当たり判定" />
-  <meta name="og:description" content="はじめに この記事は、phina.js Advent Calendar 2016 の16日目の記事です。 15日目：phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん Collisionクラスについて phina.geom.Collisionは、当たり判定を行うためのクラスです。 phina.jsの当たり判定で良く使うのは、phina.app.Object2dクラスのhitTestメソッドかと思いますが、このメソッドを使うためには以下のようにインスタンス経由となります。 obj.hitTest(target); 対して、Collisionクラスのメソッドは全てstaticなメソッドとなっています。 Collision.メソッド名(引数1, 引数2); Collisionクラスのメソッド testCircleCircle 円同士が重なっているかを判定します。 testRectRect 矩形同士が重なっているかを判定します。 testCircleRect 円と矩形が重なってるかを判定します。 testCircleLine 円と線分が重なってるかを判定します。 サンプルコード // グローバルに展開 phina.globalize(); /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // 初期化 init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // ラベル1 this.label1 = Label({ text: &#39;図形をドラッグして重ねよう&#39;, fill: &#39;white&#39;, fontSize: 48, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-6)); // ラベル2 this.label2 = Label({" />
+  <meta name="og:description" content="はじめに この記事は、phina.js Advent Calendar 2016 の16日目の記事です。 15日目：phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん 17日目：phina.jsでTiledMapEditorを利用するy minimoさん Collisionクラスについて phina.geom.Collisionは、当たり判定を行うためのクラスです。 phina.jsの当たり判定で良く使うのは、phina.app.Object2dクラスのhitTestメソッドかと思いますが、このメソッドを使うためには以下のようにインスタンス経由となります。 obj.hitTest(target); 対して、Collisionクラスのメソッドは全てstaticなメソッドとなっています。 Collision.メソッド名(引数1, 引数2); Collisionクラスのメソッド testCircleCircle 円同士が重なっているかを判定します。 testRectRect 矩形同士が重なっているかを判定します。 testCircleRect 円と矩形が重なってるかを判定します。 testCircleLine 円と線分が重なってるかを判定します。 サンプルコード // グローバルに展開 phina.globalize(); /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // 初期化 init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // ラベル1 this.label1 = Label({ text: &#39;図形をドラッグして重ねよう&#39;, fill: &#39;white&#39;, fontSize: 48, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-6)); // ラベル2 this.label2" />
   <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-advent-16th.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/12/16/phina-advent-16th" />
   <meta name="twitter:site" content="@alkn203" />
@@ -123,6 +123,7 @@
 
 <ul>
 <li>15日目：<a href="http://qiita.com/minimo/items/8aca8ee80196ad045b87">phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん</a></li>
+<li>17日目：<a href="http://qiita.com/minimo/items/b55b792c2fa19964acb4">phina.jsでTiledMapEditorを利用するy minimoさん</a></li>
 </ul>
 
 <h2 id="collisionクラスについて">Collisionクラスについて</h2>
@@ -393,6 +394,12 @@ phina.main(function() {
         </li>
       
         <li>
+          <a href="https://alkn203.github.io/blog//tags/class/">
+          <div>class&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
           <a href="https://alkn203.github.io/blog//tags/collision/">
           <div>collision&nbsp;(1)</div>
           </a>
@@ -448,7 +455,7 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/tips/">
-          <div>tips&nbsp;(20)</div>
+          <div>tips&nbsp;(21)</div>
           </a>
         </li>
       
@@ -472,6 +479,8 @@ phina.main(function() {
     
       <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2016/12/12/phina-advent-12th" rel="prev">Flowを使った非同期処理の基本</a></span>
     
+    
+      <span class="next"><a href="https://alkn203.github.io/blog/2016/12/23/phina-advent-23th" rel="next">クラス継承をしてみよう</a> &rarr;</span>
     
   </nav>
 

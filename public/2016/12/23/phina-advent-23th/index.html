@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  
+  <meta charset="UTF-8">
+  <title>
+    クラス継承をしてみよう | Keep Coding
+  </title>
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="クラス継承をしてみよう" />
+  <meta name="og:description" content="はじめに この記事は、phina.js Advent Calendar 2016 の23日目の記事です。 22日目：Three.jsとPhina.js使った何か by kjunichiさん 24日目：phina.jsとGLBoostの連携について by emadurandalさん クラス継承 phina.jsを使い慣れてくると、既存のクラスに機能を追加したいと思うことがあります。もちろんイチから作るのもありですが、ちょっとした機能追加であれば既存のクラスを継承したクラスを作った方が効率的です。今回はButtonクラスを例にその方法を説明します。 AnimateButtonクラスを作る 現在のButtonクラスの仕様はシンプルで、最低限の機能しかありません。今回はこのButtonクラスを継承してAnimateButtonというクラスを新しく作りたいと思います。追加する仕様は単純で、「ボタンを押している間は縮小して押しているように見せる」です。（下のボタンは画像なので押せません） 手順１ Buttonクラスのソースをコピーする 本来であれば、ローカル環境にソースをダウンロード→エディタで編集→ビルド→テストというのが手順かもしれませんが、今回は簡単な継承例ということでソースを丸ごとコピーして、runstant上で作業します。コピー場所はコードの冒頭にします。(phina.globalize()よりも前) 以下がButtonクラスのソースです。 /** * @class phina.ui.Button * Button */ phina.define(&#39;phina.ui.Button&#39;, { superClass: &#39;phina.display.Shape&#39;, /** * @constructor */ init: function(options) { options = (options || {}).$safe(phina.ui.Button.defaults); this.superInit(options); this.cornerRadius = options.cornerRadius; this.text = options.text; this.fontColor = options.fontColor; this.fontSize = options.fontSize; this.fontWeight = options.fontWeight; this.fontFamily = options.fontFamily; this.setInteractive(true); this.on(&#39;pointend&#39;, function() { this.flare(&#39;push&#39;); }); }, prerender:" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-advent-23th.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/12/23/phina-advent-23th" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
+  <link rel="canonical" href="https://alkn203.github.io/blog/2016/12/23/phina-advent-23th"/>
+  
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/responsive.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/highlight_monokai.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/theme.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/custom.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  
+  <link href="https://alkn203.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Keep Coding" />
+  <link href="https://alkn203.github.io/blog/index.xml" rel="feed" type="application/rss+xml" title="Keep Coding" />
+</head>
+<body>
+<div class="container">
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_9">
+        <h1><a href="https://alkn203.github.io/blog/">Keep Coding</a></h1>
+        <h2>Tutorials And Tips For phina.js Users</h2>
+      </div>
+      <div id="link" class="col span_3" style="text-align: right;">
+        <a href="https://alkn203.github.io/blog/index.xml" type="application/rss+xml" target="_blank"><i class="fa fa-rss" aria-hidden="true"></i>&nbsp;rss</a>
+      </div>
+    </div>
+  </header>
+
+  
+  <main id="single" role="main" class="col span_9">
+    <div class="article-header">
+      <h1>クラス継承をしてみよう</h1>
+      <div class="meta">
+        Dec 23, 2016 &nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/tips">tips</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/class">class</a>&nbsp;
+        
+      </div>
+    </div>
+
+    
+      
+<center>
+<table>
+  <tr>
+    
+    <td>
+      <a href="http://twitter.com/intent/tweet?text=%e3%82%af%e3%83%a9%e3%82%b9%e7%b6%99%e6%89%bf%e3%82%92%e3%81%97%e3%81%a6%e3%81%bf%e3%82%88%e3%81%86&url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f23%2fphina-advent-23th" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f23%2fphina-advent-23th" target="_blank"><i class="fa fa-facebook-square fa-2x facebook" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="http://b.hatena.ne.jp/entry/https://alkn203.github.io/blog/2016/12/23/phina-advent-23th" target="_blank"><i class="fa fa-hatena hatena"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://getpocket.com/edit?url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f23%2fphina-advent-23th" target="_blank"><i class="fa fa-get-pocket fa-2x pocket" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://plus.google.com/share?url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f23%2fphina-advent-23th" target="_blank"><i class="fa fa-google-plus-square fa-2x googleplus" aria-hidden="true"></i></a>
+    </td>
+  </tr>
+</table>
+</center>
+    
+
+    <article>
+      
+      
+        <h2>Table of contents</h2>
+        <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#クラス継承">クラス継承</a></li>
+<li><a href="#animatebuttonクラスを作る">AnimateButtonクラスを作る</a>
+<ul>
+<li><a href="#手順１-buttonクラスのソースをコピーする">手順１ Buttonクラスのソースをコピーする</a></li>
+<li><a href="#手順２-クラス名を変更し-不要な部分を削除する">手順２ クラス名を変更し、不要な部分を削除する</a></li>
+<li><a href="#手順３-押している間の見た目を変更する">手順３　押している間の見た目を変更する</a></li>
+<li><a href="#オプション-クラス特有プロパティを設定できるようにする">オプション　クラス特有プロパティを設定できるようにする</a></li>
+</ul></li>
+<li><a href="#完成コード">完成コード</a></li>
+<li><a href="#おわりに">おわりに</a></li>
+</ul></li>
+</ul>
+</nav>
+      
+      
+
+<h2 id="はじめに">はじめに</h2>
+
+<p>この記事は、<a href="http://qiita.com/advent-calendar/2016/phinajs">phina.js Advent Calendar 2016</a> の23日目の記事です。</p>
+
+<ul>
+<li>22日目：<a href="http://qiita.com/advent-calendar/2016/phinajs">Three.jsとPhina.js使った何か by kjunichiさん</a></li>
+<li>24日目：<a href="http://qiita.com/emadurandal/items/63e262df75b279dda253">phina.jsとGLBoostの連携について by emadurandalさん</a></li>
+</ul>
+
+<h2 id="クラス継承">クラス継承</h2>
+
+<p><strong>phina.js</strong>を使い慣れてくると、<strong>既存のクラスに機能を追加</strong>したいと思うことがあります。もちろんイチから作るのもありですが、ちょっとした機能追加であれば既存のクラスを継承したクラスを作った方が効率的です。今回は<strong>Button</strong>クラスを例にその方法を説明します。</p>
+
+<h2 id="animatebuttonクラスを作る">AnimateButtonクラスを作る</h2>
+
+<p>現在の<strong>Button</strong>クラスの仕様はシンプルで、最低限の機能しかありません。今回はこの<strong>Button</strong>クラスを継承して<strong>AnimateButton</strong>というクラスを新しく作りたいと思います。追加する仕様は単純で、<strong>「ボタンを押している間は縮小して押しているように見せる」</strong>です。（下のボタンは画像なので押せません）</p>
+
+<p><center><img src="https://alkn203.github.io/blog/images/phina-advent-23th.png" alt="phina-advent-23th" /></center></p>
+
+<h3 id="手順１-buttonクラスのソースをコピーする">手順１ Buttonクラスのソースをコピーする</h3>
+
+<p>本来であれば、<strong>ローカル環境にソースをダウンロード→エディタで編集→ビルド→テスト</strong>というのが手順かもしれませんが、今回は簡単な継承例ということでソースを丸ごとコピーして、<strong>runstant</strong>上で作業します。コピー場所はコードの冒頭にします。(phina.globalize()よりも前)</p>
+
+<p>以下が<strong>Button</strong>クラスのソースです。</p>
+
+<pre><code class="language-js">/**
+ * @class phina.ui.Button
+ * Button
+ */
+phina.define('phina.ui.Button', {
+  superClass: 'phina.display.Shape',
+  /**
+   * @constructor
+   */
+  init: function(options) {
+    options = (options || {}).$safe(phina.ui.Button.defaults);
+    this.superInit(options);
+
+    this.cornerRadius = options.cornerRadius;
+    this.text         = options.text;
+    this.fontColor    = options.fontColor;
+    this.fontSize     = options.fontSize;
+    this.fontWeight     = options.fontWeight;
+    this.fontFamily   = options.fontFamily;
+
+    this.setInteractive(true);
+    this.on('pointend', function() {
+      this.flare('push');
+    });
+  },
+  prerender: function(canvas) {
+    canvas.roundRect(-this.width/2, -this.height/2, this.width, this.height, this.cornerRadius);
+  },
+
+  postrender: function(canvas) {
+    var context = canvas.context;
+    // text
+    var font = &quot;{fontWeight} {fontSize}px {fontFamily}&quot;.format(this);
+    context.font = font;
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillStyle = this.fontColor;
+    context.fillText(this.text, 0, 0);
+  },
+
+  _static: {
+    defaults: {
+      width: 200,
+      height: 80,
+      backgroundColor: 'transparent',
+      fill: 'hsl(200, 80%, 60%)',
+      stroke: null,
+
+      cornerRadius: 8,
+      text: 'Hello',
+      fontColor: 'white',
+      fontSize: 32,
+      fontWeight: '',
+      fontFamily: &quot;'HiraKakuProN-W3'&quot;, // Hiragino or Helvetica,
+    },
+  },
+
+  _defined: function() {
+    phina.display.Shape.watchRenderProperty.call(this, 'cornerRadius');
+    phina.display.Shape.watchRenderProperty.call(this, 'text');
+    phina.display.Shape.watchRenderProperty.call(this, 'fontColor');
+    phina.display.Shape.watchRenderProperty.call(this, 'fontSize');
+    phina.display.Shape.watchRenderProperty.call(this, 'fontFamily');
+  },
+
+});
+
+</code></pre>
+
+<h3 id="手順２-クラス名を変更し-不要な部分を削除する">手順２ クラス名を変更し、不要な部分を削除する</h3>
+
+<p>クラス名を変更し、更に<strong>phina.ui.Button</strong>を継承するように変更します。</p>
+
+<pre><code class="language-js">/**
+   * @class phina.ui.AnimateButton
+   * AnimateButton
+   */
+  phina.define('phina.ui.AnimateButton', {
+    superClass: 'phina.ui.Button',
+</code></pre>
+
+<p>見た目や基本動作は<strong>Button</strong>クラスのものを使うので基底クラスに関する部分は削除し、以下のようにスッキリさせます。</p>
+
+<pre><code class="language-js">/**
+   * @class phina.ui.AnimateButton
+   * AnimateButton
+   */
+  phina.define('phina.ui.AnimateButton', {
+    superClass: 'phina.ui.Button',
+    /**
+     * @constructor
+     */
+    init: function(options) {
+      options = (options || {}).$safe(phina.ui.Button.defaults);
+      this.superInit(options);
+    },
+    
+    _static: {
+      defaults: {
+      },
+    },
+  });
+</code></pre>
+
+<h3 id="手順３-押している間の見た目を変更する">手順３　押している間の見た目を変更する</h3>
+
+<p>押している間は少し縮小させたいので、<strong>pointstay</strong>イベント内に処理を書きます。
+<strong>scaleMin</strong>は後のプロパティ設定で説明します。</p>
+
+<pre><code class="language-js">// プッシュ時の処理を追加
+this.on('pointstay', function() {
+  // 少し縮小
+  this.setScale(scaleMin, scaleMin);
+});
+</code></pre>
+
+<p>押し終わった後は元のサイズに戻さないといけないので、<strong>pointend</strong>イベント内に処理を書きます。
+<strong>1.0</strong>が元のサイズです。</p>
+
+<pre><code class="language-js">this.on('pointend', function() {
+  // 元に戻す
+  this.setScale(1.0, 1.0);
+});
+</code></pre>
+
+<h3 id="オプション-クラス特有プロパティを設定できるようにする">オプション　クラス特有プロパティを設定できるようにする</h3>
+
+<p>折角ですので、<strong>AnimateButton</strong>クラス特有のプロパティをコンストラクタで指定できるようにします。
+今回は、縮小サイズを指定できるようにしたいと思います。</p>
+
+<pre><code class="language-js">init: function(options) {
+  options = (options || {}).$safe(phina.ui.AnimateButton.defaults);
+  this.superInit(options);
+  // 独自プロパティ
+  var scaleMin = options.scaleMin;
+</code></pre>
+
+<p><strong>$safe</strong>はプロパティ（連想配列）をマージする関数で、<strong>options</strong>で与えられた値とデフォルトで定義されている値を結合します。
+プロパティ名がバッティングした場合、<strong>options</strong>で与えられた値をデフォルトの値で上書きすることはありません。</p>
+
+<p>独自プロパティの値は、<strong>options</strong>からもらいます。</p>
+
+<pre><code class="language-js">_static: {
+  defaults: {
+    scaleMin: 0.95,
+  },
+},
+</code></pre>
+
+<p>独自プロパティのデフォルト値は、上のように書きます。これで、コンストラクタで値を渡して指定できるようになります。</p>
+
+<h2 id="完成コード">完成コード</h2>
+
+<pre><code class="language-js">/**
+ * @class phina.ui.AnimateButton
+ * AnimateButton
+ */
+phina.define('phina.ui.AnimateButton', {
+  superClass: 'phina.ui.Button',
+  /**
+   * @constructor
+   */
+  init: function(options) {
+    options = (options || {}).$safe(phina.ui.AnimateButton.defaults);
+    this.superInit(options);
+    // 独自プロパティ
+    var scaleMin = options.scaleMin;
+    // プッシュ時の処理を追加
+    this.on('pointstay', function() {
+      // 少し縮小
+      this.setScale(scaleMin, scaleMin);
+    });
+    this.on('pointend', function() {
+      // 元に戻す
+      this.setScale(1.0, 1.0);
+    });
+  },
+  
+  _static: {
+    defaults: {
+      scaleMin: 0.95,
+    },
+  },
+});
+// グローバルに展開
+phina.globalize();
+/*
+* メインシーン
+*/
+phina.define(&quot;MainScene&quot;, {
+// 継承
+superClass: 'DisplayScene',
+// 初期化
+init: function() {
+  // 親クラス初期化
+  this.superInit();
+  
+  var txt = 'Push me';
+  // デフォルトのボタン
+  Button({text: txt}).addChildTo(this)
+          .setPosition(this.gridX.center(), this.gridY.center(-2))
+          .onpush = function() {
+            console.log('Default');  
+          };
+  // 拡張ボタン
+  AnimateButton({text: txt}).addChildTo(this)
+                 .setPosition(this.gridX.center(), this.gridY.center(2))
+                 .onpush = function() {
+                   console.log('Animate');
+                 };
+},
+});
+/*
+* メイン処理
+*/
+phina.main(function() {
+// アプリケーションを生成
+var app = GameApp({
+  // MainScene から開始
+  startLabel: 'main',
+});
+// 実行
+app.run();
+});
+</code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/9c1f8097" target="_blank">[runstantで確認]</a></p>
+
+<h2 id="おわりに">おわりに</h2>
+
+<p>説明をだいぶ端折ってしまいましたが、<strong>phina.js</strong>でのクラス継承についての説明は以上です。このように拡張したクラスは自分専用に使っても良いですし、他のユーザーにも使ってもらいたいということであれば、<a href="https://github.com/phi-jp/phina.js">Github</a>でプルリクエストをしても良いでしょう。<strong>phina.js</strong>への理解も深まりますので、お勧めです。</p>
+
+    </article>
+
+    
+      
+<center>
+<table>
+  <tr>
+    
+    <td>
+      <a href="http://twitter.com/intent/tweet?text=%e3%82%af%e3%83%a9%e3%82%b9%e7%b6%99%e6%89%bf%e3%82%92%e3%81%97%e3%81%a6%e3%81%bf%e3%82%88%e3%81%86&url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f23%2fphina-advent-23th" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f23%2fphina-advent-23th" target="_blank"><i class="fa fa-facebook-square fa-2x facebook" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="http://b.hatena.ne.jp/entry/https://alkn203.github.io/blog/2016/12/23/phina-advent-23th" target="_blank"><i class="fa fa-hatena hatena"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://getpocket.com/edit?url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f23%2fphina-advent-23th" target="_blank"><i class="fa fa-get-pocket fa-2x pocket" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://plus.google.com/share?url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f23%2fphina-advent-23th" target="_blank"><i class="fa fa-google-plus-square fa-2x googleplus" aria-hidden="true"></i></a>
+    </td>
+  </tr>
+</table>
+</center>
+    
+
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'alkn203githubio';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  
+<aside role="complementary" class="col span_3">
+  
+  <div class="article-header light-gray"><h1>About Me</h1></div>
+  <div id="profile" style="text-align: center;">
+    <div><img src="https://alkn203.github.io/blog/images/alkn203.png" width="64" height="64"></div>
+    <div>alkn203</div>
+    <div id="profile-text">javascript製のゲームライブラリphina.jsを愛用している趣味プログラマ。ファミコン世代。Hobbyist programmer/javascript/phina.js/retro games</div>
+  </div>
+  
+    <div id="social">
+      <table>
+        <tr>
+          <td><a href="https://twitter.com/alkn203" target="_blank"><i class="fa fa-twitter fa-2x"></i></a></td>
+          
+          <td><a href="https://github.com/alkn203" target="_blank"><i class="fa fa-github fa-2x"></i></a></td>
+        </tr>
+      </table>
+    </div>
+  
+  <div class="article-header light-gray"><h1>Sections</h1></div>
+  <ul class="none-ul">
+    <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a></li>
+    <li><a href="https://alkn203.github.io/blog/tips/">Tips</a></li>
+    <li><a href="https://alkn203.github.io/blog/works/">Works</a></li>
+  </ul>
+  
+  <div class="article-header light-gray"><h1>Tags</h1></div>
+    <ul class="none-ul">
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/15puzzle/">
+          <div>15puzzle&nbsp;(7)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/breakout/">
+          <div>breakout&nbsp;(8)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/calendar/">
+          <div>calendar&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/canvas/">
+          <div>canvas&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/class/">
+          <div>class&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/collision/">
+          <div>collision&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/event/">
+          <div>event&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/flow/">
+          <div>flow&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/frameanimation/">
+          <div>frameanimation&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/minesweeper/">
+          <div>minesweeper&nbsp;(6)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/shape/">
+          <div>shape&nbsp;(6)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/sprite/">
+          <div>sprite&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/static/">
+          <div>static&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/template/">
+          <div>template&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/tips/">
+          <div>tips&nbsp;(21)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/tutorial/">
+          <div>tutorial&nbsp;(21)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/works/">
+          <div>works&nbsp;(1)</div>
+          </a>
+        </li>
+      
+    </ul>
+</aside>
+
+
+  <nav class="pagination-single" class="col span_3">>
+    
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2016/12/16/phina-advent-16th" rel="prev">Collisionクラスを使った当たり判定</a></span>
+    
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo" class="col span_9">
+    <div style="text-align:center;">
+      ©&nbsp2016&nbspalkn203
+    </div>
+  </footer>
+</div>
+
+<script src="https://alkn203.github.io/blog/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-69423602-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.8";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+
+<script src="https://apis.google.com/js/platform.js" async defer>
+  {lang: 'ja'}
+</script>
+</body>
+</html>
+

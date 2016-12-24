@@ -6,8 +6,275 @@
     <description>Recent content on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Fri, 16 Dec 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 23 Dec 2016 00:01:08 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>クラス継承をしてみよう</title>
+      <link>https://alkn203.github.io/blog/2016/12/23/phina-advent-23th</link>
+      <pubDate>Fri, 23 Dec 2016 00:01:08 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/23/phina-advent-23th</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の23日目の記事です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;22日目：&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;Three.jsとPhina.js使った何か by kjunichiさん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;24日目：&lt;a href=&#34;http://qiita.com/emadurandal/items/63e262df75b279dda253&#34;&gt;phina.jsとGLBoostの連携について by emadurandalさん&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;クラス継承&#34;&gt;クラス継承&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;を使い慣れてくると、&lt;strong&gt;既存のクラスに機能を追加&lt;/strong&gt;したいと思うことがあります。もちろんイチから作るのもありですが、ちょっとした機能追加であれば既存のクラスを継承したクラスを作った方が効率的です。今回は&lt;strong&gt;Button&lt;/strong&gt;クラスを例にその方法を説明します。&lt;/p&gt;
+
+&lt;h2 id=&#34;animatebuttonクラスを作る&#34;&gt;AnimateButtonクラスを作る&lt;/h2&gt;
+
+&lt;p&gt;現在の&lt;strong&gt;Button&lt;/strong&gt;クラスの仕様はシンプルで、最低限の機能しかありません。今回はこの&lt;strong&gt;Button&lt;/strong&gt;クラスを継承して&lt;strong&gt;AnimateButton&lt;/strong&gt;というクラスを新しく作りたいと思います。追加する仕様は単純で、&lt;strong&gt;「ボタンを押している間は縮小して押しているように見せる」&lt;/strong&gt;です。（下のボタンは画像なので押せません）&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-23th.png&#34; alt=&#34;phina-advent-23th&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;手順１-buttonクラスのソースをコピーする&#34;&gt;手順１ Buttonクラスのソースをコピーする&lt;/h3&gt;
+
+&lt;p&gt;本来であれば、&lt;strong&gt;ローカル環境にソースをダウンロード→エディタで編集→ビルド→テスト&lt;/strong&gt;というのが手順かもしれませんが、今回は簡単な継承例ということでソースを丸ごとコピーして、&lt;strong&gt;runstant&lt;/strong&gt;上で作業します。コピー場所はコードの冒頭にします。(phina.globalize()よりも前)&lt;/p&gt;
+
+&lt;p&gt;以下が&lt;strong&gt;Button&lt;/strong&gt;クラスのソースです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
+ * @class phina.ui.Button
+ * Button
+ */
+phina.define(&#39;phina.ui.Button&#39;, {
+  superClass: &#39;phina.display.Shape&#39;,
+  /**
+   * @constructor
+   */
+  init: function(options) {
+    options = (options || {}).$safe(phina.ui.Button.defaults);
+    this.superInit(options);
+
+    this.cornerRadius = options.cornerRadius;
+    this.text         = options.text;
+    this.fontColor    = options.fontColor;
+    this.fontSize     = options.fontSize;
+    this.fontWeight     = options.fontWeight;
+    this.fontFamily   = options.fontFamily;
+
+    this.setInteractive(true);
+    this.on(&#39;pointend&#39;, function() {
+      this.flare(&#39;push&#39;);
+    });
+  },
+  prerender: function(canvas) {
+    canvas.roundRect(-this.width/2, -this.height/2, this.width, this.height, this.cornerRadius);
+  },
+
+  postrender: function(canvas) {
+    var context = canvas.context;
+    // text
+    var font = &amp;quot;{fontWeight} {fontSize}px {fontFamily}&amp;quot;.format(this);
+    context.font = font;
+    context.textAlign = &#39;center&#39;;
+    context.textBaseline = &#39;middle&#39;;
+    context.fillStyle = this.fontColor;
+    context.fillText(this.text, 0, 0);
+  },
+
+  _static: {
+    defaults: {
+      width: 200,
+      height: 80,
+      backgroundColor: &#39;transparent&#39;,
+      fill: &#39;hsl(200, 80%, 60%)&#39;,
+      stroke: null,
+
+      cornerRadius: 8,
+      text: &#39;Hello&#39;,
+      fontColor: &#39;white&#39;,
+      fontSize: 32,
+      fontWeight: &#39;&#39;,
+      fontFamily: &amp;quot;&#39;HiraKakuProN-W3&#39;&amp;quot;, // Hiragino or Helvetica,
+    },
+  },
+
+  _defined: function() {
+    phina.display.Shape.watchRenderProperty.call(this, &#39;cornerRadius&#39;);
+    phina.display.Shape.watchRenderProperty.call(this, &#39;text&#39;);
+    phina.display.Shape.watchRenderProperty.call(this, &#39;fontColor&#39;);
+    phina.display.Shape.watchRenderProperty.call(this, &#39;fontSize&#39;);
+    phina.display.Shape.watchRenderProperty.call(this, &#39;fontFamily&#39;);
+  },
+
+});
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;手順２-クラス名を変更し-不要な部分を削除する&#34;&gt;手順２ クラス名を変更し、不要な部分を削除する&lt;/h3&gt;
+
+&lt;p&gt;クラス名を変更し、更に&lt;strong&gt;phina.ui.Button&lt;/strong&gt;を継承するように変更します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
+   * @class phina.ui.AnimateButton
+   * AnimateButton
+   */
+  phina.define(&#39;phina.ui.AnimateButton&#39;, {
+    superClass: &#39;phina.ui.Button&#39;,
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;見た目や基本動作は&lt;strong&gt;Button&lt;/strong&gt;クラスのものを使うので基底クラスに関する部分は削除し、以下のようにスッキリさせます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
+   * @class phina.ui.AnimateButton
+   * AnimateButton
+   */
+  phina.define(&#39;phina.ui.AnimateButton&#39;, {
+    superClass: &#39;phina.ui.Button&#39;,
+    /**
+     * @constructor
+     */
+    init: function(options) {
+      options = (options || {}).$safe(phina.ui.Button.defaults);
+      this.superInit(options);
+    },
+    
+    _static: {
+      defaults: {
+      },
+    },
+  });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;手順３-押している間の見た目を変更する&#34;&gt;手順３　押している間の見た目を変更する&lt;/h3&gt;
+
+&lt;p&gt;押している間は少し縮小させたいので、&lt;strong&gt;pointstay&lt;/strong&gt;イベント内に処理を書きます。
+&lt;strong&gt;scaleMin&lt;/strong&gt;は後のプロパティ設定で説明します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// プッシュ時の処理を追加
+this.on(&#39;pointstay&#39;, function() {
+  // 少し縮小
+  this.setScale(scaleMin, scaleMin);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;押し終わった後は元のサイズに戻さないといけないので、&lt;strong&gt;pointend&lt;/strong&gt;イベント内に処理を書きます。
+&lt;strong&gt;1.0&lt;/strong&gt;が元のサイズです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;this.on(&#39;pointend&#39;, function() {
+  // 元に戻す
+  this.setScale(1.0, 1.0);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;オプション-クラス特有プロパティを設定できるようにする&#34;&gt;オプション　クラス特有プロパティを設定できるようにする&lt;/h3&gt;
+
+&lt;p&gt;折角ですので、&lt;strong&gt;AnimateButton&lt;/strong&gt;クラス特有のプロパティをコンストラクタで指定できるようにします。
+今回は、縮小サイズを指定できるようにしたいと思います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;init: function(options) {
+  options = (options || {}).$safe(phina.ui.AnimateButton.defaults);
+  this.superInit(options);
+  // 独自プロパティ
+  var scaleMin = options.scaleMin;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;$safe&lt;/strong&gt;はプロパティ（連想配列）をマージする関数で、&lt;strong&gt;options&lt;/strong&gt;で与えられた値とデフォルトで定義されている値を結合します。
+プロパティ名がバッティングした場合、&lt;strong&gt;options&lt;/strong&gt;で与えられた値をデフォルトの値で上書きすることはありません。&lt;/p&gt;
+
+&lt;p&gt;独自プロパティの値は、&lt;strong&gt;options&lt;/strong&gt;からもらいます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;_static: {
+  defaults: {
+    scaleMin: 0.95,
+  },
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;独自プロパティのデフォルト値は、上のように書きます。これで、コンストラクタで値を渡して指定できるようになります。&lt;/p&gt;
+
+&lt;h2 id=&#34;完成コード&#34;&gt;完成コード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
+ * @class phina.ui.AnimateButton
+ * AnimateButton
+ */
+phina.define(&#39;phina.ui.AnimateButton&#39;, {
+  superClass: &#39;phina.ui.Button&#39;,
+  /**
+   * @constructor
+   */
+  init: function(options) {
+    options = (options || {}).$safe(phina.ui.AnimateButton.defaults);
+    this.superInit(options);
+    // 独自プロパティ
+    var scaleMin = options.scaleMin;
+    // プッシュ時の処理を追加
+    this.on(&#39;pointstay&#39;, function() {
+      // 少し縮小
+      this.setScale(scaleMin, scaleMin);
+    });
+    this.on(&#39;pointend&#39;, function() {
+      // 元に戻す
+      this.setScale(1.0, 1.0);
+    });
+  },
+  
+  _static: {
+    defaults: {
+      scaleMin: 0.95,
+    },
+  },
+});
+// グローバルに展開
+phina.globalize();
+/*
+* メインシーン
+*/
+phina.define(&amp;quot;MainScene&amp;quot;, {
+// 継承
+superClass: &#39;DisplayScene&#39;,
+// 初期化
+init: function() {
+  // 親クラス初期化
+  this.superInit();
+  
+  var txt = &#39;Push me&#39;;
+  // デフォルトのボタン
+  Button({text: txt}).addChildTo(this)
+          .setPosition(this.gridX.center(), this.gridY.center(-2))
+          .onpush = function() {
+            console.log(&#39;Default&#39;);  
+          };
+  // 拡張ボタン
+  AnimateButton({text: txt}).addChildTo(this)
+                 .setPosition(this.gridX.center(), this.gridY.center(2))
+                 .onpush = function() {
+                   console.log(&#39;Animate&#39;);
+                 };
+},
+});
+/*
+* メイン処理
+*/
+phina.main(function() {
+// アプリケーションを生成
+var app = GameApp({
+  // MainScene から開始
+  startLabel: &#39;main&#39;,
+});
+// 実行
+app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9c1f8097&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+
+&lt;p&gt;説明をだいぶ端折ってしまいましたが、&lt;strong&gt;phina.js&lt;/strong&gt;でのクラス継承についての説明は以上です。このように拡張したクラスは自分専用に使っても良いですし、他のユーザーにも使ってもらいたいということであれば、&lt;a href=&#34;https://github.com/phi-jp/phina.js&#34;&gt;Github&lt;/a&gt;でプルリクエストをしても良いでしょう。&lt;strong&gt;phina.js&lt;/strong&gt;への理解も深まりますので、お勧めです。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Collisionクラスを使った当たり判定</title>
@@ -23,6 +290,7 @@
 
 &lt;ul&gt;
 &lt;li&gt;15日目：&lt;a href=&#34;http://qiita.com/minimo/items/8aca8ee80196ad045b87&#34;&gt;phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;17日目：&lt;a href=&#34;http://qiita.com/minimo/items/b55b792c2fa19964acb4&#34;&gt;phina.jsでTiledMapEditorを利用するy minimoさん&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&#34;collisionクラスについて&#34;&gt;Collisionクラスについて&lt;/h2&gt;
@@ -1679,221 +1947,6 @@ phina.main(function() {
 
 &lt;p&gt;ここまでで、パネルを開いて爆弾数を表示することが出来ました。
 次回は、再帰処理を使ってパネルが連鎖で開くようにします。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ゲーム作成チュートリアル（マインスイーパー）（その２）【爆弾の配置】</title>
-      <link>https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02</link>
-      <pubDate>Sun, 03 Jul 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/07/03/minesweeper-tut-02</guid>
-      <description>
-
-&lt;h2 id=&#34;今回の目標&#34;&gt;今回の目標&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://alkn203.github.io/blog/2016/06/30/minesweeper-tut-01/&#34;&gt;前回&lt;/a&gt;はパネルをグリッド状に配置しました。
-今回はマインスイーパーの主役とも言える爆弾を配置します。爆弾はランダムな場所に配置されるようにします。&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/minesweeper-tut-2.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;今回のコード&#34;&gt;今回のコード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640; // 画面横サイズ
-var PANEL_NUM_XY = 9; // 縦横のパネル数
-var GRID_SIZE = (SCREEN_WIDTH - 10) / PANEL_NUM_XY; // グリッドのサイズ
-var SCREEN_HEIGHT = GRID_SIZE * 11; // 画面縦サイズ
-var PANEL_SIZE = GRID_SIZE * 0.9; // パネルの大きさ
-var PANEL_OFFSET = (GRID_SIZE + 10) / 2; // オフセット値
-var BOMB_NUM = 10; // 爆弾数
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit({
-      width: SCREEN_WIDTH,
-      height: SCREEN_HEIGHT,
-    });
-    // 背景色
-    this.backgroundColor = &#39;gray&#39;;
-    // グリッド
-    var grid = Grid(GRID_SIZE * PANEL_NUM_XY, PANEL_NUM_XY);
-    // グループ
-    var panelGroup = DisplayElement().addChildTo(this);
-    // 爆弾位置をランダムに決めた配列を作成
-    var bombs = [];
-    (PANEL_NUM_XY * PANEL_NUM_XY).times(function() {
-      bombs.push(false);
-    });
-    bombs.fill(true, 0, 10).shuffle();
-    // ピース配置
-    PANEL_NUM_XY.times(function(spanX) {
-      PANEL_NUM_XY.times(function(spanY) {
-        // パネル作成
-        var panel = Panel().addChildTo(panelGroup);
-        // Gridを利用して配置
-        panel.x = grid.span(spanX) + PANEL_OFFSET;
-        panel.y = grid.span(spanY) + PANEL_OFFSET;
-        // パネルに爆弾情報を紐づける
-        panel.isBomb = bombs[spanX * PANEL_NUM_XY + spanY];
-        // 爆弾なら表示
-        if (panel.isBomb) Bomb().addChildTo(panel);
-      });
-    });
-  },
-});
-// パネルクラス
-phina.define(&#39;Panel&#39;, {
-  // RectangleShapeを継承
-  superClass: &#39;RectangleShape&#39;,
-    // コンストラクタ
-    init: function() {
-      // 親クラス初期化
-      this.superInit({
-        width: PANEL_SIZE,
-        height: PANEL_SIZE,
-        fill: &#39;silver&#39;, // 塗りつぶし色
-        stroke: &#39;white&#39;, // 枠の色
-        cornerRadius: 2, // 角の丸み
-      });
-    },
-});
-// 爆弾クラス
-phina.define(&#39;Bomb&#39;, {
-  // Shapeを継承
-  superClass: &#39;Shape&#39;,
-    // コンストラクタ
-    init: function() {
-      // 親クラス初期化
-      this.superInit({
-        width: GRID_SIZE,
-        height: GRID_SIZE,
-        backgroundColor: &#39;transparent&#39;,
-      });
-      // 導線
-      RectangleShape({
-        width: PANEL_SIZE / 8,
-        height: PANEL_SIZE / 8,
-        fill: &amp;quot;navy&amp;quot;,
-        stroke: &#39;white&#39;,
-        y: -20,
-      }).addChildTo(this);
-      // 本体
-      CircleShape({
-        radius: PANEL_SIZE / 4,
-        fill: &amp;quot;navy&amp;quot;,
-        stroke: &#39;white&#39;,
-      }).addChildTo(this);
-    },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;, // メイン画面からスタート
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/a24d063d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
-
-&lt;h3 id=&#34;定数の定義&#34;&gt;定数の定義&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 定数
-（略）
-var BOMB_NUM = 10; // 爆弾数
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;設置する爆弾数を定義します。&lt;/p&gt;
-
-&lt;h3 id=&#34;爆弾位置情報の作成&#34;&gt;爆弾位置情報の作成&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;init: function() {
-  （略）
-  // 爆弾位置をランダムに決めた配列を作成
-  var bombs = [];
-  (PANEL_NUM_XY * PANEL_NUM_XY).times(function() {
-    bombs.push(false);
-  });
-  bombs.fill(true, 0, 10).shuffle();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;爆弾位置格納用の配列を作ります。&lt;/li&gt;
-&lt;li&gt;一旦&lt;strong&gt;false&lt;/strong&gt;で埋めて、先頭の10個まで&lt;strong&gt;true&lt;/strong&gt;に置き換えてから&lt;strong&gt;shuffle&lt;/strong&gt;関数で要素をランダムに並び替えています。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;爆弾位置情報をパネルに紐づける&#34;&gt;爆弾位置情報をパネルに紐づける&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // ピース配置
-  PANEL_NUM_XY.times(function(spanX) {
-    PANEL_NUM_XY.times(function(spanY) {
-      （略）
-      // パネルに爆弾情報を紐づける
-      panel.isBomb = bombs[spanX * PANEL_NUM_XY + spanY];
-      // 爆弾なら表示
-      if (panel.isBomb) Bomb().addChildTo(panel);
-    });
-  });
-},
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;パネルの&lt;strong&gt;isBomb&lt;/strong&gt;プロパティに爆弾かどうかの情報&lt;strong&gt;true&lt;/strong&gt; or &lt;strong&gt;false&lt;/strong&gt;を設定しています。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;isBomb&lt;/strong&gt;プロパティが&lt;strong&gt;true&lt;/strong&gt;なら、爆弾を配置します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;爆弾クラス&#34;&gt;爆弾クラス&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 爆弾クラス
-phina.define(&#39;Bomb&#39;, {
-  // Shapeを継承
-  superClass: &#39;Shape&#39;,
-    // コンストラクタ
-    init: function() {
-      // 親クラス初期化
-      this.superInit({
-        width: GRID_SIZE,
-        height: GRID_SIZE,
-        backgroundColor: &#39;transparent&#39;,
-      });
-      // 導線
-      RectangleShape({
-        width: PANEL_SIZE / 8,
-        height: PANEL_SIZE / 8,
-        fill: &amp;quot;navy&amp;quot;,
-        stroke: &#39;white&#39;,
-        y: -20,
-      }).addChildTo(this);
-      // 本体
-      CircleShape({
-        radius: PANEL_SIZE / 4,
-        fill: &amp;quot;navy&amp;quot;,
-        stroke: &#39;white&#39;,
-      }).addChildTo(this);
-    },
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;新たに&lt;strong&gt;Bomb&lt;/strong&gt;クラスを作成しています。&lt;/li&gt;
-&lt;li&gt;爆弾はスプライト画像を使っても良いのですが、今回は敢えて&lt;strong&gt;Shape&lt;/strong&gt;を組み合わせて表現してみました。&lt;/li&gt;
-&lt;li&gt;素の&lt;strong&gt;Shape&lt;/strong&gt;は&lt;strong&gt;backgroundColor&lt;/strong&gt;が設定されているので、これを透明にします。&lt;/li&gt;
-&lt;li&gt;導線は本体の少し上になるようにy座標を指定しています。この場合、親から見た&lt;strong&gt;相対座標&lt;/strong&gt;になるということに注意してください。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;今回はここまで&#34;&gt;今回はここまで&lt;/h2&gt;
-
-&lt;p&gt;ここまでで、爆弾をランダムに配置することができました。読み込まれる度に配置が異なることが確認できるかと思います。
-次回は、パネルを開く処理を追加します。&lt;/p&gt;
 </description>
     </item>
     

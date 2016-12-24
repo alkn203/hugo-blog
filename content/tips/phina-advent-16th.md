@@ -11,6 +11,7 @@ eyecatch = "/images/phina-advent-16th.png"
 この記事は、[phina.js Advent Calendar 2016](http://qiita.com/advent-calendar/2016/phinajs) の16日目の記事です。
 
 * 15日目：[phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん](http://qiita.com/minimo/items/8aca8ee80196ad045b87)
+* 17日目：[phina.jsでTiledMapEditorを利用するy minimoさん](http://qiita.com/minimo/items/b55b792c2fa19964acb4)
 
 ## Collisionクラスについて
 **phina.geom.Collision**は、当たり判定を行うためのクラスです。
