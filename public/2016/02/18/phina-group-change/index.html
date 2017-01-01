@@ -11,8 +11,8 @@
   
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="オブジェクトのグループ間移動のサンプル" />
-  <meta name="og:description" content="はじめに phina.jsにおいて複数のオブジェクトを取り扱う時には、自ずとグループ管理が必須になってきます。 グループ管理には、DisplayElement(旧CanvasElement)を活用しますが、例えば、AグループとBグループがあった場合 Aグループの要素.addChildTo(Bグループ); とすることで、要素はAグループからBグループへ移動します。今回のサンプルでは、この仕様を利用して落下するオブジェクトと固定されたオブジェクトの当たり判定を行っています。 サンプル [runstantで開く] コード phina.globalize(); // 定数 var SCREEN_HEIGHT = 960; // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;gray&#39;; // 落下グループ this.dynamicGroup = DisplayElement().addChildTo(this); // 固定グループ this.staticGroup = DisplayElement().addChildTo(this); }, // 毎フレーム更新 update: function(app) { // 一定フレーム毎にブロック作成 if (app.frame % 50 === 0) { Block().addChildTo(this.dynamicGroup) .setPosition(this.gridX.center(Random.randint(-1, 1)), 0) .physical.gravity.set(0, 0.25); } var self = this;" />
-  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="og:description" content="今回のサンプル phina.jsにおいて複数のオブジェクトを取り扱う時には、自ずとグループ管理が必須になってきます。 グループ管理には、DisplayElement(旧CanvasElement)を活用しますが、例えば、AグループとBグループがあった場合 Aグループの要素.addChildTo(Bグループ); とすることで、要素はAグループからBグループへ移動します。今回のサンプルでは、この仕様を利用して落下するオブジェクトと固定されたオブジェクトの当たり判定を行っています。 コード phina.globalize(); // 定数 var SCREEN_HEIGHT = 960; // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;gray&#39;; // 落下グループ this.dynamicGroup = DisplayElement().addChildTo(this); // 固定グループ this.staticGroup = DisplayElement().addChildTo(this); }, // 毎フレーム更新 update: function(app) { // 一定フレーム毎にブロック作成 if (app.frame % 50 === 0) { Block().addChildTo(this.dynamicGroup) .setPosition(this.gridX.center(Random.randint(-1, 1)), 0) .physical.gravity.set(0, 0.25); } var self = this; // 画面下との当たり判定" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-group-change.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/02/18/phina-group-change" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
@@ -52,6 +52,12 @@
         Feb 18, 2016 &nbsp;
         
           #<a href="https://alkn203.github.io/blog/tags/tips">tips</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/displayelement">DisplayElement</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/shape">shape</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/group">group</a>&nbsp;
         
       </div>
     </div>
@@ -96,8 +102,7 @@
 <ul>
 <li>
 <ul>
-<li><a href="#はじめに">はじめに</a></li>
-<li><a href="#サンプル">サンプル</a></li>
+<li><a href="#今回のサンプル">今回のサンプル</a></li>
 <li><a href="#コード">コード</a></li>
 </ul></li>
 </ul></li>
@@ -106,7 +111,7 @@
       
       
 
-<h3 id="はじめに">はじめに</h3>
+<h3 id="今回のサンプル">今回のサンプル</h3>
 
 <p><strong>phina.js</strong>において複数のオブジェクトを取り扱う時には、自ずとグループ管理が必須になってきます。
 グループ管理には、<strong>DisplayElement</strong>(旧CanvasElement)を活用しますが、例えば、AグループとBグループがあった場合</p>
@@ -116,11 +121,7 @@
 
 <p>とすることで、<strong>要素はAグループからBグループへ移動</strong>します。今回のサンプルでは、この仕様を利用して<strong>落下するオブジェクトと固定されたオブジェクトの当たり判定</strong>を行っています。</p>
 
-<h3 id="サンプル">サンプル</h3>
-
-<div class='runstant'><iframe src='http://goo.gl/Hg1w0z' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
-
-<p>[<a href="http://goo.gl/Hg1w0z">runstantで開く</a>]</p>
+<p><center><img src="https://alkn203.github.io/blog/images/phina-group-change.png" alt="phina-group-change" /></center></p>
 
 <h3 id="コード">コード</h3>
 
@@ -149,7 +150,7 @@ phina.define('MainScene', {
              .setPosition(this.gridX.center(Random.randint(-1, 1)), 0)
              .physical.gravity.set(0, 0.25);
     }
-
+    
     var self = this;
     // 画面下との当たり判定
     this.dynamicGroup.children.each(function(block) {
@@ -198,6 +199,8 @@ phina.main(function() {
   app.run();
 });
 </code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/8421fe5a" target="_blank">[runstantで確認]</a></p>
 
     </article>
 
@@ -301,7 +304,19 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/canvas/">
-          <div>canvas&nbsp;(2)</div>
+          <div>canvas&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/children/">
+          <div>children&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/circle/">
+          <div>circle&nbsp;(1)</div>
           </a>
         </li>
       
@@ -313,7 +328,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/collision/">
-          <div>collision&nbsp;(1)</div>
+          <div>collision&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/displayelement/">
+          <div>displayelement&nbsp;(1)</div>
           </a>
         </li>
       
@@ -331,7 +352,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/frameanimation/">
-          <div>frameanimation&nbsp;(2)</div>
+          <div>frameanimation&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/group/">
+          <div>group&nbsp;(1)</div>
           </a>
         </li>
       
@@ -342,14 +369,32 @@ phina.main(function() {
         </li>
       
         <li>
+          <a href="https://alkn203.github.io/blog//tags/parent/">
+          <div>parent&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/pathshape/">
+          <div>pathshape&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/physical/">
+          <div>physical&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
           <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(6)</div>
+          <div>shape&nbsp;(9)</div>
           </a>
         </li>
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/sprite/">
-          <div>sprite&nbsp;(2)</div>
+          <div>sprite&nbsp;(3)</div>
           </a>
         </li>
       
@@ -367,7 +412,7 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/tips/">
-          <div>tips&nbsp;(21)</div>
+          <div>tips&nbsp;(22)</div>
           </a>
         </li>
       

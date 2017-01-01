@@ -2,31 +2,33 @@
 date = "2016-02-16T23:59:06+09:00"
 draft = false
 slug = ""
-tags = ["tips"]
+tags = ["tips","shape","canvas"]
 title = "ShapeとCanvas描画を組み合わせたサンプル（時計Shape）"
-
+eyecatch = "/images/phina-canvas2.png"
 +++
 
-### はじめに
+### 今回の内容
 以前に**tmlib.js**で作った物を**phina.js**にリファクタリングしてみました。
 **Shape**を通常の**canvas**と見なせますので、今回の時計に限らず、**canvas**で描けるものは全て**Shape**として取り扱うことができます。
 
-<div class='runstant'><iframe src='http://goo.gl/y3bhHM' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
-
-[[runstantで開く](http://goo.gl/hY3BcQ)]
+<center>![phina-canvas2](/images/phina-canvas2.png)</center>
 
 ### コード
 ```js
+// グローバルに展開
 phina.globalize();
 // 定数
 var SCREEN_WIDTH = 640;
 var SCREEN_HEIGHT = 960;
 var CENTER_X = SCREEN_WIDTH / 2;
 var CENTER_Y = SCREEN_HEIGHT / 2;
-// メインシーン
-phina.define('MainScene', {
-  superClass: 'CanvasScene',
-  // コンストラクタ
+/*
+ * メインシーン
+ */
+phina.define("MainScene", {
+  // 継承
+  superClass: 'DisplayScene',
+  // 初期化
   init: function() {
     // 親クラス初期化
     this.superInit();
@@ -39,20 +41,22 @@ phina.define('MainScene', {
       fill: "silver",
       stroke: "gray",
     }).addChildTo(this).setPosition(320, 480);
-
+    
     this.clock.physical.gravity.y = 0.5;
   },
   // 毎フレーム更新
   update: function() {
     // canvasを再描画するようにフラグを立てる
     this.clock._dirtyDraw = true;
-
+    
     if (this.clock.bottom > 960) {
       this.clock.physical.force(0, -10);
     }
   },
 });
-// 時計クラス
+/*
+ * 時計Shapeクラス
+ */ 
 phina.define('ClockShape', {
   // Shapeクラスを継承
   superClass: 'Shape',
@@ -62,7 +66,7 @@ phina.define('ClockShape', {
     this.backgroundColor = 'transparent';
   },
   // 自身のcanvasの描画内容
-  render: function(canvas) {
+  prerender: function(canvas) {
     // 描画領域クリア
     canvas.clear();
     // スタイル指定
@@ -88,7 +92,7 @@ phina.define('ClockShape', {
     // 繰り返し
     (60).times(function(i) {
       // 目盛始点（5分毎の目盛か判定）
-      var fr = deg % 30 === 0 ? radius * 7.5 / 10 : radius * 8.0 / 10;
+      var fr = deg % 30 === 0 ? radius * 7.5 / 10 : radius * 8.0 / 10; 
       // 目盛描画
       var rad = Math.degToRad(deg);
       var fromX = cx + fr * Math.cos(rad);
@@ -135,11 +139,20 @@ phina.define('ClockShape', {
     this.canvas.drawLine(cx, cy, toX, toY);
   },
 });
-// メイン
+/*
+ * メイン処理
+ */
 phina.main(function() {
+  // アプリケーションを生成
   var app = GameApp({
+    // MainScene から開始
     startLabel: 'main',
   });
+  // fps表示
+  //app.enableStats();
+  // 実行
   app.run();
 });
 ```
+
+<a href="http://runstant.com/alkn203/projects/7610ec35" target="_blank">[runstantで確認]</a>

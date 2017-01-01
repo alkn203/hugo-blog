@@ -2,12 +2,12 @@
 date = "2016-02-18T23:59:06+09:00"
 draft = false
 slug = ""
-tags = ["tips"]
+tags = ["tips","DisplayElement","shape","group"]
 title = "オブジェクトのグループ間移動のサンプル"
-
+eyecatch = "/images/phina-group-change.png"
 +++
 
-### はじめに
+### 今回のサンプル
 **phina.js**において複数のオブジェクトを取り扱う時には、自ずとグループ管理が必須になってきます。
 グループ管理には、**DisplayElement**(旧CanvasElement)を活用しますが、例えば、AグループとBグループがあった場合
 
@@ -17,11 +17,7 @@ Aグループの要素.addChildTo(Bグループ);
 
 とすることで、**要素はAグループからBグループへ移動**します。今回のサンプルでは、この仕様を利用して**落下するオブジェクトと固定されたオブジェクトの当たり判定**を行っています。
 
-### サンプル
-
-<div class='runstant'><iframe src='http://goo.gl/Hg1w0z' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
-
-[[runstantで開く](http://goo.gl/Hg1w0z)]
+<center>![phina-group-change](/images/phina-group-change.png)</center>
 
 ### コード
 ```js
@@ -50,7 +46,7 @@ phina.define('MainScene', {
              .setPosition(this.gridX.center(Random.randint(-1, 1)), 0)
              .physical.gravity.set(0, 0.25);
     }
-
+    
     var self = this;
     // 画面下との当たり判定
     this.dynamicGroup.children.each(function(block) {
@@ -99,3 +95,7 @@ phina.main(function() {
   app.run();
 });
 ```
+
+<a href="http://runstant.com/alkn203/projects/8421fe5a" target="_blank">[runstantで確認]</a>
+
+

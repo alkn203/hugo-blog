@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  
+  <meta charset="UTF-8">
+  <title>
+    円と円の衝突運動プログラム | Keep Coding
+  </title>
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="円と円の衝突運動プログラム" />
+  <meta name="og:description" content="今回のサンプル phina.jsの作者phiさんの過去のブログ記事[New] JavaScript ライブラリ tmlib.js で円同士の衝突プログラムを作ってみたを参考にして、円同士の衝突運動プログラムを作ってみました。 こういった動きは物理エンジンに頼っても良いと思いますが、一度自分で書いてみることで理解が深まります。 ソースコード // グローバルに展開 phina.globalize(); // 定数 var REBOUND = 0.8; // 反発係数 var FRICTION = 0.99; // 摩擦係数 var GRAVITY = 0.8; // 重力 var BALL_MAX_NUM = 15; // ボールの数 /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // 初期化 init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // 画面の矩形 var scrRect = Rect(0, 0, 640, 960); //" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-circle-collision.png" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/12/31/phina-circle-collision" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  
+  <link rel="canonical" href="https://alkn203.github.io/blog/2016/12/31/phina-circle-collision"/>
+  
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/responsive.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/highlight_monokai.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/theme.css">
+  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/custom.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  
+  <link href="https://alkn203.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Keep Coding" />
+  <link href="https://alkn203.github.io/blog/index.xml" rel="feed" type="application/rss+xml" title="Keep Coding" />
+</head>
+<body>
+<div class="container">
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_9">
+        <h1><a href="https://alkn203.github.io/blog/">Keep Coding</a></h1>
+        <h2>Tutorials And Tips For phina.js Users</h2>
+      </div>
+      <div id="link" class="col span_3" style="text-align: right;">
+        <a href="https://alkn203.github.io/blog/index.xml" type="application/rss+xml" target="_blank"><i class="fa fa-rss" aria-hidden="true"></i>&nbsp;rss</a>
+      </div>
+    </div>
+  </header>
+
+  
+  <main id="single" role="main" class="col span_9">
+    <div class="article-header">
+      <h1>円と円の衝突運動プログラム</h1>
+      <div class="meta">
+        Dec 31, 2016 &nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/tips">tips</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/circle">circle</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/collision">collision</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/physical">physical</a>&nbsp;
+        
+      </div>
+    </div>
+
+    
+      
+<center>
+<table>
+  <tr>
+    
+    <td>
+      <a href="http://twitter.com/intent/tweet?text=%e5%86%86%e3%81%a8%e5%86%86%e3%81%ae%e8%a1%9d%e7%aa%81%e9%81%8b%e5%8b%95%e3%83%97%e3%83%ad%e3%82%b0%e3%83%a9%e3%83%a0&url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f31%2fphina-circle-collision" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f31%2fphina-circle-collision" target="_blank"><i class="fa fa-facebook-square fa-2x facebook" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="http://b.hatena.ne.jp/entry/https://alkn203.github.io/blog/2016/12/31/phina-circle-collision" target="_blank"><i class="fa fa-hatena hatena"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://getpocket.com/edit?url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f31%2fphina-circle-collision" target="_blank"><i class="fa fa-get-pocket fa-2x pocket" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://plus.google.com/share?url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f31%2fphina-circle-collision" target="_blank"><i class="fa fa-google-plus-square fa-2x googleplus" aria-hidden="true"></i></a>
+    </td>
+  </tr>
+</table>
+</center>
+    
+
+    <article>
+      
+      
+        <h2>Table of contents</h2>
+        <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#今回のサンプル">今回のサンプル</a></li>
+<li><a href="#ソースコード">ソースコード</a></li>
+</ul></li>
+</ul>
+</nav>
+      
+      
+
+<h2 id="今回のサンプル">今回のサンプル</h2>
+
+<p><strong>phina.js</strong>の作者<a href="https://twitter.com/phi_jp">phi</a>さんの過去のブログ記事<a href="http://tmlife.net/programming/javascript-tmlib-js-circle-collision.html">[New] JavaScript ライブラリ tmlib.js で円同士の衝突プログラムを作ってみた</a>を参考にして、円同士の衝突運動プログラムを作ってみました。
+こういった動きは物理エンジンに頼っても良いと思いますが、一度自分で書いてみることで理解が深まります。</p>
+
+<p><center><img src="https://alkn203.github.io/blog/images/phina-circle-collision.png" alt="phina-circle-collision" /></center></p>
+
+<h2 id="ソースコード">ソースコード</h2>
+
+<pre><code class="language-js">// グローバルに展開
+phina.globalize();
+// 定数
+var REBOUND  = 0.8;    // 反発係数
+var FRICTION = 0.99;   // 摩擦係数
+var GRAVITY  = 0.8;    // 重力
+var BALL_MAX_NUM = 15; // ボールの数
+/*
+ * メインシーン
+ */
+phina.define(&quot;MainScene&quot;, {
+  // 継承
+  superClass: 'DisplayScene',
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = 'black';
+    // 画面の矩形
+    var scrRect = Rect(0, 0, 640, 960);
+    // ボールグループ
+    var ballGroup = DisplayElement().addChildTo(this);
+    var self = this;
+    // ランダムな場所にボールを作成
+    (BALL_MAX_NUM).times(function() {
+      var rx = Random.randint(scrRect.left, scrRect.right);
+      var ry = Random.randint(scrRect.top, scrRect.bottom);
+      var ball = Ball().addChildTo(ballGroup).setPosition(rx, ry);
+    });
+    // 参照用
+    this.ballGroup = ballGroup;
+    this.scrRect = scrRect;
+  },
+  // 毎フレーム更新
+  update: function() {
+    // ボール同士
+    this.checkHitBalls();
+    // ボールと壁
+    this.checkHitWalls();
+  },
+  // ボール同士の当たり判定処理
+  checkHitBalls: function() {
+    var balls = this.ballGroup.children;
+
+    balls.each(function(ball, i) {
+      balls.each(function(target, j) {
+        // 自分以外の相手
+        if (i !== j) {
+          // 衝突してたら
+          if (Collision.testCircleCircle(ball, target)) {
+            // 自分から相手へのベクトル
+            var abVec = Vector2.sub(target.position, ball.position);
+            var len = abVec.length();
+            if (len === 0) return;
+            // 正規化
+            abVec.normalize();
+            // 自分と相手の距離
+            var distance = (ball.radius + target.radius) - len;
+            // めり込んだ量の半分
+            var sinkVec = Vector2.mul(abVec, (distance / 2));
+            // それぞれで押し出す
+            ball.position.sub(sinkVec);
+            target.position.add(sinkVec);
+            // 反発ベクトルを求める
+            var V = Vector2;
+            var m0 = ball.m;
+            var m1 = target.m;
+            var e = REBOUND;
+            var vs = ball.physical.velocity;
+            var vo = target.physical.velocity;
+
+            var ma = ((m1 / (m0 + m1)) * (1 + e)) * V.dot(V.sub(vo, vs), abVec);
+            var mb = ((m0 / (m0 + m1)) * (1 + e)) * V.dot(V.sub(vs, vo), abVec);
+       
+            vs.add(V.mul(abVec, ma));
+            vo.add(V.mul(abVec, mb));
+          }
+        }
+      });    
+    });
+  },
+  // タッチ終了時
+  onpointend: function() {
+    // ボールを散らす
+    this.ballGroup.children.each(function(ball) {
+      ball.physical.velocity.random(0, 360, 32);
+    });
+  },
+  // ボールと壁との辺り判定
+  checkHitWalls: function() {
+    var balls = this.ballGroup.children;
+    var rect = this.scrRect;
+    
+    balls.each(function(ball) {
+      if (ball.top &lt; rect.top) {
+        ball.top = rect.top;
+        ball.physical.velocity.y *= -1;
+      }
+      if (ball.bottom &gt; rect.bottom) {
+        ball.bottom = rect.bottom;
+        ball.physical.velocity.y *= -1;
+      }
+      if (ball.left &lt; rect.left) {
+        ball.left = rect.left;
+        ball.physical.velocity.x *= -1;
+      }
+      if (ball.right &gt; rect.right) {
+        ball.right = rect.right;
+        ball.physical.velocity.x *= -1;
+      }
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define('Ball', {
+  // CircleShapeを継承
+  superClass: 'CircleShape',
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      fill: null,
+    });
+    // 重力
+    this.physical.gravity.set(0, GRAVITY);
+    // 摩擦
+    this.physical.friction = FRICTION;
+    // 半径
+    this.radius = Random.randint(25, 50);
+    // 面積 = 質量にする
+    this.m = Math.PI * this.radius * this.radius;
+    // 初期移動量
+    this.physical.velocity.random(0, 360, 32);
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: 'main',
+  });
+  // 実行
+  app.run();
+});
+</code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/75048ec9" target="_blank">[runstantで確認]</a></p>
+
+    </article>
+
+    
+      
+<center>
+<table>
+  <tr>
+    
+    <td>
+      <a href="http://twitter.com/intent/tweet?text=%e5%86%86%e3%81%a8%e5%86%86%e3%81%ae%e8%a1%9d%e7%aa%81%e9%81%8b%e5%8b%95%e3%83%97%e3%83%ad%e3%82%b0%e3%83%a9%e3%83%a0&url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f31%2fphina-circle-collision" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f31%2fphina-circle-collision" target="_blank"><i class="fa fa-facebook-square fa-2x facebook" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="http://b.hatena.ne.jp/entry/https://alkn203.github.io/blog/2016/12/31/phina-circle-collision" target="_blank"><i class="fa fa-hatena hatena"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://getpocket.com/edit?url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f31%2fphina-circle-collision" target="_blank"><i class="fa fa-get-pocket fa-2x pocket" aria-hidden="true"></i></a>
+    </td>
+    
+    <td>
+      <a href="https://plus.google.com/share?url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f12%2f31%2fphina-circle-collision" target="_blank"><i class="fa fa-google-plus-square fa-2x googleplus" aria-hidden="true"></i></a>
+    </td>
+  </tr>
+</table>
+</center>
+    
+
+    
+ <aside><div id="disqus_thread"></div></aside>
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'alkn203githubio';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  </main>
+  
+  
+<aside role="complementary" class="col span_3">
+  
+  <div class="article-header light-gray"><h1>About Me</h1></div>
+  <div id="profile" style="text-align: center;">
+    <div><img src="https://alkn203.github.io/blog/images/alkn203.png" width="64" height="64"></div>
+    <div>alkn203</div>
+    <div id="profile-text">javascript製のゲームライブラリphina.jsを愛用している趣味プログラマ。ファミコン世代。Hobbyist programmer/javascript/phina.js/retro games</div>
+  </div>
+  
+    <div id="social">
+      <table>
+        <tr>
+          <td><a href="https://twitter.com/alkn203" target="_blank"><i class="fa fa-twitter fa-2x"></i></a></td>
+          
+          <td><a href="https://github.com/alkn203" target="_blank"><i class="fa fa-github fa-2x"></i></a></td>
+        </tr>
+      </table>
+    </div>
+  
+  <div class="article-header light-gray"><h1>Sections</h1></div>
+  <ul class="none-ul">
+    <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a></li>
+    <li><a href="https://alkn203.github.io/blog/tips/">Tips</a></li>
+    <li><a href="https://alkn203.github.io/blog/works/">Works</a></li>
+  </ul>
+  
+  <div class="article-header light-gray"><h1>Tags</h1></div>
+    <ul class="none-ul">
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/15puzzle/">
+          <div>15puzzle&nbsp;(7)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/breakout/">
+          <div>breakout&nbsp;(8)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/calendar/">
+          <div>calendar&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/canvas/">
+          <div>canvas&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/children/">
+          <div>children&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/circle/">
+          <div>circle&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/class/">
+          <div>class&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/collision/">
+          <div>collision&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/displayelement/">
+          <div>displayelement&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/event/">
+          <div>event&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/flow/">
+          <div>flow&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/frameanimation/">
+          <div>frameanimation&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/group/">
+          <div>group&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/minesweeper/">
+          <div>minesweeper&nbsp;(6)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/parent/">
+          <div>parent&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/pathshape/">
+          <div>pathshape&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/physical/">
+          <div>physical&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/shape/">
+          <div>shape&nbsp;(9)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/sprite/">
+          <div>sprite&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/static/">
+          <div>static&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/template/">
+          <div>template&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/tips/">
+          <div>tips&nbsp;(22)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/tutorial/">
+          <div>tutorial&nbsp;(21)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/works/">
+          <div>works&nbsp;(1)</div>
+          </a>
+        </li>
+      
+    </ul>
+</aside>
+
+
+  <nav class="pagination-single" class="col span_3">>
+    
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2016/12/23/phina-advent-23th" rel="prev">クラス継承をしてみよう</a></span>
+    
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo" class="col span_9">
+    <div style="text-align:center;">
+      ©&nbsp2016&nbspalkn203
+    </div>
+  </footer>
+</div>
+
+<script src="https://alkn203.github.io/blog/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-69423602-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.8";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+
+<script src="https://apis.google.com/js/platform.js" async defer>
+  {lang: 'ja'}
+</script>
+</body>
+</html>
+

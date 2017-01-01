@@ -11,8 +11,8 @@
   
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="ShapeとCanvas描画を組み合わせたサンプル（時計Shape）" />
-  <meta name="og:description" content="はじめに 以前にtmlib.jsで作った物をphina.jsにリファクタリングしてみました。 Shapeを通常のcanvasと見なせますので、今回の時計に限らず、canvasで描けるものは全てShapeとして取り扱うことができます。 [runstantで開く] コード phina.globalize(); // 定数 var SCREEN_WIDTH = 640; var SCREEN_HEIGHT = 960; var CENTER_X = SCREEN_WIDTH / 2; var CENTER_Y = SCREEN_HEIGHT / 2; // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;CanvasScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // 時計Shapeを作成 this.clock = ClockShape({ width: 320, // 幅 height: 320, // 高さ fill: &quot;silver&quot;, stroke: &quot;gray&quot;, }).addChildTo(this).setPosition(320, 480); this.clock.physical.gravity.y = 0.5; }, // 毎フレーム更新 update: function() { // canvasを再描画するようにフラグを立てる this.clock._dirtyDraw = true; if (this.clock.bottom &gt; 960) { this.clock.physical.force(0, -10); } }, }); // 時計クラス phina.define(&#39;ClockShape&#39;, { // Shapeクラスを継承 superClass: &#39;Shape&#39;, // コンストラクタ init: function(options) { this.superInit(options); this.backgroundColor = &#39;transparent&#39;; }, // 自身のcanvasの描画内容 render: function(canvas) { // 描画領域クリア canvas.clear(); // スタイル指定 canvas.fillStyle = this.fill; canvas.strokeStyle = this.stroke; // 半径 var radius = this.radius; // canvasの中心 var cx = 0; var cy = 0; var baseW = radius / 50; // 時計盤描画 canvas.fillCircle(cx, cy, radius); canvas.lineWidth = baseW; canvas.strokeCircle(cx, cy, radius - 2); canvas.lineWidth = baseW * 2; canvas.strokeCircle(cx, cy, radius * 9.0 / 10); // 目盛終点 var tr = radius * 8.3 / 10; // 角度 var deg = 0; canvas.lineWidth = baseW; // 繰り返し (60).times(function(i) { // 目盛始点（5分毎の目盛か判定） var fr = deg % 30 === 0 ?" />
-  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="og:description" content="今回の内容 以前にtmlib.jsで作った物をphina.jsにリファクタリングしてみました。 Shapeを通常のcanvasと見なせますので、今回の時計に限らず、canvasで描けるものは全てShapeとして取り扱うことができます。 コード // グローバルに展開 phina.globalize(); // 定数 var SCREEN_WIDTH = 640; var SCREEN_HEIGHT = 960; var CENTER_X = SCREEN_WIDTH / 2; var CENTER_Y = SCREEN_HEIGHT / 2; /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // 初期化 init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // 時計Shapeを作成 this.clock = ClockShape({ width: 320, // 幅 height: 320, // 高さ fill: &quot;silver&quot;, stroke: &quot;gray&quot;, }).addChildTo(this).setPosition(320, 480); this.clock.physical.gravity.y = 0.5; }, // 毎フレーム更新 update: function() { // canvasを再描画するようにフラグを立てる this.clock._dirtyDraw = true; if (this.clock.bottom &gt; 960) { this.clock.physical.force(0, -10); } }, }); /* * 時計Shapeクラス */ phina.define(&#39;ClockShape&#39;, { // Shapeクラスを継承 superClass: &#39;Shape&#39;, // コンストラクタ init: function(options) { this.superInit(options); this.backgroundColor = &#39;transparent&#39;; }, // 自身のcanvasの描画内容 prerender: function(canvas) { // 描画領域クリア canvas.clear(); // スタイル指定 canvas.fillStyle = this.fill; canvas.strokeStyle = this.stroke; // 半径 var radius = this.radius; // canvasの中心 var cx = 0; var cy = 0; var baseW = radius / 50; // 時計盤描画 canvas.fillCircle(cx, cy, radius); canvas.lineWidth = baseW; canvas.strokeCircle(cx, cy, radius - 2); canvas.lineWidth = baseW * 2; canvas.strokeCircle(cx, cy, radius * 9.0 / 10); // 目盛終点 var tr = radius * 8.3 / 10; // 角度 var deg = 0; canvas.lineWidth = baseW; // 繰り返し (60).times(function(i) { // 目盛始点（5分毎の目盛か判定） var fr = deg % 30 === 0 ?" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-canvas2.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/02/16/phina-canvas2" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
@@ -52,6 +52,10 @@
         Feb 16, 2016 &nbsp;
         
           #<a href="https://alkn203.github.io/blog/tags/tips">tips</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/shape">shape</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/canvas">canvas</a>&nbsp;
         
       </div>
     </div>
@@ -96,7 +100,7 @@
 <ul>
 <li>
 <ul>
-<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#今回の内容">今回の内容</a></li>
 <li><a href="#コード">コード</a></li>
 </ul></li>
 </ul></li>
@@ -105,27 +109,29 @@
       
       
 
-<h3 id="はじめに">はじめに</h3>
+<h3 id="今回の内容">今回の内容</h3>
 
 <p>以前に<strong>tmlib.js</strong>で作った物を<strong>phina.js</strong>にリファクタリングしてみました。
 <strong>Shape</strong>を通常の<strong>canvas</strong>と見なせますので、今回の時計に限らず、<strong>canvas</strong>で描けるものは全て<strong>Shape</strong>として取り扱うことができます。</p>
 
-<div class='runstant'><iframe src='http://goo.gl/y3bhHM' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
-
-<p>[<a href="http://goo.gl/hY3BcQ">runstantで開く</a>]</p>
+<p><center><img src="https://alkn203.github.io/blog/images/phina-canvas2.png" alt="phina-canvas2" /></center></p>
 
 <h3 id="コード">コード</h3>
 
-<pre><code class="language-js">phina.globalize();
+<pre><code class="language-js">// グローバルに展開
+phina.globalize();
 // 定数
 var SCREEN_WIDTH = 640;
 var SCREEN_HEIGHT = 960;
 var CENTER_X = SCREEN_WIDTH / 2;
 var CENTER_Y = SCREEN_HEIGHT / 2;
-// メインシーン
-phina.define('MainScene', {
-  superClass: 'CanvasScene',
-  // コンストラクタ
+/*
+ * メインシーン
+ */
+phina.define(&quot;MainScene&quot;, {
+  // 継承
+  superClass: 'DisplayScene',
+  // 初期化
   init: function() {
     // 親クラス初期化
     this.superInit();
@@ -138,20 +144,22 @@ phina.define('MainScene', {
       fill: &quot;silver&quot;,
       stroke: &quot;gray&quot;,
     }).addChildTo(this).setPosition(320, 480);
-
+    
     this.clock.physical.gravity.y = 0.5;
   },
   // 毎フレーム更新
   update: function() {
     // canvasを再描画するようにフラグを立てる
     this.clock._dirtyDraw = true;
-
+    
     if (this.clock.bottom &gt; 960) {
       this.clock.physical.force(0, -10);
     }
   },
 });
-// 時計クラス
+/*
+ * 時計Shapeクラス
+ */ 
 phina.define('ClockShape', {
   // Shapeクラスを継承
   superClass: 'Shape',
@@ -161,7 +169,7 @@ phina.define('ClockShape', {
     this.backgroundColor = 'transparent';
   },
   // 自身のcanvasの描画内容
-  render: function(canvas) {
+  prerender: function(canvas) {
     // 描画領域クリア
     canvas.clear();
     // スタイル指定
@@ -187,7 +195,7 @@ phina.define('ClockShape', {
     // 繰り返し
     (60).times(function(i) {
       // 目盛始点（5分毎の目盛か判定）
-      var fr = deg % 30 === 0 ? radius * 7.5 / 10 : radius * 8.0 / 10;
+      var fr = deg % 30 === 0 ? radius * 7.5 / 10 : radius * 8.0 / 10; 
       // 目盛描画
       var rad = Math.degToRad(deg);
       var fromX = cx + fr * Math.cos(rad);
@@ -234,14 +242,23 @@ phina.define('ClockShape', {
     this.canvas.drawLine(cx, cy, toX, toY);
   },
 });
-// メイン
+/*
+ * メイン処理
+ */
 phina.main(function() {
+  // アプリケーションを生成
   var app = GameApp({
+    // MainScene から開始
     startLabel: 'main',
   });
+  // fps表示
+  //app.enableStats();
+  // 実行
   app.run();
 });
 </code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/7610ec35" target="_blank">[runstantで確認]</a></p>
 
     </article>
 
@@ -345,7 +362,19 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/canvas/">
-          <div>canvas&nbsp;(2)</div>
+          <div>canvas&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/children/">
+          <div>children&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/circle/">
+          <div>circle&nbsp;(1)</div>
           </a>
         </li>
       
@@ -357,7 +386,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/collision/">
-          <div>collision&nbsp;(1)</div>
+          <div>collision&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/displayelement/">
+          <div>displayelement&nbsp;(1)</div>
           </a>
         </li>
       
@@ -375,7 +410,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/frameanimation/">
-          <div>frameanimation&nbsp;(2)</div>
+          <div>frameanimation&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/group/">
+          <div>group&nbsp;(1)</div>
           </a>
         </li>
       
@@ -386,14 +427,32 @@ phina.main(function() {
         </li>
       
         <li>
+          <a href="https://alkn203.github.io/blog//tags/parent/">
+          <div>parent&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/pathshape/">
+          <div>pathshape&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/physical/">
+          <div>physical&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
           <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(6)</div>
+          <div>shape&nbsp;(9)</div>
           </a>
         </li>
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/sprite/">
-          <div>sprite&nbsp;(2)</div>
+          <div>sprite&nbsp;(3)</div>
           </a>
         </li>
       
@@ -411,7 +470,7 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/tips/">
-          <div>tips&nbsp;(21)</div>
+          <div>tips&nbsp;(22)</div>
           </a>
         </li>
       
@@ -433,7 +492,7 @@ phina.main(function() {
 
   <nav class="pagination-single" class="col span_3">>
     
-      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2016/01/31/phina-canvas" rel="prev">ShapeとCanvas描画を組み合わせたサンプル</a></span>
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2016/01/31/phina-canvas" rel="prev">ShapeとPathShapeを組み合わせたサンプル</a></span>
     
     
       <span class="next"><a href="https://alkn203.github.io/blog/2016/02/18/phina-group-change" rel="next">オブジェクトのグループ間移動のサンプル</a> &rarr;</span>

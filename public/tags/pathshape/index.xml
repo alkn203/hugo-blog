@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pathshape on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/pathshape/</link>
+    <description>Recent content in Pathshape on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sun, 31 Jan 2016 23:59:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/pathshape/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ShapeとPathShapeを組み合わせたサンプル</title>
+      <link>https://alkn203.github.io/blog/2016/01/31/phina-canvas</link>
+      <pubDate>Sun, 31 Jan 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/01/31/phina-canvas</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;phina.jsでゲームを作る際には、通常は&lt;strong&gt;Sprite&lt;/strong&gt;や&lt;strong&gt;Shape&lt;/strong&gt;を使うことになるでしょう。
+しかし、phina.jsには&lt;strong&gt;html5&lt;/strong&gt;の&lt;strong&gt;canvas&lt;/strong&gt;を機能的にラップした&lt;strong&gt;phina.graphics.Canvas&lt;/strong&gt;という便利なクラスがあります。
+今回は、この&lt;strong&gt;Canvas&lt;/strong&gt;クラスの機能を利用して線の描画を行う&lt;strong&gt;PathShape&lt;/strong&gt;と組み合わせたサンプルを紹介します。&lt;/p&gt;
+
+&lt;h2 id=&#34;サンプル&#34;&gt;サンプル&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;矩形をドラッグして離すと画面中央にバネのような動きをして戻ります。&lt;/li&gt;
+&lt;li&gt;線描画用として、画面と同じ広さを持つ&lt;strong&gt;PathShape&lt;/strong&gt;を作ってシーンに重ね合わせています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PathShape&lt;/strong&gt;で線を描画して、矩形から線が出ているように位置を合わせています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PathShape&lt;/strong&gt;のパス情報を毎フレーム更新して、線が矩形に追従するようにしています。&lt;/li&gt;
+&lt;li&gt;パス情報を与えれば、&lt;strong&gt;PathShape&lt;/strong&gt;が自動で線を描画してくれます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-canvas.png&#34; alt=&#34;phina-canvas&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ソースコード&#34;&gt;ソースコード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // 画面のサイズ
+    var w = this.gridX.width;
+    var h = this.gridY.width;
+    var cx = w /2;
+    var cy = h / 2;
+    
+    Label({
+      text: &#39;Drag a rect and release&#39;,
+      fontSize: 48,
+      fill: &#39;yellow&#39;,
+    }).addChildTo(this).setPosition(cx, this.gridY.span(2));
+    // 矩形
+    var rect = RectangleShape().setPosition(cx, cy);
+    // PathShapeを利用してロープを作成
+    var rope = PathShape({
+      width: w, 
+      height: h, 
+      stroke: &#39;red&#39;,
+      strokeWidth: 8,
+      paths: [Vector2(cx, cy), Vector2(rect.x, rect.y)],
+    }).addChildTo(this);
+    // 描画順を考えてこのタイミングで追加
+    rect.addChildTo(this);
+    // ドラッグ可能にする
+    Draggable().attachTo(rect);
+    // リリースされたら
+    rect.onpointend = function() {
+      // 中心へ移動するアニメーション
+      rect.tweener.to({x: cx, y: cy}, 1000, &#39;easeOutElastic&#39;).play();
+    };
+    // 毎フレーム更新
+    this.update = function() {
+      // pathを更新
+      rope.changePath(1, rect.x, rect.y);
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/6e0e6f07&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

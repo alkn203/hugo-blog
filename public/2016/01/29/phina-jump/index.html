@@ -11,8 +11,8 @@
   
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="Physicalクラスを利用したジャンプアクションの基本サンプル" />
-  <meta name="og:description" content="はじめに phina.jsでゲームを作る際には、通常はSpriteやShapeを使うことになるでしょう。 しかし、phina.jsにはhtml5のcanvasを機能的にラップしたphina.graphics.Canvasという便利なクラスがあります。 今回は、そのCanvasクラスとShapeを組み合わせたサンプルを紹介したいと思います。 サンプル 画面をタッチするとキャラクターがジャンプします。 Physicalクラスのvelocityとgravityの使い分けがポイントです。 [runstantで開く] ソースコード phina.globalize(); // アセット var ASSETS = { // 画像 image: { &#39;tomapiko&#39;: &#39;https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;, }, // フレームアニメーション情報 spritesheet: { &#39;tomapiko_ss&#39;: &#39;https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss&#39;, }, }; // 定数 var JUMP_POWOR = 10; // ジャンプ力 var GRAVITY = 0.5; // 重力 // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;CanvasScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景 this.backgroundColor = &#39;skyblue&#39;; Label({ text: &#39;Touch To Jump&#39;, fontSize:" />
-  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="og:description" content="サンプル 画面をタッチするとキャラクターがジャンプします。 Physicalクラスのvelocityとgravityの使い分けがポイントです。 ソースコード // グローバルに展開 phina.globalize(); // アセット var ASSETS = { // 画像 image: { &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;, }, // フレームアニメーション情報 spritesheet: { &#39;tomapiko_ss&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss&#39;, }, }; // 定数 var JUMP_POWOR = 10; // ジャンプ力 var GRAVITY = 0.5; // 重力 /* * メインシーン */ phina.define(&quot;MainScene&quot;, { // 継承 superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景 this.backgroundColor = &#39;skyblue&#39;; Label({ text: &#39;Touch To Jump&#39;," />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-jump.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/29/phina-jump" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
@@ -51,7 +51,11 @@
       <div class="meta">
         Jan 29, 2016 &nbsp;
         
+          #<a href="https://alkn203.github.io/blog/tags/sprite">sprite</a>&nbsp;
+        
           #<a href="https://alkn203.github.io/blog/tags/tips">tips</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/frameanimation">frameanimation</a>&nbsp;
         
       </div>
     </div>
@@ -94,55 +98,47 @@
 <ul>
 <li>
 <ul>
-<li>
-<ul>
-<li><a href="#はじめに">はじめに</a></li>
 <li><a href="#サンプル">サンプル</a></li>
 <li><a href="#ソースコード">ソースコード</a></li>
-</ul></li>
 </ul></li>
 </ul>
 </nav>
       
       
 
-<h3 id="はじめに">はじめに</h3>
-
-<p>phina.jsでゲームを作る際には、通常は<strong>Sprite</strong>や<strong>Shape</strong>を使うことになるでしょう。
-しかし、phina.jsには<strong>html5</strong>の<strong>canvas</strong>を機能的にラップした<strong>phina.graphics.Canvas</strong>という便利なクラスがあります。
-今回は、その<strong>Canvas</strong>クラスと<strong>Shape</strong>を組み合わせたサンプルを紹介したいと思います。</p>
-
-<h3 id="サンプル">サンプル</h3>
+<h2 id="サンプル">サンプル</h2>
 
 <ul>
 <li>画面をタッチするとキャラクターがジャンプします。</li>
 <li><strong>Physical</strong>クラスの<strong>velocity</strong>と<strong>gravity</strong>の使い分けがポイントです。</li>
 </ul>
 
-<div class='runstant'><iframe src='http://goo.gl/MejrGg' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+<p><center><img src="https://alkn203.github.io/blog/images/phina-jump.png" alt="phina-advent-23th" /></center></p>
 
-<p>[<a href="http://goo.gl/MejrGg">runstantで開く</a>]</p>
+<h2 id="ソースコード">ソースコード</h2>
 
-<h3 id="ソースコード">ソースコード</h3>
-
-<pre><code class="language-js">phina.globalize();
+<pre><code class="language-js">// グローバルに展開
+phina.globalize();
 // アセット
 var ASSETS = {
   // 画像
   image: {
-    'tomapiko': 'https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png',
+    'tomapiko': 'https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png',
   },
   // フレームアニメーション情報
   spritesheet: {
-    'tomapiko_ss': 'https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss',
+    'tomapiko_ss': 'https://rawgit.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss',
   },
 };
 // 定数
 var JUMP_POWOR = 10; // ジャンプ力
 var GRAVITY = 0.5; // 重力
-// メインシーン
-phina.define('MainScene', {
-  superClass: 'CanvasScene',
+/*
+ * メインシーン
+ */
+phina.define(&quot;MainScene&quot;, {
+  // 継承
+  superClass: 'DisplayScene',
   // コンストラクタ
   init: function() {
     // 親クラス初期化
@@ -200,7 +196,9 @@ phina.define('MainScene', {
     }
   },
 });
-// プレイヤークラス
+/*
+ * プレイヤークラス
+ */
 phina.define('Player', {
   superClass: 'Sprite',
   // コンストラクタ
@@ -225,17 +223,25 @@ phina.define('Player', {
     }
   },
 });
-// メイン
+/*
+ * メイン処理
+ */
 phina.main(function() {
+  // アプリケーションを生成
   var app = GameApp({
+    // MainScene から開始
+    startLabel: 'main',
     // アセット読み込み
     assets: ASSETS,
-    startLabel: 'main',
   });
+  // fps表示
+  //app.enableStats();
+  // 実行
   app.run();
 });
-
 </code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/de30c997" target="_blank">[runstantで確認]</a></p>
 
     </article>
 
@@ -339,7 +345,19 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/canvas/">
-          <div>canvas&nbsp;(2)</div>
+          <div>canvas&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/children/">
+          <div>children&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/circle/">
+          <div>circle&nbsp;(1)</div>
           </a>
         </li>
       
@@ -351,7 +369,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/collision/">
-          <div>collision&nbsp;(1)</div>
+          <div>collision&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/displayelement/">
+          <div>displayelement&nbsp;(1)</div>
           </a>
         </li>
       
@@ -369,7 +393,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/frameanimation/">
-          <div>frameanimation&nbsp;(2)</div>
+          <div>frameanimation&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/group/">
+          <div>group&nbsp;(1)</div>
           </a>
         </li>
       
@@ -380,14 +410,32 @@ phina.main(function() {
         </li>
       
         <li>
+          <a href="https://alkn203.github.io/blog//tags/parent/">
+          <div>parent&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/pathshape/">
+          <div>pathshape&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/physical/">
+          <div>physical&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
           <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(6)</div>
+          <div>shape&nbsp;(9)</div>
           </a>
         </li>
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/sprite/">
-          <div>sprite&nbsp;(2)</div>
+          <div>sprite&nbsp;(3)</div>
           </a>
         </li>
       
@@ -405,7 +453,7 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/tips/">
-          <div>tips&nbsp;(21)</div>
+          <div>tips&nbsp;(22)</div>
           </a>
         </li>
       
@@ -430,7 +478,7 @@ phina.main(function() {
       <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2016/01/24/phina-tetris" rel="prev">phina.jsでテトリス風落ちものゲーム作ってみた</a></span>
     
     
-      <span class="next"><a href="https://alkn203.github.io/blog/2016/01/31/phina-canvas" rel="next">ShapeとCanvas描画を組み合わせたサンプル</a> &rarr;</span>
+      <span class="next"><a href="https://alkn203.github.io/blog/2016/01/31/phina-canvas" rel="next">ShapeとPathShapeを組み合わせたサンプル</a> &rarr;</span>
     
   </nav>
 

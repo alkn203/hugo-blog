@@ -11,8 +11,8 @@
   
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="グローバル座標とローカル座標を使ったサンプル" />
-  <meta name="og:description" content="はじめに phina.jsでは、オブジェクトにオブジェクトを追加すると親子関係が成立します。子オブジェクトは親オブジェクトに追従するようになり、まとめて移動する必要がある時などに便利です。 この際に注意するべきことは、子オブジェクトの座標は親オブジェクトの中心からの相対座標になるという点です。 従って、子オブジェクトとの当たり判定などを行う時は、親のグローバル座標と子のローカル座標について把握しておく必要があります。 サンプル 子オブジェクトとの当たり判定のサンプルです。 当たり判定処理では、子オブジェクトの座標値はそのまま使えませんので 親のx座標 &#43; 子のx座標（相対値） 親のy座標 &#43; 子のy座標（相対値） で補正した値を元に位置情報だけのRect（矩形）を作り、Collisionクラスを使ってそのRectと当たり判定を行っています。 [runstantで開く] コード phina.globalize(); // 定数 var SCREEN_RECT = Rect(0, 0, 640, 960); // 画面サイズのRect // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景 this.backgroundColor = &#39;black&#39;; Label({ text: &#39;Touch To Shot&#39;, fontSize: 48, fill: &#39;lime&#39;, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(2)); // ショットグループ var shotGroup = DisplayElement().addChildTo(this); // 敵子供グループ var pitGroup = DisplayElement().addChildTo(this);" />
-  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="og:description" content="はじめに phina.jsでは、オブジェクトにオブジェクトを追加すると親子関係が成立します。子オブジェクトは親オブジェクトに追従するようになり、まとめて移動する必要がある時などに便利です。 この際に注意するべきことは、子オブジェクトの座標は親オブジェクトの中心からの相対座標になるという点です。 従って、子オブジェクトとの当たり判定などを行う時は、親のグローバル座標と子のローカル座標について把握しておく必要があります。 サンプル 子オブジェクトとの当たり判定のサンプルです。 当たり判定処理では、子オブジェクトの座標値はそのまま使えませんので 親のx座標 &#43; 子のx座標（相対値） 親のy座標 &#43; 子のy座標（相対値） で補正した値を元に位置情報だけのRect（矩形）を作り、Collisionクラスを使ってそのRectと当たり判定を行っています。 コード phina.globalize(); // 定数 var SCREEN_RECT = Rect(0, 0, 640, 960); // 画面サイズのRect // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景 this.backgroundColor = &#39;black&#39;; Label({ text: &#39;Touch To Shot&#39;, fontSize: 48, fill: &#39;lime&#39;, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(2)); // ショットグループ var shotGroup = DisplayElement().addChildTo(this); // 敵子供グループ var pitGroup = DisplayElement().addChildTo(this); //" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/parent-and-children.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/03/05/parent-and-children" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
@@ -52,6 +52,10 @@
         Mar 5, 2016 &nbsp;
         
           #<a href="https://alkn203.github.io/blog/tags/tips">tips</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/parent">parent</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/children">children</a>&nbsp;
         
       </div>
     </div>
@@ -123,9 +127,7 @@
 
 <p>で補正した値を元に位置情報だけの<strong>Rect</strong>（矩形）を作り、<strong>Collision</strong>クラスを使ってその<strong>Rect</strong>と当たり判定を行っています。</p>
 
-<div class='runstant'><iframe src='http://goo.gl/IIEsns' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
-
-<p>[<a href="http://goo.gl/IIEsns">runstantで開く</a>]</p>
+<p><center><img src="https://alkn203.github.io/blog/images/parent-and-children.png" alt="parent-and-children" /></center></p>
 
 <h3 id="コード">コード</h3>
 
@@ -141,7 +143,7 @@ phina.define('MainScene', {
     this.superInit();
     // 背景
     this.backgroundColor = 'black';
-
+    
     Label({
       text: 'Touch To Shot',
       fontSize: 48,
@@ -157,7 +159,7 @@ phina.define('MainScene', {
     // 敵
     var enemy = RectangleShape().addChildTo(this);
     enemy.setPosition(this.gridX.center(), this.gridY.center(-2));
-
+    
     enemy.tweener.clear()
                  .by({x: -100}, 1000)
                  .by({x: 200}, 2000)
@@ -245,6 +247,8 @@ phina.main(function() {
   app.run();
 });
 </code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/d5091514" target="_blank">[runstantで確認]</a></p>
 
     </article>
 
@@ -348,7 +352,19 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/canvas/">
-          <div>canvas&nbsp;(2)</div>
+          <div>canvas&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/children/">
+          <div>children&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/circle/">
+          <div>circle&nbsp;(1)</div>
           </a>
         </li>
       
@@ -360,7 +376,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/collision/">
-          <div>collision&nbsp;(1)</div>
+          <div>collision&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/displayelement/">
+          <div>displayelement&nbsp;(1)</div>
           </a>
         </li>
       
@@ -378,7 +400,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/frameanimation/">
-          <div>frameanimation&nbsp;(2)</div>
+          <div>frameanimation&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/group/">
+          <div>group&nbsp;(1)</div>
           </a>
         </li>
       
@@ -389,14 +417,32 @@ phina.main(function() {
         </li>
       
         <li>
+          <a href="https://alkn203.github.io/blog//tags/parent/">
+          <div>parent&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/pathshape/">
+          <div>pathshape&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/physical/">
+          <div>physical&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
           <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(6)</div>
+          <div>shape&nbsp;(9)</div>
           </a>
         </li>
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/sprite/">
-          <div>sprite&nbsp;(2)</div>
+          <div>sprite&nbsp;(3)</div>
           </a>
         </li>
       
@@ -414,7 +460,7 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/tips/">
-          <div>tips&nbsp;(21)</div>
+          <div>tips&nbsp;(22)</div>
           </a>
         </li>
       

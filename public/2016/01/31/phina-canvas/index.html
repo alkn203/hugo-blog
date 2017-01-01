@@ -4,15 +4,15 @@
   
   <meta charset="UTF-8">
   <title>
-    ShapeとCanvas描画を組み合わせたサンプル | Keep Coding
+    ShapeとPathShapeを組み合わせたサンプル | Keep Coding
   </title>
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
   <meta name="twitter:card" content="summary" />
-  <meta name="og:title" content="ShapeとCanvas描画を組み合わせたサンプル" />
-  <meta name="og:description" content="はじめに phina.jsでゲームを作る際には、通常はSpriteやShapeを使うことになるでしょう。 しかし、phina.jsにはhtml5のcanvasを機能的にラップしたphina.graphics.Canvasという便利なクラスがあります。 今回は、このCanvasクラスの機能とShapeを組み合わせたサンプルを紹介します。 サンプル 矩形をドラッグして離すと画面中央にバネのような動きをして戻ります。 線描画用として、画面と同じ広さを持つ空のShapeを作ってシーンに重ね合わせています。 Shapeのcanvasに線を描画して、矩形から線が出ているように位置を合わせています。 Shapeのcanvasの描画内容を毎フレーム更新して、線が矩形に追従するようにしています。 [runstantで開く] ソースコード phina.globalize(); // 定数 var SCREEN_WIDTH = 640; var SCREEN_HEIGHT = 960; var CENTER_X = SCREEN_WIDTH / 2; var CENTER_Y = SCREEN_HEIGHT / 2; // メインシーン phina.define(&#39;MainScene&#39;, { superClass: &#39;CanvasScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; Label({ text: &#39;Drag and Release&#39;, fontSize: 48, fill: &#39;yellow&#39;, }).addChildTo(this).setPosition(CENTER_X, this.gridY.span(2)); // ロープを作成 var rope = Rope({" />
-  <meta name="og:image" content="https://alkn203.github.io/blog/" />
+  <meta name="og:title" content="ShapeとPathShapeを組み合わせたサンプル" />
+  <meta name="og:description" content="はじめに phina.jsでゲームを作る際には、通常はSpriteやShapeを使うことになるでしょう。 しかし、phina.jsにはhtml5のcanvasを機能的にラップしたphina.graphics.Canvasという便利なクラスがあります。 今回は、このCanvasクラスの機能を利用して線の描画を行うPathShapeと組み合わせたサンプルを紹介します。 サンプル 矩形をドラッグして離すと画面中央にバネのような動きをして戻ります。 線描画用として、画面と同じ広さを持つPathShapeを作ってシーンに重ね合わせています。 PathShapeで線を描画して、矩形から線が出ているように位置を合わせています。 PathShapeのパス情報を毎フレーム更新して、線が矩形に追従するようにしています。 パス情報を与えれば、PathShapeが自動で線を描画してくれます。 ソースコード phina.globalize(); /* * メインシーン */ phina.define(&quot;MainScene&quot;, { superClass: &#39;DisplayScene&#39;, // コンストラクタ init: function() { // 親クラス初期化 this.superInit(); // 背景色 this.backgroundColor = &#39;black&#39;; // 画面のサイズ var w = this.gridX.width; var h = this.gridY.width; var cx = w /2; var cy = h / 2; Label({ text: &#39;Drag a rect and release&#39;, fontSize: 48, fill: &#39;yellow&#39;, }).addChildTo(this).setPosition(cx, this.gridY.span(2)); // 矩形 var" />
+  <meta name="og:image" content="https://alkn203.github.io/blog//images/phina-canvas.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2016/01/31/phina-canvas" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
@@ -47,11 +47,15 @@
   
   <main id="single" role="main" class="col span_9">
     <div class="article-header">
-      <h1>ShapeとCanvas描画を組み合わせたサンプル</h1>
+      <h1>ShapeとPathShapeを組み合わせたサンプル</h1>
       <div class="meta">
         Jan 31, 2016 &nbsp;
         
           #<a href="https://alkn203.github.io/blog/tags/tips">tips</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/pathshape">pathshape</a>&nbsp;
+        
+          #<a href="https://alkn203.github.io/blog/tags/shape">shape</a>&nbsp;
         
       </div>
     </div>
@@ -63,7 +67,7 @@
   <tr>
     
     <td>
-      <a href="http://twitter.com/intent/tweet?text=Shape%e3%81%a8Canvas%e6%8f%8f%e7%94%bb%e3%82%92%e7%b5%84%e3%81%bf%e5%90%88%e3%82%8f%e3%81%9b%e3%81%9f%e3%82%b5%e3%83%b3%e3%83%97%e3%83%ab&url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f01%2f31%2fphina-canvas" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
+      <a href="http://twitter.com/intent/tweet?text=Shape%e3%81%a8PathShape%e3%82%92%e7%b5%84%e3%81%bf%e5%90%88%e3%82%8f%e3%81%9b%e3%81%9f%e3%82%b5%e3%83%b3%e3%83%97%e3%83%ab&url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f01%2f31%2fphina-canvas" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
     </td>
     
     <td>
@@ -94,116 +98,101 @@
 <ul>
 <li>
 <ul>
-<li>
-<ul>
 <li><a href="#はじめに">はじめに</a></li>
 <li><a href="#サンプル">サンプル</a></li>
 <li><a href="#ソースコード">ソースコード</a></li>
-</ul></li>
 </ul></li>
 </ul>
 </nav>
       
       
 
-<h3 id="はじめに">はじめに</h3>
+<h2 id="はじめに">はじめに</h2>
 
 <p>phina.jsでゲームを作る際には、通常は<strong>Sprite</strong>や<strong>Shape</strong>を使うことになるでしょう。
 しかし、phina.jsには<strong>html5</strong>の<strong>canvas</strong>を機能的にラップした<strong>phina.graphics.Canvas</strong>という便利なクラスがあります。
-今回は、この<strong>Canvas</strong>クラスの機能と<strong>Shape</strong>を組み合わせたサンプルを紹介します。</p>
+今回は、この<strong>Canvas</strong>クラスの機能を利用して線の描画を行う<strong>PathShape</strong>と組み合わせたサンプルを紹介します。</p>
 
-<h3 id="サンプル">サンプル</h3>
+<h2 id="サンプル">サンプル</h2>
 
 <ul>
 <li>矩形をドラッグして離すと画面中央にバネのような動きをして戻ります。</li>
-<li>線描画用として、画面と同じ広さを持つ空の<strong>Shape</strong>を作ってシーンに重ね合わせています。</li>
-<li><strong>Shape</strong>の<strong>canvas</strong>に線を描画して、矩形から線が出ているように位置を合わせています。</li>
-<li><strong>Shape</strong>の<strong>canvas</strong>の描画内容を毎フレーム更新して、線が矩形に追従するようにしています。</li>
+<li>線描画用として、画面と同じ広さを持つ<strong>PathShape</strong>を作ってシーンに重ね合わせています。</li>
+<li><strong>PathShape</strong>で線を描画して、矩形から線が出ているように位置を合わせています。</li>
+<li><strong>PathShape</strong>のパス情報を毎フレーム更新して、線が矩形に追従するようにしています。</li>
+<li>パス情報を与えれば、<strong>PathShape</strong>が自動で線を描画してくれます。</li>
 </ul>
 
-<div class='runstant'><iframe src='http://goo.gl/aaEsAL' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+<p><center><img src="https://alkn203.github.io/blog/images/phina-canvas.png" alt="phina-canvas" /></center></p>
 
-<p>[<a href="http://goo.gl/BKLSjh">runstantで開く</a>]</p>
-
-<h3 id="ソースコード">ソースコード</h3>
+<h2 id="ソースコード">ソースコード</h2>
 
 <pre><code class="language-js">phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640;
-var SCREEN_HEIGHT = 960;
-var CENTER_X = SCREEN_WIDTH / 2;
-var CENTER_Y = SCREEN_HEIGHT / 2;
-// メインシーン
-phina.define('MainScene', {
-  superClass: 'CanvasScene',
+/*
+ * メインシーン
+ */
+phina.define(&quot;MainScene&quot;, {
+  superClass: 'DisplayScene',
   // コンストラクタ
   init: function() {
     // 親クラス初期化
     this.superInit();
     // 背景色
     this.backgroundColor = 'black';
-
+    // 画面のサイズ
+    var w = this.gridX.width;
+    var h = this.gridY.width;
+    var cx = w /2;
+    var cy = h / 2;
+    
     Label({
-      text: 'Drag and Release',
+      text: 'Drag a rect and release',
       fontSize: 48,
       fill: 'yellow',
-    }).addChildTo(this).setPosition(CENTER_X, this.gridY.span(2));
-    // ロープを作成
-    var rope = Rope({
-      width: SCREEN_WIDTH, // 画面の幅
-      height: SCREEN_HEIGHT, // 画面の高さ
+    }).addChildTo(this).setPosition(cx, this.gridY.span(2));
+    // 矩形
+    var rect = RectangleShape().setPosition(cx, cy);
+    // PathShapeを利用してロープを作成
+    var rope = PathShape({
+      width: w, 
+      height: h, 
       stroke: 'red',
       strokeWidth: 8,
+      paths: [Vector2(cx, cy), Vector2(rect.x, rect.y)],
     }).addChildTo(this);
-    // シーンに重ねるために原点を左上にする
-    rope.origin.set(0, 0);
-
-    var rect = RectangleShape().addChildTo(this)
-                               .setPosition(CENTER_X, CENTER_Y);
+    // 描画順を考えてこのタイミングで追加
+    rect.addChildTo(this);
     // ドラッグ可能にする
     Draggable().attachTo(rect);
     // リリースされたら
     rect.onpointend = function() {
       // 中心へ移動するアニメーション
-      rect.tweener.clear()
-                  .to({x: CENTER_X, y: CENTER_Y}, 1000, 'easeOutElastic');
+      rect.tweener.to({x: cx, y: cy}, 1000, 'easeOutElastic').play();
     };
     // 毎フレーム更新
     this.update = function() {
-      // 矩形の位置を引き渡す
-      rope.rect = rect;
-      // canvasを再描画するようにフラグを立てる
-      rope._dirtyDraw = true;
+      // pathを更新
+      rope.changePath(1, rect.x, rect.y);
     };
   },
 });
-// ロープクラス
-phina.define('Rope', {
-  // Shapeクラスを継承
-  superClass: 'Shape',
-  // コンストラクタ
-  init: function(options) {
-    this.superInit(options);
-    // 矩形情報を内部で保持(最初はダミー値)
-    this.rect = Rect(100, 100, 100, 100);
-  },
-  // 自身のcanvasの描画内容
-  render: function(canvas) {
-    // スタイル指定
-    canvas.strokeStyle = this.stroke;
-    canvas.lineWidth = this.strokeWidth;
-    // ラインを引く
-    canvas.drawLine(CENTER_X, CENTER_Y, this.rect.x, this.rect.y);
-  },
-});
-// メイン
+/*
+ * メイン処理
+ */
 phina.main(function() {
+  // アプリケーションを生成
   var app = GameApp({
+    // MainScene から開始
     startLabel: 'main',
   });
+  // fps表示
+  //app.enableStats();
+  // 実行
   app.run();
 });
 </code></pre>
+
+<p><a href="http://runstant.com/alkn203/projects/6e0e6f07" target="_blank">[runstantで確認]</a></p>
 
     </article>
 
@@ -214,7 +203,7 @@ phina.main(function() {
   <tr>
     
     <td>
-      <a href="http://twitter.com/intent/tweet?text=Shape%e3%81%a8Canvas%e6%8f%8f%e7%94%bb%e3%82%92%e7%b5%84%e3%81%bf%e5%90%88%e3%82%8f%e3%81%9b%e3%81%9f%e3%82%b5%e3%83%b3%e3%83%97%e3%83%ab&url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f01%2f31%2fphina-canvas" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
+      <a href="http://twitter.com/intent/tweet?text=Shape%e3%81%a8PathShape%e3%82%92%e7%b5%84%e3%81%bf%e5%90%88%e3%82%8f%e3%81%9b%e3%81%9f%e3%82%b5%e3%83%b3%e3%83%97%e3%83%ab&url=https%3a%2f%2falkn203.github.io%2fblog%2f2016%2f01%2f31%2fphina-canvas" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
     </td>
     
     <td>
@@ -307,7 +296,19 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/canvas/">
-          <div>canvas&nbsp;(2)</div>
+          <div>canvas&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/children/">
+          <div>children&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/circle/">
+          <div>circle&nbsp;(1)</div>
           </a>
         </li>
       
@@ -319,7 +320,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/collision/">
-          <div>collision&nbsp;(1)</div>
+          <div>collision&nbsp;(2)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/displayelement/">
+          <div>displayelement&nbsp;(1)</div>
           </a>
         </li>
       
@@ -337,7 +344,13 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/frameanimation/">
-          <div>frameanimation&nbsp;(2)</div>
+          <div>frameanimation&nbsp;(3)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/group/">
+          <div>group&nbsp;(1)</div>
           </a>
         </li>
       
@@ -348,14 +361,32 @@ phina.main(function() {
         </li>
       
         <li>
+          <a href="https://alkn203.github.io/blog//tags/parent/">
+          <div>parent&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/pathshape/">
+          <div>pathshape&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://alkn203.github.io/blog//tags/physical/">
+          <div>physical&nbsp;(1)</div>
+          </a>
+        </li>
+      
+        <li>
           <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(6)</div>
+          <div>shape&nbsp;(9)</div>
           </a>
         </li>
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/sprite/">
-          <div>sprite&nbsp;(2)</div>
+          <div>sprite&nbsp;(3)</div>
           </a>
         </li>
       
@@ -373,7 +404,7 @@ phina.main(function() {
       
         <li>
           <a href="https://alkn203.github.io/blog//tags/tips/">
-          <div>tips&nbsp;(21)</div>
+          <div>tips&nbsp;(22)</div>
           </a>
         </li>
       

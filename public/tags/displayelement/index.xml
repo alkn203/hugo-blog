@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Displayelement on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/displayelement/</link>
+    <description>Recent content in Displayelement on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Thu, 18 Feb 2016 23:59:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/displayelement/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>オブジェクトのグループ間移動のサンプル</title>
+      <link>https://alkn203.github.io/blog/2016/02/18/phina-group-change</link>
+      <pubDate>Thu, 18 Feb 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/02/18/phina-group-change</guid>
+      <description>
+
+&lt;h3 id=&#34;今回のサンプル&#34;&gt;今回のサンプル&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;において複数のオブジェクトを取り扱う時には、自ずとグループ管理が必須になってきます。
+グループ管理には、&lt;strong&gt;DisplayElement&lt;/strong&gt;(旧CanvasElement)を活用しますが、例えば、AグループとBグループがあった場合&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;Aグループの要素.addChildTo(Bグループ);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;とすることで、&lt;strong&gt;要素はAグループからBグループへ移動&lt;/strong&gt;します。今回のサンプルでは、この仕様を利用して&lt;strong&gt;落下するオブジェクトと固定されたオブジェクトの当たり判定&lt;/strong&gt;を行っています。&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-group-change.png&#34; alt=&#34;phina-group-change&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
+// 定数
+var SCREEN_HEIGHT = 960;
+// メインシーン
+phina.define(&#39;MainScene&#39;, {
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;gray&#39;;
+    // 落下グループ
+    this.dynamicGroup = DisplayElement().addChildTo(this);
+    // 固定グループ
+    this.staticGroup = DisplayElement().addChildTo(this);
+  },
+  // 毎フレーム更新
+  update: function(app) {
+    // 一定フレーム毎にブロック作成
+    if (app.frame % 50 === 0) {
+      Block().addChildTo(this.dynamicGroup)
+             .setPosition(this.gridX.center(Random.randint(-1, 1)), 0)
+             .physical.gravity.set(0, 0.25);
+    }
+    
+    var self = this;
+    // 画面下との当たり判定
+    this.dynamicGroup.children.each(function(block) {
+      if (block.bottom &amp;gt; SCREEN_HEIGHT) {
+        block.disable();
+        // 位置補正
+        block.bottom = SCREEN_HEIGHT;
+        // 固定グループへ移動
+        block.addChildTo(self.staticGroup);
+      }  
+    });
+    // 固定ブロックとの当たり判定
+    this.dynamicGroup.children.each(function(block) {
+      self.staticGroup.children.each(function(target) {
+        if (block.hitTestElement(target)) {
+          block.disable();
+          block.bottom = target.top;
+          block.addChildTo(self.staticGroup);
+        }  
+      });
+    });
+  },
+});
+// ブロッククラス
+phina.define(&#39;Block&#39;, {
+  // RectangleShapeクラスを継承
+  superClass: &#39;RectangleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    this.superInit({
+      width: 40,
+    });
+  },
+  // 固定ブロック仕様にする
+  disable: function() {
+    this.physical.gravity.y = 0;
+    this.physical.velocity.y = 0;
+    this.fill = &#39;silver&#39;;
+  },
+});
+// メイン
+phina.main(function() {
+  var app = GameApp({
+    startLabel: &#39;main&#39;,
+  });
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8421fe5a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -2,9 +2,9 @@
 date = "2016-03-05T23:59:06+09:00"
 draft = false
 slug = ""
-tags = ["tips"]
+tags = ["tips","parent","children"]
 title = "グローバル座標とローカル座標を使ったサンプル"
-
+eyecatch = "/images/parent-and-children.png"
 +++
 
 ### はじめに
@@ -22,9 +22,7 @@ title = "グローバル座標とローカル座標を使ったサンプル"
 ```
 で補正した値を元に位置情報だけの**Rect**（矩形）を作り、**Collision**クラスを使ってその**Rect**と当たり判定を行っています。
 
-<div class='runstant'><iframe src='http://goo.gl/IIEsns' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
-
-[[runstantで開く](http://goo.gl/IIEsns)]
+<center>![parent-and-children](/images/parent-and-children.png)</center>
 
 ### コード
 
@@ -41,7 +39,7 @@ phina.define('MainScene', {
     this.superInit();
     // 背景
     this.backgroundColor = 'black';
-
+    
     Label({
       text: 'Touch To Shot',
       fontSize: 48,
@@ -57,7 +55,7 @@ phina.define('MainScene', {
     // 敵
     var enemy = RectangleShape().addChildTo(this);
     enemy.setPosition(this.gridX.center(), this.gridY.center(-2));
-
+    
     enemy.tweener.clear()
                  .by({x: -100}, 1000)
                  .by({x: 200}, 2000)
@@ -145,3 +143,5 @@ phina.main(function() {
   app.run();
 });
 ```
+
+<a href="http://runstant.com/alkn203/projects/d5091514" target="_blank">[runstantで確認]</a>

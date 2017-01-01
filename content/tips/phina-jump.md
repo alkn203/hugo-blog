@@ -2,45 +2,42 @@
 date = "2016-01-29T23:59:06+09:00"
 draft = false
 slug = ""
-tags = ["tips"]
+tags = ["sprite","tips","frameanimation"]
 title = "Physicalクラスを利用したジャンプアクションの基本サンプル"
-
+eyecatch = "/images/phina-jump.png"
 +++
 
-### はじめに
-phina.jsでゲームを作る際には、通常は**Sprite**や**Shape**を使うことになるでしょう。
-しかし、phina.jsには**html5**の**canvas**を機能的にラップした**phina.graphics.Canvas**という便利なクラスがあります。
-今回は、その**Canvas**クラスと**Shape**を組み合わせたサンプルを紹介したいと思います。
-
-### サンプル
+## サンプル
 * 画面をタッチするとキャラクターがジャンプします。
 * **Physical**クラスの**velocity**と**gravity**の使い分けがポイントです。
 
-<div class='runstant'><iframe src='http://goo.gl/MejrGg' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+<center>![phina-advent-23th](/images/phina-jump.png)</center>
 
-[[runstantで開く](http://goo.gl/MejrGg)]
-
-### ソースコード
+## ソースコード
 
 ```js
+// グローバルに展開
 phina.globalize();
 // アセット
 var ASSETS = {
   // 画像
   image: {
-    'tomapiko': 'https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png',
+    'tomapiko': 'https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png',
   },
   // フレームアニメーション情報
   spritesheet: {
-    'tomapiko_ss': 'https://raw.githubusercontent.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss',
+    'tomapiko_ss': 'https://rawgit.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss',
   },
 };
 // 定数
 var JUMP_POWOR = 10; // ジャンプ力
 var GRAVITY = 0.5; // 重力
-// メインシーン
-phina.define('MainScene', {
-  superClass: 'CanvasScene',
+/*
+ * メインシーン
+ */
+phina.define("MainScene", {
+  // 継承
+  superClass: 'DisplayScene',
   // コンストラクタ
   init: function() {
     // 親クラス初期化
@@ -98,7 +95,9 @@ phina.define('MainScene', {
     }
   },
 });
-// プレイヤークラス
+/*
+ * プレイヤークラス
+ */
 phina.define('Player', {
   superClass: 'Sprite',
   // コンストラクタ
@@ -123,14 +122,22 @@ phina.define('Player', {
     }
   },
 });
-// メイン
+/*
+ * メイン処理
+ */
 phina.main(function() {
+  // アプリケーションを生成
   var app = GameApp({
+    // MainScene から開始
+    startLabel: 'main',
     // アセット読み込み
     assets: ASSETS,
-    startLabel: 'main',
   });
+  // fps表示
+  //app.enableStats();
+  // 実行
   app.run();
 });
-
 ```
+
+<a href="http://runstant.com/alkn203/projects/de30c997" target="_blank">[runstantで確認]</a>

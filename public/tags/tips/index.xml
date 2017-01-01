@@ -6,8 +6,181 @@
     <description>Recent content in Tips on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Fri, 23 Dec 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 31 Dec 2016 23:59:06 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>円と円の衝突運動プログラム</title>
+      <link>https://alkn203.github.io/blog/2016/12/31/phina-circle-collision</link>
+      <pubDate>Sat, 31 Dec 2016 23:59:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2016/12/31/phina-circle-collision</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のサンプル&#34;&gt;今回のサンプル&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;の作者&lt;a href=&#34;https://twitter.com/phi_jp&#34;&gt;phi&lt;/a&gt;さんの過去のブログ記事&lt;a href=&#34;http://tmlife.net/programming/javascript-tmlib-js-circle-collision.html&#34;&gt;[New] JavaScript ライブラリ tmlib.js で円同士の衝突プログラムを作ってみた&lt;/a&gt;を参考にして、円同士の衝突運動プログラムを作ってみました。
+こういった動きは物理エンジンに頼っても良いと思いますが、一度自分で書いてみることで理解が深まります。&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-circle-collision.png&#34; alt=&#34;phina-circle-collision&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ソースコード&#34;&gt;ソースコード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// 定数
+var REBOUND  = 0.8;    // 反発係数
+var FRICTION = 0.99;   // 摩擦係数
+var GRAVITY  = 0.8;    // 重力
+var BALL_MAX_NUM = 15; // ボールの数
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // 画面の矩形
+    var scrRect = Rect(0, 0, 640, 960);
+    // ボールグループ
+    var ballGroup = DisplayElement().addChildTo(this);
+    var self = this;
+    // ランダムな場所にボールを作成
+    (BALL_MAX_NUM).times(function() {
+      var rx = Random.randint(scrRect.left, scrRect.right);
+      var ry = Random.randint(scrRect.top, scrRect.bottom);
+      var ball = Ball().addChildTo(ballGroup).setPosition(rx, ry);
+    });
+    // 参照用
+    this.ballGroup = ballGroup;
+    this.scrRect = scrRect;
+  },
+  // 毎フレーム更新
+  update: function() {
+    // ボール同士
+    this.checkHitBalls();
+    // ボールと壁
+    this.checkHitWalls();
+  },
+  // ボール同士の当たり判定処理
+  checkHitBalls: function() {
+    var balls = this.ballGroup.children;
+
+    balls.each(function(ball, i) {
+      balls.each(function(target, j) {
+        // 自分以外の相手
+        if (i !== j) {
+          // 衝突してたら
+          if (Collision.testCircleCircle(ball, target)) {
+            // 自分から相手へのベクトル
+            var abVec = Vector2.sub(target.position, ball.position);
+            var len = abVec.length();
+            if (len === 0) return;
+            // 正規化
+            abVec.normalize();
+            // 自分と相手の距離
+            var distance = (ball.radius + target.radius) - len;
+            // めり込んだ量の半分
+            var sinkVec = Vector2.mul(abVec, (distance / 2));
+            // それぞれで押し出す
+            ball.position.sub(sinkVec);
+            target.position.add(sinkVec);
+            // 反発ベクトルを求める
+            var V = Vector2;
+            var m0 = ball.m;
+            var m1 = target.m;
+            var e = REBOUND;
+            var vs = ball.physical.velocity;
+            var vo = target.physical.velocity;
+
+            var ma = ((m1 / (m0 + m1)) * (1 + e)) * V.dot(V.sub(vo, vs), abVec);
+            var mb = ((m0 / (m0 + m1)) * (1 + e)) * V.dot(V.sub(vs, vo), abVec);
+       
+            vs.add(V.mul(abVec, ma));
+            vo.add(V.mul(abVec, mb));
+          }
+        }
+      });    
+    });
+  },
+  // タッチ終了時
+  onpointend: function() {
+    // ボールを散らす
+    this.ballGroup.children.each(function(ball) {
+      ball.physical.velocity.random(0, 360, 32);
+    });
+  },
+  // ボールと壁との辺り判定
+  checkHitWalls: function() {
+    var balls = this.ballGroup.children;
+    var rect = this.scrRect;
+    
+    balls.each(function(ball) {
+      if (ball.top &amp;lt; rect.top) {
+        ball.top = rect.top;
+        ball.physical.velocity.y *= -1;
+      }
+      if (ball.bottom &amp;gt; rect.bottom) {
+        ball.bottom = rect.bottom;
+        ball.physical.velocity.y *= -1;
+      }
+      if (ball.left &amp;lt; rect.left) {
+        ball.left = rect.left;
+        ball.physical.velocity.x *= -1;
+      }
+      if (ball.right &amp;gt; rect.right) {
+        ball.right = rect.right;
+        ball.physical.velocity.x *= -1;
+      }
+    });
+  },
+});
+/*
+ * ボールクラス
+ */
+phina.define(&#39;Ball&#39;, {
+  // CircleShapeを継承
+  superClass: &#39;CircleShape&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit({
+      fill: null,
+    });
+    // 重力
+    this.physical.gravity.set(0, GRAVITY);
+    // 摩擦
+    this.physical.friction = FRICTION;
+    // 半径
+    this.radius = Random.randint(25, 50);
+    // 面積 = 質量にする
+    this.m = Math.PI * this.radius * this.radius;
+    // 初期移動量
+    this.physical.velocity.random(0, 360, 32);
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/75048ec9&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>クラス継承をしてみよう</title>
@@ -1552,156 +1725,6 @@ phina.main(function() {
     // 画面サイズ指定
     width: LOGO_SIZE,
     height: LOGO_SIZE,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>グローバル座標とローカル座標を使ったサンプル</title>
-      <link>https://alkn203.github.io/blog/2016/03/05/parent-and-children</link>
-      <pubDate>Sat, 05 Mar 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/03/05/parent-and-children</guid>
-      <description>
-
-&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、オブジェクトにオブジェクトを追加すると親子関係が成立します。子オブジェクトは親オブジェクトに追従するようになり、まとめて移動する必要がある時などに便利です。
-この際に注意するべきことは、&lt;strong&gt;子オブジェクトの座標は親オブジェクトの中心からの相対座標&lt;/strong&gt;になるという点です。
-従って、子オブジェクトとの当たり判定などを行う時は、親のグローバル座標と子のローカル座標について把握しておく必要があります。&lt;/p&gt;
-
-&lt;h3 id=&#34;サンプル&#34;&gt;サンプル&lt;/h3&gt;
-
-&lt;p&gt;子オブジェクトとの当たり判定のサンプルです。
-当たり判定処理では、子オブジェクトの座標値はそのまま使えませんので&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;親のx座標 + 子のx座標（相対値）
-親のy座標 + 子のy座標（相対値）
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;で補正した値を元に位置情報だけの&lt;strong&gt;Rect&lt;/strong&gt;（矩形）を作り、&lt;strong&gt;Collision&lt;/strong&gt;クラスを使ってその&lt;strong&gt;Rect&lt;/strong&gt;と当たり判定を行っています。&lt;/p&gt;
-
-&lt;div class=&#39;runstant&#39;&gt;&lt;iframe src=&#39;http://goo.gl/IIEsns&#39; width=&#39;100%&#39; height=&#39;640px&#39; style=&#39;border:0px;box-shadow:0px 0px 2px 0px #aaa&#39;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;[&lt;a href=&#34;http://goo.gl/IIEsns&#34;&gt;runstantで開く&lt;/a&gt;]&lt;/p&gt;
-
-&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// 定数
-var SCREEN_RECT = Rect(0, 0, 640, 960); // 画面サイズのRect
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景
-    this.backgroundColor = &#39;black&#39;;
-
-    Label({
-      text: &#39;Touch To Shot&#39;,
-      fontSize: 48,
-      fill: &#39;lime&#39;,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.span(2));
-    // ショットグループ
-    var shotGroup = DisplayElement().addChildTo(this);
-    // 敵子供グループ
-    var pitGroup = DisplayElement().addChildTo(this);
-    // 自機
-    var player = TriangleShape().addChildTo(this);
-    player.setPosition(this.gridX.center(), this.gridY.span(15));
-    // 敵
-    var enemy = RectangleShape().addChildTo(this);
-    enemy.setPosition(this.gridX.center(), this.gridY.center(-2));
-
-    enemy.tweener.clear()
-                 .by({x: -100}, 1000)
-                 .by({x: 200}, 2000)
-                 .by({x: -100}, 1000)
-                 .setLoop(true);
-    // 敵子供追加
-    [0, 45, 90, 135, 180, 225, 270, 315].each(function(deg) {
-      Pit(deg, 4).addChildTo(enemy);
-    });
-    // 参照用
-    this.player = player;
-    this.enemy = enemy;
-    this.shotGroup = shotGroup;
-    this.pitGroup = pitGroup;
-  },
-  // 画面タッチ時処理
-  onpointstart: function() {
-    // ショットが無ければ
-    if (this.shotGroup.children.length === 0) {
-      // 上方向にショット発射
-      CircleShape({
-        radius: 16,
-      }).addChildTo(this.shotGroup)
-        .setPosition(this.player.x, this.player.top)
-        .physical.force(0, -16);
-    }
-  },
-  // 毎フレーム更新
-  update: function() {
-    var enemy = this.enemy;
-    // 画面からはみ出たショットは削除
-    this.shotGroup.children.each(function(shot) {
-      if (shot.bottom &amp;lt; SCREEN_RECT.top) shot.remove();      
-    });
-    // 敵に当たったらショットは削除
-    this.shotGroup.children.each(function(shot) {
-      if (shot.hitTestElement(enemy)) shot.remove();
-    });
-    // ショットと敵の子供のあたり判定
-    this.shotGroup.children.each(function(shot) {
-      enemy.children.each(function(pit) {
-        // 相対座標を絶対座標に変換した当たり判定用の矩形を作る
-        var rect = Rect(enemy.x + pit.x, enemy.y + pit.y, pit.width, pit.height);
-        // Collisionクラスを利用して当たり判定
-        if (Collision.testRectRect(shot, rect)) {
-          shot.remove();
-          pit.remove();
-        }
-      });
-    });
-  },
-});
-// 敵子供クラス
-phina.define(&#39;Pit&#39;, {
-  superClass: &#39;PolygonShape&#39;,
-  // コンストラクタ
-  init: function(deg, speed) {
-    // 親クラス初期化
-    this.superInit({
-      radius: 16,
-      sides: 6,
-    });
-
-    this.r = 32 * 3;
-    this.speed = speed;
-    this.deg = deg;
-  },
-  // 毎フレーム更新
-  update: function() {
-    this.rotation += -this.speed * 2;
-    this.deg += this.speed;    
-    var deg = this.deg;
-    var r = this.r;
-    // 円周上の位置（相対座標）
-    this.x = r * Math.cos(Math.degToRad(deg));
-    this.y = r * Math.sin(Math.degToRad(deg));
-  },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;,
-    title: &#39;Hit test children&#39;,
   });
   app.run();
 });
