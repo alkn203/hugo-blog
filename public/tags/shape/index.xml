@@ -6,72 +6,204 @@
     <description>Recent content in Shape on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 29 Nov 2016 00:01:08 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 22 Apr 2017 15:13:06 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tags/shape/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>006-Shapeの更新イベント処理</title>
-      <link>https://alkn203.github.io/blog/2016/11/29/phina-update-shape</link>
-      <pubDate>Tue, 29 Nov 2016 00:01:08 +0900</pubDate>
+      <title>Shapeをランダムな位置にたくさん表示する</title>
+      <link>https://alkn203.github.io/blog/2017/04/22/random-locate-shapes</link>
+      <pubDate>Sat, 22 Apr 2017 15:13:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/11/29/phina-update-shape</guid>
+      <guid>https://alkn203.github.io/blog/2017/04/22/random-locate-shapes</guid>
       <description>
 
-&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対してフレーム更新処理を登録する方法について説明します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を画面上のランダムな位置にたくさん表示します。
+&lt;a href=&#34;http://qiita.com/alkn203/items/b3471138323efd33587c&#34;&gt;前回のTips&lt;/a&gt;に繰り返し処理を追加します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-update-shape.png&#34; alt=&#34;phina-invisible-shape&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/random-locate-shapes.gif&#34; alt=&#34;random-locate-shape.png&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;更新イベント処理-update&#34;&gt;更新イベント処理（update）&lt;/h2&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4d83a38d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;p&gt;更新処理を登録するためには、&lt;strong&gt;shape&lt;/strong&gt;の&lt;strong&gt;update&lt;/strong&gt;関数を実装します。
-&lt;strong&gt;update&lt;/strong&gt;関数が実装されていると、その内容が毎フレーム実行されます。&lt;/p&gt;
+&lt;h3 id=&#34;timesメソッドを使った繰り返し処理&#34;&gt;timesメソッドを使った繰り返し処理&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
-shape.update = function() {
-  // 移動
-  shape.moveBy(1, 1);  
-};
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;javascript&lt;/strong&gt;で繰り返し処理を行う時には、&lt;strong&gt;for&lt;/strong&gt;を使うのが一般的です。
+&lt;strong&gt;phina.js&lt;/strong&gt;のTipsということもありますので、今回は元々の&lt;strong&gt;Number&lt;/strong&gt;クラスの拡張メソッド&lt;strong&gt;times&lt;/strong&gt;を使います。使い方は以下のとおりです。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d709760f&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;更新イベント処理-on-enterframe&#34;&gt;更新イベント処理（on + enterframe）&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;では1つのメソッドしか登録できません。一方、&lt;strong&gt;on&lt;/strong&gt;と&lt;strong&gt;enterframe&lt;/strong&gt;を組み合わせると複数のメソッドを登録可能で、その内容が並行して実行されます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
-shape.on(&#39;enterframe&#39;, function() {
-  // 移動
-  shape.moveBy(1, 1);  
-});
-// 毎フレーム更新処理
-shape.on(&#39;enterframe&#39;, function() {
-  // 回転
-  shape.rotation++;  
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;(10).times(function(i) {
+  console.log(i);
 });
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/0705ecfc&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;function&lt;/strong&gt;の内部の処理を冒頭に指定された数の回数繰り返します。&lt;/li&gt;
+&lt;li&gt;変数&lt;strong&gt;i&lt;/strong&gt;にインデックス値が入ってきますので、上の例では結果として&lt;strong&gt;0から9&lt;/strong&gt;の数字が出力されます。&lt;/li&gt;
+&lt;li&gt;繰り返しが目的であれば、&lt;strong&gt;i&lt;/strong&gt;の値を必ずしも使用する必要はありません。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;
+var SCREEN_HEIGHT = 960;
+var SHAPE_SIZE = 16;
+var SHAPE_HALF = SHAPE_SIZE / 2;
+var NUM = 50;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // function内でthisを参照するための設定
+    var self = this;
+    // 繰り返し処理
+    (NUM).times(function(i) {
+      // Shapeを作成してシーンに追加
+      var shape = Shape({
+        width: SHAPE_SIZE,
+        height: SHAPE_SIZE,
+        backgroundColor: &#39;red&#39;,
+      }).addChildTo(self);
+      // 画面上に収まるランダムな位置に配置
+      shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
+      shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
+    });
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;メソッドの回数に指定する数値は変数でも良いので、このサンプルのように定数定義しておくと便利です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;メソッドの&lt;strong&gt;function&lt;/strong&gt;内部で&lt;strong&gt;this&lt;/strong&gt;を使うと&lt;strong&gt;function&lt;/strong&gt;そのものを参照することになるので、その前に&lt;strong&gt;var self = this&lt;/strong&gt;で退避して、内部では&lt;strong&gt;self&lt;/strong&gt;を使うことで正しい参照になるようにしています。&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
     <item>
-      <title>005-Shapeを透明化する</title>
-      <link>https://alkn203.github.io/blog/2016/11/13/phina-invisible-shape</link>
-      <pubDate>Sun, 13 Nov 2016 00:01:08 +0900</pubDate>
+      <title>Shapeをランダムな位置に表示する</title>
+      <link>https://alkn203.github.io/blog/2017/04/22/random-locate-shape</link>
+      <pubDate>Sat, 22 Apr 2017 15:13:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/11/13/phina-invisible-shape</guid>
+      <guid>https://alkn203.github.io/blog/2017/04/22/random-locate-shape</guid>
       <description>
 
-&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を透明化する方法について説明します。&lt;/p&gt;
+&lt;p&gt;実行する度に&lt;strong&gt;Shape&lt;/strong&gt;を画面上のランダムな位置に表示します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-invisible-shape.png&#34; alt=&#34;phina-invisible-shape&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/random-locate-shape.gif&#34; alt=&#34;random-locate-shape.png&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;shapeの透明化&#34;&gt;Shapeの透明化&lt;/h2&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4b44a4dd&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;randomクラスを使う&#34;&gt;Randomクラスを使う&lt;/h3&gt;
+
+&lt;p&gt;ランダムな位置に表示するためには、ランダムな数値が必要です。&lt;strong&gt;phina.js&lt;/strong&gt;にはこれを取り扱う&lt;strong&gt;phina.util.Random&lt;/strong&gt;クラスが用意されています。
+今回は&lt;strong&gt;Random&lt;/strong&gt;クラスの&lt;strong&gt;randint&lt;/strong&gt;メソッドを使います。使い方は以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var rnd = Random.randint(0, 100);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上の例ですと、変数&lt;strong&gt;rnd&lt;/strong&gt;に&lt;strong&gt;0から100&lt;/strong&gt;の間でランダムな&lt;strong&gt;整数&lt;/strong&gt;が1つ代入されます。&lt;/p&gt;
+
+&lt;h3 id=&#34;使用例&#34;&gt;使用例&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
+shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SHAPE_HALF&lt;/strong&gt;は&lt;strong&gt;Shape&lt;/strong&gt;のサイズの半分の値で、&lt;strong&gt;Shape&lt;/strong&gt;が画面からはみ出さないように&lt;strong&gt;randint&lt;/strong&gt;の範囲を調整しています。半分にしたのは、&lt;strong&gt;Shape&lt;/strong&gt;の座標は&lt;strong&gt;中心が起点(origin)&lt;/strong&gt;になっているためです。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;
+var SCREEN_HEIGHT = 960;
+var SHAPE_SIZE = 16;
+var SHAPE_HALF = SHAPE_SIZE / 2;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // Shapeを作成してシーンに追加
+    var shape = Shape({
+      width: SHAPE_SIZE,
+      height: SHAPE_SIZE,
+      backgroundColor: &#39;red&#39;,
+    }).addChildTo(this);
+    // 画面上に収まるランダムな位置に配置
+    shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
+    shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shapeを透明化・非表示にする</title>
+      <link>https://alkn203.github.io/blog/2017/04/22/alpha-shape</link>
+      <pubDate>Sat, 22 Apr 2017 12:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/22/alpha-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を透明化または非表示にします。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-template.gif&#34; alt=&#34;phina-template.png&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;shapeの透明化&#34;&gt;Shapeの透明化&lt;/h3&gt;
 
 &lt;p&gt;透明にするには&lt;strong&gt;alpha&lt;/strong&gt;プロパティに&lt;strong&gt;0&lt;/strong&gt;を指定します。&lt;/p&gt;
 
@@ -82,7 +214,7 @@ shape.on(&#39;enterframe&#39;, function() {
 
 &lt;p&gt;&lt;strong&gt;alpha&lt;/strong&gt;プロパティには&lt;strong&gt;0から1&lt;/strong&gt;が指定できるので、好みの透明度にすることができます。&lt;/p&gt;
 
-&lt;h2 id=&#34;shapeの非表示&#34;&gt;Shapeの非表示&lt;/h2&gt;
+&lt;h3 id=&#34;shapeの非表示&#34;&gt;Shapeの非表示&lt;/h3&gt;
 
 &lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、透明化の他に&lt;strong&gt;hide&lt;/strong&gt;メソッドでオブジェクトそのものを非表示にすることができます。&lt;/p&gt;
 
@@ -96,25 +228,85 @@ shape.on(&#39;enterframe&#39;, function() {
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.show();
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;透明化と非表示の違い&#34;&gt;透明化と非表示の違い&lt;/h2&gt;
+&lt;h3 id=&#34;透明化と非表示の違い&#34;&gt;透明化と非表示の違い&lt;/h3&gt;
 
 &lt;p&gt;透明化ではオブジェクト自体は存在するので、当たり判定やタッチ処理は有効ですが、非表示にした場合は描画自体されないので、当たり判定やタッチ処理は無効になります。&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>004-Shapeの背景色指定</title>
-      <link>https://alkn203.github.io/blog/2016/10/09/phina-bg-shape</link>
-      <pubDate>Sun, 09 Oct 2016 00:01:08 +0900</pubDate>
+      <title>Shapeのサイズを指定する</title>
+      <link>https://alkn203.github.io/blog/2017/04/22/resize-shape</link>
+      <pubDate>Sat, 22 Apr 2017 00:28:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/10/09/phina-bg-shape</guid>
+      <guid>https://alkn203.github.io/blog/2017/04/22/resize-shape</guid>
       <description>
 
-&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の背景色の指定方法について説明します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の幅・高さを指定します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-bg-shape.png&#34; alt=&#34;phina-bg-shape&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/resize-shape.gif&#34; alt=&#34;resize-shape&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4e8bc6e6&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;幅指定&#34;&gt;幅指定&lt;/h3&gt;
+
+&lt;p&gt;幅は&lt;strong&gt;width&lt;/strong&gt;プロパティで指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.width = 128;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7fad0439&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;高さ指定&#34;&gt;高さ指定&lt;/h3&gt;
+
+&lt;p&gt;高さは&lt;strong&gt;height&lt;/strong&gt;プロパティで指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.height = 128;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/5da92e05&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;幅-高さを一括指定&#34;&gt;幅・高さを一括指定&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;setSize&lt;/strong&gt;を使えば、幅と高さを一括で指定できます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.setSize(128, 256);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8de8694c&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;コンストラクタ内で指定&#34;&gt;コンストラクタ内で指定&lt;/h3&gt;
+
+&lt;p&gt;位置指定と同じくコンストラクタ内で幅・高さを指定することも可能です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    var shape = Shape({
+      // 位置・幅・高さ指定
+      x: 320,
+      y: 480,
+      width: 128,
+      height: 256,
+    }).addChildTo(this);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/1a3e59cf&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shapeの背景色を指定する</title>
+      <link>https://alkn203.github.io/blog/2017/04/22/background-shape</link>
+      <pubDate>Sat, 22 Apr 2017 00:28:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/22/background-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の背景色を指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/background-shape.gif&#34; alt=&#34;backgruond-shape.png&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;背景色指定&#34;&gt;背景色指定&lt;/h2&gt;
 
@@ -157,125 +349,35 @@ shape.on(&#39;enterframe&#39;, function() {
     </item>
     
     <item>
-      <title>003-Shapeの幅・高さ指定</title>
-      <link>https://alkn203.github.io/blog/2016/10/06/phina-resize-shape</link>
-      <pubDate>Thu, 06 Oct 2016 00:01:08 +0900</pubDate>
+      <title>Shapeの位置を指定する</title>
+      <link>https://alkn203.github.io/blog/2017/04/21/relocate-shape</link>
+      <pubDate>Fri, 21 Apr 2017 00:28:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/10/06/phina-resize-shape</guid>
+      <guid>https://alkn203.github.io/blog/2017/04/21/relocate-shape</guid>
       <description>
 
-&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の幅・高さの指定方法について説明します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-resize-shape.png&#34; alt=&#34;phina-resize-shape&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;幅指定&#34;&gt;幅指定&lt;/h2&gt;
-
-&lt;p&gt;幅は&lt;strong&gt;width&lt;/strong&gt;プロパティで指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.width = 128;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7fad0439&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;高さ指定&#34;&gt;高さ指定&lt;/h2&gt;
-
-&lt;p&gt;高さは&lt;strong&gt;height&lt;/strong&gt;プロパティで指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.height = 128;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/5da92e05&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;幅-高さを一括指定&#34;&gt;幅・高さを一括指定&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;setSize&lt;/strong&gt;を使えば、幅と高さを一括で指定できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.setSize(128, 256);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8de8694c&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;コンストラクタ内で指定&#34;&gt;コンストラクタ内で指定&lt;/h2&gt;
-
-&lt;p&gt;位置指定と同じくコンストラクタ内で幅・高さを指定することも可能です。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    var shape = Shape({
-      // 位置・幅・高さ指定
-      x: 320,
-      y: 480,
-      width: 128,
-      height: 256,
-    }).addChildTo(this);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/1a3e59cf&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>002-Shapeの位置指定</title>
-      <link>https://alkn203.github.io/blog/2016/10/03/phina-locate-shape</link>
-      <pubDate>Mon, 03 Oct 2016 00:01:08 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/10/03/phina-locate-shape</guid>
-      <description>
-
-&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の位置を以下のように指定します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-locate-shape.png&#34; alt=&#34;phina_locate_shape_image&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/relocate-shape.gif&#34; alt=&#34;locate-shape&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4e8bc6e6&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  // 継承
-  superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // Shapeを作成してシーンに追加
-    var shape = Shape().addChildTo(this);
-    // 移動
-    shape.x = 320;
-    shape.y = 480;
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
+&lt;h3 id=&#34;shapeの位置指定&#34;&gt;Shapeの位置指定&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// Shapeを作成してシーンに追加
+var shape = Shape().addChildTo(this);
+// 移動
+shape.x = 320;
+shape.y = 480;
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4e8bc6e6&#34;&gt;[runstantで実行]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;の位置変更は、&lt;strong&gt;x, y&lt;/strong&gt;プロパティに直接数値を指定することで可能です。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;他の位置指定方法&#34;&gt;他の位置指定方法&lt;/h2&gt;
+&lt;h3 id=&#34;他の位置指定方法&#34;&gt;他の位置指定方法&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;setPosition&lt;/strong&gt;関数を使えば、&lt;strong&gt;x, y&lt;/strong&gt;の値を一括で指定することができ、生成から一気にチェインメソッドで繋げて書くこともできるので便利です。&lt;/li&gt;
@@ -308,7 +410,7 @@ phina.main(function() {
 &lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/af6327d3&#34;&gt;[runstantで実行]&lt;/a&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;変則的ですが、&lt;strong&gt;Vector2&lt;/strong&gt;クラスを使ってベクトル値の加算で位置指定する方法もあります。&lt;/li&gt;
+&lt;li&gt;他に、&lt;strong&gt;Vector2&lt;/strong&gt;クラスを使ってベクトル値の加算で位置指定する方法もあります。&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var v = Vector2(100, 200);
@@ -320,20 +422,34 @@ shape.position.add(v);
     </item>
     
     <item>
-      <title>001-Shapeを生成してSceneに追加する</title>
-      <link>https://alkn203.github.io/blog/2016/10/01/phina-add-shape</link>
-      <pubDate>Sat, 01 Oct 2016 00:01:06 +0900</pubDate>
+      <title>Shapeを生成してSceneに追加する</title>
+      <link>https://alkn203.github.io/blog/2017/04/20/locate-shape</link>
+      <pubDate>Thu, 20 Apr 2017 00:28:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/10/01/phina-add-shape</guid>
+      <guid>https://alkn203.github.io/blog/2017/04/20/locate-shape</guid>
       <description>
 
-&lt;h2 id=&#34;内容&#34;&gt;内容&lt;/h2&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;p&gt;今回は基本的な内容ではありますが、オブジェクトの基本形である&lt;strong&gt;Shape&lt;/strong&gt;を以下のように画面に表示してみます。&lt;/p&gt;
+&lt;p&gt;オブジェクトの基本形である&lt;strong&gt;Shape&lt;/strong&gt;を以下のように画面に表示します。
+位置を指定しなければ、画面左上に表示されます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-add-shape.png&#34; alt=&#34;phina_add_shape_image&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/locate-shape.gif&#34; alt=&#34;locate-shape&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/c5ac89af&#34;&gt;[runstantで実行]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/c5ac89af&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;shapeの追加&#34;&gt;Shapeの追加&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // Shapeを作成してシーンに追加
+    Shape().addChildTo(this);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;クラスを使って生成します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;phina.js&lt;/strong&gt;は、コンストラクタの前に&lt;strong&gt;new&lt;/strong&gt;をつける必要はありません。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;addChildTo(this)&lt;/strong&gt;で現在の&lt;strong&gt;Scene&lt;/strong&gt;に追加します。&lt;strong&gt;this&lt;/strong&gt;は&lt;strong&gt;MainScene&lt;/strong&gt;を指しています。&lt;/li&gt;
+&lt;li&gt;位置が指定されていない時は、画面左上(0,0)を中心として表示されます。&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
 
@@ -352,8 +468,7 @@ phina.define(&amp;quot;MainScene&amp;quot;, {
     // 背景色
     this.backgroundColor = &#39;black&#39;;
     // Shapeを作成してシーンに追加
-    var shape = Shape();
-    shape.addChildTo(this);
+    Shape().addChildTo(this);
   },
 });
 /*
@@ -371,28 +486,6 @@ phina.main(function() {
   app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;クラスのコンストラクタで生成します。コンストラクタの前に&lt;strong&gt;new&lt;/strong&gt;をつける必要はありません。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;addChildTo(this)&lt;/strong&gt;で現在の&lt;strong&gt;Scene&lt;/strong&gt;に追加します。&lt;strong&gt;this&lt;/strong&gt;は&lt;strong&gt;MainScene&lt;/strong&gt;を指しています。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;this.addChild(shape)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;としても同じですし&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var shape = Shape().addChildTo(this)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;として1行にまとめることもできます。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;位置が指定されていない時は、画面左上(0,0)に表示されます。&lt;/li&gt;
-&lt;li&gt;変数に代入しなくても表示されますが、後にプロパティを操作することが多いので、とりあえずは変数に代入しておいた方が良いでしょう。&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     
@@ -655,103 +748,6 @@ phina.main(function() {
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7610ec35&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ShapeとPathShapeを組み合わせたサンプル</title>
-      <link>https://alkn203.github.io/blog/2016/01/31/phina-canvas</link>
-      <pubDate>Sun, 31 Jan 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/01/31/phina-canvas</guid>
-      <description>
-
-&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
-
-&lt;p&gt;phina.jsでゲームを作る際には、通常は&lt;strong&gt;Sprite&lt;/strong&gt;や&lt;strong&gt;Shape&lt;/strong&gt;を使うことになるでしょう。
-しかし、phina.jsには&lt;strong&gt;html5&lt;/strong&gt;の&lt;strong&gt;canvas&lt;/strong&gt;を機能的にラップした&lt;strong&gt;phina.graphics.Canvas&lt;/strong&gt;という便利なクラスがあります。
-今回は、この&lt;strong&gt;Canvas&lt;/strong&gt;クラスの機能を利用して線の描画を行う&lt;strong&gt;PathShape&lt;/strong&gt;と組み合わせたサンプルを紹介します。&lt;/p&gt;
-
-&lt;h2 id=&#34;サンプル&#34;&gt;サンプル&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;矩形をドラッグして離すと画面中央にバネのような動きをして戻ります。&lt;/li&gt;
-&lt;li&gt;線描画用として、画面と同じ広さを持つ&lt;strong&gt;PathShape&lt;/strong&gt;を作ってシーンに重ね合わせています。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;PathShape&lt;/strong&gt;で線を描画して、矩形から線が出ているように位置を合わせています。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;PathShape&lt;/strong&gt;のパス情報を毎フレーム更新して、線が矩形に追従するようにしています。&lt;/li&gt;
-&lt;li&gt;パス情報を与えれば、&lt;strong&gt;PathShape&lt;/strong&gt;が自動で線を描画してくれます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-canvas.png&#34; alt=&#34;phina-canvas&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;ソースコード&#34;&gt;ソースコード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // 画面のサイズ
-    var w = this.gridX.width;
-    var h = this.gridY.width;
-    var cx = w /2;
-    var cy = h / 2;
-    
-    Label({
-      text: &#39;Drag a rect and release&#39;,
-      fontSize: 48,
-      fill: &#39;yellow&#39;,
-    }).addChildTo(this).setPosition(cx, this.gridY.span(2));
-    // 矩形
-    var rect = RectangleShape().setPosition(cx, cy);
-    // PathShapeを利用してロープを作成
-    var rope = PathShape({
-      width: w, 
-      height: h, 
-      stroke: &#39;red&#39;,
-      strokeWidth: 8,
-      paths: [Vector2(cx, cy), Vector2(rect.x, rect.y)],
-    }).addChildTo(this);
-    // 描画順を考えてこのタイミングで追加
-    rect.addChildTo(this);
-    // ドラッグ可能にする
-    Draggable().attachTo(rect);
-    // リリースされたら
-    rect.onpointend = function() {
-      // 中心へ移動するアニメーション
-      rect.tweener.to({x: cx, y: cy}, 1000, &#39;easeOutElastic&#39;).play();
-    };
-    // 毎フレーム更新
-    this.update = function() {
-      // pathを更新
-      rope.changePath(1, rect.x, rect.y);
-    };
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/6e0e6f07&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

@@ -6,27 +6,26 @@
     <description>Recent content in Template on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Thu, 29 Sep 2016 01:55:06 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 19 Apr 2017 00:28:06 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tags/template/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>phina.jsの基本テンプレートについて</title>
-      <link>https://alkn203.github.io/blog/2016/09/29/phina-template</link>
-      <pubDate>Thu, 29 Sep 2016 01:55:06 +0900</pubDate>
+      <link>https://alkn203.github.io/blog/2017/04/19/phina-template</link>
+      <pubDate>Wed, 19 Apr 2017 00:28:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/09/29/phina-template</guid>
+      <guid>https://alkn203.github.io/blog/2017/04/19/phina-template</guid>
       <description>
 
 &lt;h2 id=&#34;phina-jsの基本テンプレート&#34;&gt;phina.jsの基本テンプレート&lt;/h2&gt;
 
-&lt;p&gt;自分自身の復習のためにも、私が普段１からコーディングをする時に使用しているテンプレートを紹介します。
-実行結果は以下のように黒い画面が表示されるだけです。&lt;/p&gt;
+&lt;p&gt;私が&lt;strong&gt;phina.js&lt;/strong&gt;でコーディングをする時に使用しているテンプレートを紹介します。実行結果は以下のように黒い画面が表示されるだけです。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-template.png&#34; alt=&#34;phina_template_image&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-template.gif&#34; alt=&#34;phina-template&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8f0388a4&#34;&gt;[runstantで実行]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8f0388a4&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
+&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
 phina.globalize();

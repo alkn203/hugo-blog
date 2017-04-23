@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Random on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/random/</link>
+    <description>Recent content in Random on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sat, 22 Apr 2017 15:13:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/random/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Shapeをランダムな位置にたくさん表示する</title>
+      <link>https://alkn203.github.io/blog/2017/04/22/random-locate-shapes</link>
+      <pubDate>Sat, 22 Apr 2017 15:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/22/random-locate-shapes</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を画面上のランダムな位置にたくさん表示します。
+&lt;a href=&#34;http://qiita.com/alkn203/items/b3471138323efd33587c&#34;&gt;前回のTips&lt;/a&gt;に繰り返し処理を追加します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/random-locate-shapes.gif&#34; alt=&#34;random-locate-shape.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4d83a38d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;timesメソッドを使った繰り返し処理&#34;&gt;timesメソッドを使った繰り返し処理&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;javascript&lt;/strong&gt;で繰り返し処理を行う時には、&lt;strong&gt;for&lt;/strong&gt;を使うのが一般的です。
+&lt;strong&gt;phina.js&lt;/strong&gt;のTipsということもありますので、今回は元々の&lt;strong&gt;Number&lt;/strong&gt;クラスの拡張メソッド&lt;strong&gt;times&lt;/strong&gt;を使います。使い方は以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;(10).times(function(i) {
+  console.log(i);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;function&lt;/strong&gt;の内部の処理を冒頭に指定された数の回数繰り返します。&lt;/li&gt;
+&lt;li&gt;変数&lt;strong&gt;i&lt;/strong&gt;にインデックス値が入ってきますので、上の例では結果として&lt;strong&gt;0から9&lt;/strong&gt;の数字が出力されます。&lt;/li&gt;
+&lt;li&gt;繰り返しが目的であれば、&lt;strong&gt;i&lt;/strong&gt;の値を必ずしも使用する必要はありません。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;
+var SCREEN_HEIGHT = 960;
+var SHAPE_SIZE = 16;
+var SHAPE_HALF = SHAPE_SIZE / 2;
+var NUM = 50;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // function内でthisを参照するための設定
+    var self = this;
+    // 繰り返し処理
+    (NUM).times(function(i) {
+      // Shapeを作成してシーンに追加
+      var shape = Shape({
+        width: SHAPE_SIZE,
+        height: SHAPE_SIZE,
+        backgroundColor: &#39;red&#39;,
+      }).addChildTo(self);
+      // 画面上に収まるランダムな位置に配置
+      shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
+      shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
+    });
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;メソッドの回数に指定する数値は変数でも良いので、このサンプルのように定数定義しておくと便利です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;メソッドの&lt;strong&gt;function&lt;/strong&gt;内部で&lt;strong&gt;this&lt;/strong&gt;を使うと&lt;strong&gt;function&lt;/strong&gt;そのものを参照することになるので、その前に&lt;strong&gt;var self = this&lt;/strong&gt;で退避して、内部では&lt;strong&gt;self&lt;/strong&gt;を使うことで正しい参照になるようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shapeをランダムな位置に表示する</title>
+      <link>https://alkn203.github.io/blog/2017/04/22/random-locate-shape</link>
+      <pubDate>Sat, 22 Apr 2017 15:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/22/random-locate-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;実行する度に&lt;strong&gt;Shape&lt;/strong&gt;を画面上のランダムな位置に表示します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/random-locate-shape.gif&#34; alt=&#34;random-locate-shape.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4b44a4dd&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;randomクラスを使う&#34;&gt;Randomクラスを使う&lt;/h3&gt;
+
+&lt;p&gt;ランダムな位置に表示するためには、ランダムな数値が必要です。&lt;strong&gt;phina.js&lt;/strong&gt;にはこれを取り扱う&lt;strong&gt;phina.util.Random&lt;/strong&gt;クラスが用意されています。
+今回は&lt;strong&gt;Random&lt;/strong&gt;クラスの&lt;strong&gt;randint&lt;/strong&gt;メソッドを使います。使い方は以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var rnd = Random.randint(0, 100);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上の例ですと、変数&lt;strong&gt;rnd&lt;/strong&gt;に&lt;strong&gt;0から100&lt;/strong&gt;の間でランダムな&lt;strong&gt;整数&lt;/strong&gt;が1つ代入されます。&lt;/p&gt;
+
+&lt;h3 id=&#34;使用例&#34;&gt;使用例&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
+shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SHAPE_HALF&lt;/strong&gt;は&lt;strong&gt;Shape&lt;/strong&gt;のサイズの半分の値で、&lt;strong&gt;Shape&lt;/strong&gt;が画面からはみ出さないように&lt;strong&gt;randint&lt;/strong&gt;の範囲を調整しています。半分にしたのは、&lt;strong&gt;Shape&lt;/strong&gt;の座標は&lt;strong&gt;中心が起点(origin)&lt;/strong&gt;になっているためです。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// 定数
+var SCREEN_WIDTH = 640;
+var SCREEN_HEIGHT = 960;
+var SHAPE_SIZE = 16;
+var SHAPE_HALF = SHAPE_SIZE / 2;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景色
+    this.backgroundColor = &#39;black&#39;;
+    // Shapeを作成してシーンに追加
+    var shape = Shape({
+      width: SHAPE_SIZE,
+      height: SHAPE_SIZE,
+      backgroundColor: &#39;red&#39;,
+    }).addChildTo(this);
+    // 画面上に収まるランダムな位置に配置
+    shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
+    shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
