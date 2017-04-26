@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Update on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/update/</link>
+    <description>Recent content in Update on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 26 Apr 2017 00:13:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/update/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Shapeの更新イベントを登録する</title>
+      <link>https://alkn203.github.io/blog/2017/04/26/update-shape</link>
+      <pubDate>Wed, 26 Apr 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/26/update-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対してフレーム更新処理を登録する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/update-shape.gif&#34; alt=&#34;upate-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;更新イベント処理-update&#34;&gt;更新イベント処理（update）&lt;/h3&gt;
+
+&lt;p&gt;更新処理を登録するためには、&lt;strong&gt;shape&lt;/strong&gt;の&lt;strong&gt;update&lt;/strong&gt;関数を実装します。
+&lt;strong&gt;update&lt;/strong&gt;関数が実装されていると、その内容が毎フレーム実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
+shape.update = function() {
+  // 移動
+  shape.moveBy(1, 1);  
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d709760f&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;更新イベント処理-on-enterframe&#34;&gt;更新イベント処理（on + enterframe）&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;では1つのメソッドしか登録できません。一方、&lt;strong&gt;on&lt;/strong&gt;と&lt;strong&gt;enterframe&lt;/strong&gt;を組み合わせると複数のメソッドを登録可能で、その内容が並行して実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
+shape.on(&#39;enterframe&#39;, function() {
+  // 移動
+  shape.moveBy(1, 1);  
+});
+// 毎フレーム更新処理
+shape.on(&#39;enterframe&#39;, function() {
+  // 回転
+  shape.rotation++;  
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/0705ecfc&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

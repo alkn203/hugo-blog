@@ -23,14 +23,14 @@
 
 &lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-template.gif&#34; alt=&#34;phina-template.png&#34; /&gt;&lt;/p&gt;
 
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7e1a191a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
 &lt;h3 id=&#34;shapeの透明化&#34;&gt;Shapeの透明化&lt;/h3&gt;
 
 &lt;p&gt;透明にするには&lt;strong&gt;alpha&lt;/strong&gt;プロパティに&lt;strong&gt;0&lt;/strong&gt;を指定します。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.alpha = 0;
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7e1a191a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;alpha&lt;/strong&gt;プロパティには&lt;strong&gt;0から1&lt;/strong&gt;が指定できるので、好みの透明度にすることができます。&lt;/p&gt;
 

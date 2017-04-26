@@ -3,34 +3,31 @@ date = "2017-04-23T15:13:06+09:00"
 draft = false
 slug = ""
 tags = ["tips","shape", "random", "times", "hsl", "format"]
-title = "Shapeをランダムな位置にたくさん表示する"
-eyecatch = "/images/random-locate-shapes.gif"
+title = "カラフルなShapeをランダムな位置にたくさん表示する"
+eyecatch = "/images/random-locate-col-shapes.gif"
 +++ 
 
 ## 今回のTips
-**Shape**を画面上のランダムな位置にたくさん表示します。
-[前回のTips](http://alkn203.github.io/blog/2017/04/22/random-locate-shape/)に繰り返し処理を追加します。
+様々な色の**Shape**を画面上のランダムな位置にたくさん表示します。
+[Shapeをランダムな位置にたくさん表示する](http://alkn203.github.io/blog/2017/04/22/random-locate-shapes/)に色指定を追加します。
 
-![random-locate-shape.png](/images/random-locate-shapes.gif)
+![random-locate-col-shape.png](/images/random-locate-col-shapes.gif)
 
-<center><a href="http://runstant.com/alkn203/projects/4d83a38d" target="_blank">[runstantで確認]</a></center>
+<center><a href="http://runstant.com/alkn203/projects/7058dacc" target="_blank">[runstantで確認]</a></center>
 
-### timesメソッドを使った繰り返し処理
+## hslとformatメソッドを使った色指定
 
-**javascript**で繰り返し処理を行う時には、**for**を使うのが一般的です。
-**phina.js**のTipsということもありますので、今回は元々の**Number**クラスの拡張メソッド**times**を使います。使い方は以下のとおりです。
+* **HSL色空間**は、**色相**（Hue）、**彩度**（Saturation）、**輝度**（Lightness）で色を指定します。使い方は、[Shapeの背景色を指定する](http://alkn203.github.io/blog/2017/04/22/background-shape/)を参考にして下さい。
+* **format**は、**String**クラスの拡張メソッドで、引数で与えられた値を文字列に引き渡します。以下の様に使います。
 
 ```js
-(10).times(function(i) {
-  console.log(i);
-});
+var hue = Random.randint(0, 360);
+var color = 'hsl({0}, 75%, 50%)'.format(hue);
 ```
+* 上の例ですと、変数**hue**に代入されたランダムな整数値を**format**メソッドに与えることで前段の文字列内の**{0}**が**hue**の値に置き換わります。
+* **'hsl({0}, {1}, 50%)'.format(hue, saturation)**のように引数を増やすこともできます。
 
-* **function**の内部の処理を冒頭に指定された数の回数繰り返します。
-* 変数**i**にインデックス値が入ってきますので、上の例では結果として**0から9**の数字が出力されます。
-* 繰り返しが目的であれば、**i**の値を必ずしも使用する必要はありません。
-
-### サンプルコード
+## サンプルコード
 
 ```js
 // グローバルに展開
@@ -41,6 +38,8 @@ var SCREEN_HEIGHT = 960;
 var SHAPE_SIZE = 16;
 var SHAPE_HALF = SHAPE_SIZE / 2;
 var NUM = 50;
+var SATURATION = 100;	// 彩度
+var LIGHTNESS = 50;	// 輝度
 /*
  * メインシーン
  */
@@ -61,18 +60,19 @@ phina.define("MainScene", {
       var shape = Shape({
         width: SHAPE_SIZE,
         height: SHAPE_SIZE,
-        backgroundColor: 'red',
       }).addChildTo(self);
       // 画面上に収まるランダムな位置に配置
       shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
       shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
+      // 背景色をランダムに設定
+      var hue = Random.randint(0, 360);
+      shape.backgroundColor = 'hsl({0}, 75%, 50%)'.format(hue);
     });
   },
 });
 /*
  * メイン処理
- */
-phina.main(function() {
+ */phina.main(function() {
   // アプリケーションを生成
   var app = GameApp({
     // MainScene から開始
@@ -84,6 +84,3 @@ phina.main(function() {
   app.run();
 });
 ```
-
-* **times**メソッドの回数に指定する数値は変数でも良いので、このサンプルのように定数定義しておくと便利です。
-* **times**メソッドの**function**内部で**this**を使うと**function**そのものを参照することになるので、その前に**var self = this**で退避して、内部では**self**を使うことで正しい参照になるようにしています。

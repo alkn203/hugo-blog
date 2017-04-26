@@ -12,6 +12,8 @@ eyecatch = "/images/phina-template.gif"
 
 ![phina-template.png](/images/phina-template.gif)
 
+<a href="http://runstant.com/alkn203/projects/7e1a191a" target="_blank">[runstantで確認]</a>
+
 ### Shapeの透明化
 
 透明にするには**alpha**プロパティに**0**を指定します。
@@ -19,7 +21,6 @@ eyecatch = "/images/phina-template.gif"
 ```js
 shape.alpha = 0;
 ```
-<a href="http://runstant.com/alkn203/projects/7e1a191a" target="_blank">[runstantで確認]</a>
 
 **alpha**プロパティには**0から1**が指定できるので、好みの透明度にすることができます。
 
