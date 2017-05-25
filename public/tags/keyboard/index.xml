@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Keyboard on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/keyboard/</link>
+    <description>Recent content in Keyboard on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 24 May 2017 22:18:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/keyboard/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Spriteをキーボードで操作する</title>
+      <link>https://alkn203.github.io/blog/2017/05/24/keyboard-control</link>
+      <pubDate>Wed, 24 May 2017 22:18:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/24/keyboard-control</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライトをキーボードで動かす方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/keyboard-control.gif&#34; alt=&#34;keyboard-control.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/1d78bbe7&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;getkeyメソッドの使い方&#34;&gt;getKeyメソッドの使い方&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 毎フレーム処理
+    sprite.update = function(app) {
+      var key = app.keyboard;
+      // 上下左右移動
+      if (key.getKey(&#39;left&#39;)) { sprite.x -= SPEED; }
+      if (key.getKey(&#39;right&#39;)) { sprite.x += SPEED; }
+      if (key.getKey(&#39;up&#39;)) { sprite.y -= SPEED; }
+      if (key.getKey(&#39;down&#39;)) { sprite.y += SPEED; }
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;app&lt;/strong&gt;経由で&lt;strong&gt;keyboard&lt;/strong&gt;を入手しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;getKey&lt;/strong&gt;は、引数で指定されたキーが押されているかを返します。&lt;/li&gt;
+&lt;li&gt;各方向キーが押されているかを判定して、適切な方向にスプライトを移動させています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
+};
+// 定数
+var SPEED = 4;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(this);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+     // 毎フレーム処理
+    sprite.update = function(app) {
+      var key = app.keyboard;
+      // 上下左右移動
+      if (key.getKey(&#39;left&#39;)) { sprite.x -= SPEED; }
+      if (key.getKey(&#39;right&#39;)) { sprite.x += SPEED; }
+      if (key.getKey(&#39;up&#39;)) { sprite.y -= SPEED; }
+      if (key.getKey(&#39;down&#39;)) { sprite.y += SPEED; }
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;キーボード操作&#39;,
+    // MainScene から開始
+    //startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

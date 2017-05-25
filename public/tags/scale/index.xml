@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Scale on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/scale/</link>
+    <description>Recent content in Scale on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Mon, 22 May 2017 21:15:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/scale/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Sprite の進行方向に応じて表示する向きを変更する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/reverse-sprite-dir</link>
+      <pubDate>Mon, 22 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/22/reverse-sprite-dir</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;前回のTipsでは、スプライトは右に移動しても左方向を向いたままです。
+そこで今回は、スプライトの向きと移動方向が一致するようにします。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/reverse-sprite-dir.gif&#34; alt=&#34;reverse-sprite-dir.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3e687aa0&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトと画面端との判定&#34;&gt;スプライトと画面端との判定&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;関数内に処理を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+        // 向きを反転する
+        sprite.scaleX *= -1;
+      }
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;付け加えたのは1行だけで、&lt;strong&gt;sprite.scaleX *= -1&lt;/strong&gt;とすることで向きを反転させることができます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 初期速度
+    sprite.vx = -2;
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+        // 向きを反転する
+        sprite.scaleX *= -1;
+      }
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteを拡大・縮小させる（setScale使用）</title>
+      <link>https://alkn203.github.io/blog/2017/05/13/resize-sprite</link>
+      <pubDate>Sat, 13 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/13/resize-sprite</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライト画像に拡大・縮小率を指定する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/resize-sprite.gif&#34; alt=&#34;resize-sprite.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/e7e075a0&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトの拡大-縮小-setscale&#34;&gt;スプライトの拡大・縮小（setScale）&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Sprite&lt;/strong&gt;の拡大・縮小率を指定するには&lt;strong&gt;setScale&lt;/strong&gt;関数を使用します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // スプライト拡大
+    sprite.setScale(2.0, 2.0);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;1.0&lt;/strong&gt;を基準として、小さければ縮小、大きければ拡大になります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト作成
+    var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(this);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // スプライト拡大
+    sprite.setScale(2.0, 2.0);
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    //startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

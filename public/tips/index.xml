@@ -6,945 +6,480 @@
     <description>Recent content in Tips on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Wed, 26 Apr 2017 00:13:06 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 26 May 2017 22:19:06 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tips/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Shapeの更新イベントを登録する</title>
-      <link>https://alkn203.github.io/blog/2017/04/26/update-shape</link>
-      <pubDate>Wed, 26 Apr 2017 00:13:06 +0900</pubDate>
+      <title>タッチしたスプライトを消す</title>
+      <link>https://alkn203.github.io/blog/2017/05/26/touch-and-remove</link>
+      <pubDate>Fri, 26 May 2017 22:19:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2017/04/26/update-shape</guid>
+      <guid>https://alkn203.github.io/blog/2017/05/26/touch-and-remove</guid>
       <description>
 
 &lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対してフレーム更新処理を登録する方法について説明します。&lt;/p&gt;
+&lt;p&gt;タッチされたスプライトを消す方法について説明します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/update-shape.gif&#34; alt=&#34;upate-shape.gif&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-remove.gif&#34; alt=&#34;touch-remove.gif&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;更新イベント処理-update&#34;&gt;更新イベント処理（update）&lt;/h3&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/dbd8507a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;p&gt;更新処理を登録するためには、&lt;strong&gt;shape&lt;/strong&gt;の&lt;strong&gt;update&lt;/strong&gt;関数を実装します。
-&lt;strong&gt;update&lt;/strong&gt;関数が実装されていると、その内容が毎フレーム実行されます。&lt;/p&gt;
+&lt;h3 id=&#34;removeメソッド&#34;&gt;removeメソッド&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
-shape.update = function() {
-  // 移動
-  shape.moveBy(1, 1);  
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // スプライト画像を大量作成
+    (32).times(function(i) {
+      var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(self);
+      var half = sprite.width / 2;
+      // ランダムな位置
+      sprite.x = Random.randint(half, 640 - half);
+      sprite.y = Random.randint(half, 960 - half);
+      // タッチを有効にする
+      sprite.setInteractive(true);
+      // タッチイベント登録
+      sprite.onpointstart = function() {
+        // 削除
+        sprite.remove();
+      };
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;関数を使って、スプライトの作成を指定数繰り返しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Random&lt;/strong&gt;クラスの&lt;strong&gt;randint&lt;/strong&gt;メソッドを使って、スプライトをランダムな位置に表示します。&lt;/li&gt;
+&lt;li&gt;スプライトのタッチを有効にするために&lt;strong&gt;setInteractive(true)&lt;/strong&gt;を忘れないようにします。&lt;/li&gt;
+&lt;li&gt;スプライトの&lt;strong&gt;onpointstart&lt;/strong&gt;イベントの中で&lt;strong&gt;remove&lt;/strong&gt;を使ってスプライトを消しています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
 };
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d709760f&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;更新イベント処理-on-enterframe&#34;&gt;更新イベント処理（on + enterframe）&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;では1つのメソッドしか登録できません。一方、&lt;strong&gt;on&lt;/strong&gt;と&lt;strong&gt;enterframe&lt;/strong&gt;を組み合わせると複数のメソッドを登録可能で、その内容が並行して実行されます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 毎フレーム更新処理
-shape.on(&#39;enterframe&#39;, function() {
-  // 移動
-  shape.moveBy(1, 1);  
-});
-// 毎フレーム更新処理
-shape.on(&#39;enterframe&#39;, function() {
-  // 回転
-  shape.rotation++;  
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/0705ecfc&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeの原点を変更する</title>
-      <link>https://alkn203.github.io/blog/2017/04/25/change-shape-origin</link>
-      <pubDate>Tue, 25 Apr 2017 00:13:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/25/change-shape-origin</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、デフォルトでオブジェクトの原点は中心となっており、配置や回転処理などではこの原点が基準となります。
-今回は&lt;strong&gt;Shape&lt;/strong&gt;を例にオブジェクトの原点を変更する方法について説明します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/change-shape-origin.gif&#34; alt=&#34;change-shape-origin.png&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7058dacc&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;p&gt;上の例では、同じ矩形でも回転の中心が違うのが分かるかと思います。&lt;/p&gt;
-
-&lt;h3 id=&#34;originプロパティと原点の位置&#34;&gt;originプロパティと原点の位置&lt;/h3&gt;
-
-&lt;p&gt;オブジェクトの原点は&lt;strong&gt;origin&lt;/strong&gt;で指定でき、位置関係は以下のようになっています。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;origin.set(0.5, 0.5)&lt;/strong&gt;・・・中心（デフォルト）&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;origin.set(0, 0)&lt;/strong&gt;・・・左上&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;origin.set(0, 1)&lt;/strong&gt;・・左下&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;origin.set(1, 0)&lt;/strong&gt;・・右上&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;origin.set(1, 1)&lt;/strong&gt;・・右下&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;例えば&lt;strong&gt;shape&lt;/strong&gt;の原点を左上にしたい場合、以下のようにします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.origin.set(0, 0)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
 /*
  * メインシーン
  */
 phina.define(&amp;quot;MainScene&amp;quot;, {
   // 継承
   superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // Shapeを作成してシーンに追加
-    var shape = Shape().addChildTo(this);
-    // 移動
-    shape.x = 320;
-    shape.y = 480;
-    // 回転
-    shape.update = function() {
-      shape.rotation += 2;  
-    };
-
-    var shape2 = Shape().addChildTo(this);
-    // 移動
-    shape2.x = 320;
-    shape2.y = 240;
-    // 左上を原点に
-    shape2.origin.set(0, 0);
-    // 回転
-    shape2.update = function() {
-      shape2.rotation += -2;  
-    };
-    
-    var shape3 = Shape().addChildTo(this);
-    // 移動
-    shape3.x = 320;
-    shape3.y = 720;
-    // 右下を原点に
-    shape3.origin.set(1, 1);
-    // 回転
-    shape3.update = function() {
-      shape3.rotation += -2;  
-    };
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>カラフルなShapeをランダムな位置にたくさん表示する</title>
-      <link>https://alkn203.github.io/blog/2017/04/23/random-locate-col-shapes</link>
-      <pubDate>Sun, 23 Apr 2017 15:13:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/23/random-locate-col-shapes</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;様々な色の&lt;strong&gt;Shape&lt;/strong&gt;を画面上のランダムな位置にたくさん表示します。
-&lt;a href=&#34;http://alkn203.github.io/blog/2017/04/22/random-locate-shapes/&#34;&gt;Shapeをランダムな位置にたくさん表示する&lt;/a&gt;に色指定を追加します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/random-locate-col-shapes.gif&#34; alt=&#34;random-locate-col-shape.png&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7058dacc&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;hslとformatメソッドを使った色指定&#34;&gt;hslとformatメソッドを使った色指定&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;HSL色空間&lt;/strong&gt;は、&lt;strong&gt;色相&lt;/strong&gt;（Hue）、&lt;strong&gt;彩度&lt;/strong&gt;（Saturation）、&lt;strong&gt;輝度&lt;/strong&gt;（Lightness）で色を指定します。使い方は、&lt;a href=&#34;http://alkn203.github.io/blog/2017/04/22/background-shape/&#34;&gt;Shapeの背景色を指定する&lt;/a&gt;を参考にして下さい。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;format&lt;/strong&gt;は、&lt;strong&gt;String&lt;/strong&gt;クラスの拡張メソッドで、引数で与えられた値を文字列に引き渡します。以下の様に使います。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var hue = Random.randint(0, 360);
-var color = &#39;hsl({0}, 75%, 50%)&#39;.format(hue);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;上の例ですと、変数&lt;strong&gt;hue&lt;/strong&gt;に代入されたランダムな整数値を&lt;strong&gt;format&lt;/strong&gt;メソッドに与えることで前段の文字列内の&lt;strong&gt;{0}&lt;/strong&gt;が&lt;strong&gt;hue&lt;/strong&gt;の値に置き換わります。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;&amp;lsquo;hsl({0}, {1}, 50%)&amp;rsquo;.format(hue, saturation)&lt;/strong&gt;のように引数を増やすこともできます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640;
-var SCREEN_HEIGHT = 960;
-var SHAPE_SIZE = 16;
-var SHAPE_HALF = SHAPE_SIZE / 2;
-var NUM = 50;
-var SATURATION = 100;   // 彩度
-var LIGHTNESS = 50; // 輝度
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  // 継承
-  superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // function内でthisを参照するための設定
-    var self = this;
-    // 繰り返し処理
-    (NUM).times(function(i) {
-      // Shapeを作成してシーンに追加
-      var shape = Shape({
-        width: SHAPE_SIZE,
-        height: SHAPE_SIZE,
-      }).addChildTo(self);
-      // 画面上に収まるランダムな位置に配置
-      shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
-      shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
-      // 背景色をランダムに設定
-      var hue = Random.randint(0, 360);
-      shape.backgroundColor = &#39;hsl({0}, 75%, 50%)&#39;.format(hue);
-    });
-  },
-});
-/*
- * メイン処理
- */phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeをランダムな位置にたくさん表示する</title>
-      <link>https://alkn203.github.io/blog/2017/04/22/random-locate-shapes</link>
-      <pubDate>Sat, 22 Apr 2017 15:13:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/22/random-locate-shapes</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を画面上のランダムな位置にたくさん表示します。
-&lt;a href=&#34;http://alkn203.github.io/blog/2017/04/22/random-locate-shape/&#34;&gt;前回のTips&lt;/a&gt;に繰り返し処理を追加します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/random-locate-shapes.gif&#34; alt=&#34;random-locate-shape.png&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4d83a38d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;timesメソッドを使った繰り返し処理&#34;&gt;timesメソッドを使った繰り返し処理&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;javascript&lt;/strong&gt;で繰り返し処理を行う時には、&lt;strong&gt;for&lt;/strong&gt;を使うのが一般的です。
-&lt;strong&gt;phina.js&lt;/strong&gt;のTipsということもありますので、今回は元々の&lt;strong&gt;Number&lt;/strong&gt;クラスの拡張メソッド&lt;strong&gt;times&lt;/strong&gt;を使います。使い方は以下のとおりです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;(10).times(function(i) {
-  console.log(i);
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;function&lt;/strong&gt;の内部の処理を冒頭に指定された数の回数繰り返します。&lt;/li&gt;
-&lt;li&gt;変数&lt;strong&gt;i&lt;/strong&gt;にインデックス値が入ってきますので、上の例では結果として&lt;strong&gt;0から9&lt;/strong&gt;の数字が出力されます。&lt;/li&gt;
-&lt;li&gt;繰り返しが目的であれば、&lt;strong&gt;i&lt;/strong&gt;の値を必ずしも使用する必要はありません。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640;
-var SCREEN_HEIGHT = 960;
-var SHAPE_SIZE = 16;
-var SHAPE_HALF = SHAPE_SIZE / 2;
-var NUM = 50;
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  // 継承
-  superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // function内でthisを参照するための設定
-    var self = this;
-    // 繰り返し処理
-    (NUM).times(function(i) {
-      // Shapeを作成してシーンに追加
-      var shape = Shape({
-        width: SHAPE_SIZE,
-        height: SHAPE_SIZE,
-        backgroundColor: &#39;red&#39;,
-      }).addChildTo(self);
-      // 画面上に収まるランダムな位置に配置
-      shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
-      shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
-    });
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;メソッドの回数に指定する数値は変数でも良いので、このサンプルのように定数定義しておくと便利です。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;times&lt;/strong&gt;メソッドの&lt;strong&gt;function&lt;/strong&gt;内部で&lt;strong&gt;this&lt;/strong&gt;を使うと&lt;strong&gt;function&lt;/strong&gt;そのものを参照することになるので、その前に&lt;strong&gt;var self = this&lt;/strong&gt;で退避して、内部では&lt;strong&gt;self&lt;/strong&gt;を使うことで正しい参照になるようにしています。&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeをランダムな位置に表示する</title>
-      <link>https://alkn203.github.io/blog/2017/04/22/random-locate-shape</link>
-      <pubDate>Sat, 22 Apr 2017 15:13:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/22/random-locate-shape</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;実行する度に&lt;strong&gt;Shape&lt;/strong&gt;を画面上のランダムな位置に表示します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/random-locate-shape.gif&#34; alt=&#34;random-locate-shape.png&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4b44a4dd&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;randomクラスを使う&#34;&gt;Randomクラスを使う&lt;/h3&gt;
-
-&lt;p&gt;ランダムな位置に表示するためには、ランダムな数値が必要です。&lt;strong&gt;phina.js&lt;/strong&gt;にはこれを取り扱う&lt;strong&gt;phina.util.Random&lt;/strong&gt;クラスが用意されています。
-今回は&lt;strong&gt;Random&lt;/strong&gt;クラスの&lt;strong&gt;randint&lt;/strong&gt;メソッドを使います。使い方は以下のとおりです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var rnd = Random.randint(0, 100);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上の例ですと、変数&lt;strong&gt;rnd&lt;/strong&gt;に&lt;strong&gt;0から100&lt;/strong&gt;の間でランダムな&lt;strong&gt;整数&lt;/strong&gt;が1つ代入されます。&lt;/p&gt;
-
-&lt;h3 id=&#34;使用例&#34;&gt;使用例&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
-shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;SHAPE_HALF&lt;/strong&gt;は&lt;strong&gt;Shape&lt;/strong&gt;のサイズの半分の値で、&lt;strong&gt;Shape&lt;/strong&gt;が画面からはみ出さないように&lt;strong&gt;randint&lt;/strong&gt;の範囲を調整しています。半分にしたのは、&lt;strong&gt;Shape&lt;/strong&gt;の座標は&lt;strong&gt;中心が起点(origin)&lt;/strong&gt;になっているためです。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640;
-var SCREEN_HEIGHT = 960;
-var SHAPE_SIZE = 16;
-var SHAPE_HALF = SHAPE_SIZE / 2;
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  // 継承
-  superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // Shapeを作成してシーンに追加
-    var shape = Shape({
-      width: SHAPE_SIZE,
-      height: SHAPE_SIZE,
-      backgroundColor: &#39;red&#39;,
-    }).addChildTo(this);
-    // 画面上に収まるランダムな位置に配置
-    shape.x = Random.randint(SHAPE_HALF, SCREEN_WIDTH - SHAPE_HALF);
-    shape.y = Random.randint(SHAPE_HALF, SCREEN_HEIGHT - SHAPE_HALF);
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeを透明化・非表示にする</title>
-      <link>https://alkn203.github.io/blog/2017/04/22/alpha-shape</link>
-      <pubDate>Sat, 22 Apr 2017 12:13:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/22/alpha-shape</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を透明化または非表示にします。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-template.gif&#34; alt=&#34;phina-template.png&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7e1a191a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;shapeの透明化&#34;&gt;Shapeの透明化&lt;/h3&gt;
-
-&lt;p&gt;透明にするには&lt;strong&gt;alpha&lt;/strong&gt;プロパティに&lt;strong&gt;0&lt;/strong&gt;を指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.alpha = 0;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;alpha&lt;/strong&gt;プロパティには&lt;strong&gt;0から1&lt;/strong&gt;が指定できるので、好みの透明度にすることができます。&lt;/p&gt;
-
-&lt;h3 id=&#34;shapeの非表示&#34;&gt;Shapeの非表示&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、透明化の他に&lt;strong&gt;hide&lt;/strong&gt;メソッドでオブジェクトそのものを非表示にすることができます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.hide();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3df6a8b8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;再表示するには、&lt;strong&gt;show&lt;/strong&gt;メソッドを使います。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.show();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;透明化と非表示の違い&#34;&gt;透明化と非表示の違い&lt;/h3&gt;
-
-&lt;p&gt;透明化ではオブジェクト自体は存在するので、当たり判定やタッチ処理は有効ですが、非表示にした場合は描画自体されないので、当たり判定やタッチ処理は無効になります。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeのサイズを指定する</title>
-      <link>https://alkn203.github.io/blog/2017/04/22/resize-shape</link>
-      <pubDate>Sat, 22 Apr 2017 00:28:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/22/resize-shape</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の幅・高さを指定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/resize-shape.gif&#34; alt=&#34;resize-shape&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4e8bc6e6&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;幅指定&#34;&gt;幅指定&lt;/h3&gt;
-
-&lt;p&gt;幅は&lt;strong&gt;width&lt;/strong&gt;プロパティで指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.width = 128;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7fad0439&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;高さ指定&#34;&gt;高さ指定&lt;/h3&gt;
-
-&lt;p&gt;高さは&lt;strong&gt;height&lt;/strong&gt;プロパティで指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.height = 128;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/5da92e05&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;幅-高さを一括指定&#34;&gt;幅・高さを一括指定&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;setSize&lt;/strong&gt;を使えば、幅と高さを一括で指定できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.setSize(128, 256);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8de8694c&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;コンストラクタ内で指定&#34;&gt;コンストラクタ内で指定&lt;/h3&gt;
-
-&lt;p&gt;位置指定と同じくコンストラクタ内で幅・高さを指定することも可能です。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    var shape = Shape({
-      // 位置・幅・高さ指定
-      x: 320,
-      y: 480,
-      width: 128,
-      height: 256,
-    }).addChildTo(this);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/1a3e59cf&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeの背景色を指定する</title>
-      <link>https://alkn203.github.io/blog/2017/04/22/background-shape</link>
-      <pubDate>Sat, 22 Apr 2017 00:28:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/22/background-shape</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の背景色を指定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/background-shape.gif&#34; alt=&#34;backgruond-shape.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;背景色指定&#34;&gt;背景色指定&lt;/h2&gt;
-
-&lt;p&gt;背景色は&lt;strong&gt;backgroundColor&lt;/strong&gt;プロパティで指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.backgroundColor = &#39;red&#39;;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/57cab291&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;他の指定方法&#34;&gt;他の指定方法&lt;/h2&gt;
-
-&lt;h3 id=&#34;16進数&#34;&gt;16進数&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;css&lt;/strong&gt;と同様に指定できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.backgroundColor = &#39;#ffff00&#39;;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/6a5a9d1d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;rgb&#34;&gt;RGB&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;Rgb&lt;/strong&gt;クラスを使って指定できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.backgroundColor = `rgb(0, 255, 255)`;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/cb651549&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;hsl&#34;&gt;hsl&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;css&lt;/strong&gt;と同様に指定できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.backgroundColor = `hsl(300, 75%, 50%)`;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/accb7a5a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeの位置を指定する</title>
-      <link>https://alkn203.github.io/blog/2017/04/21/relocate-shape</link>
-      <pubDate>Fri, 21 Apr 2017 00:28:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/21/relocate-shape</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の位置を以下のように指定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/relocate-shape.gif&#34; alt=&#34;locate-shape&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4e8bc6e6&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;shapeの位置指定&#34;&gt;Shapeの位置指定&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// Shapeを作成してシーンに追加
-var shape = Shape().addChildTo(this);
-// 移動
-shape.x = 320;
-shape.y = 480;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;の位置変更は、&lt;strong&gt;x, y&lt;/strong&gt;プロパティに直接数値を指定することで可能です。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;他の位置指定方法&#34;&gt;他の位置指定方法&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;setPosition&lt;/strong&gt;関数を使えば、&lt;strong&gt;x, y&lt;/strong&gt;の値を一括で指定することができ、生成から一気にチェインメソッドで繋げて書くこともできるので便利です。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var shape = Shape().addChildTo(this).shape.setPosition(320, 480);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/4c21e518&#34;&gt;[runstantで実行]&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;のコンストラクタにパラメータとして与えてることでも指定できます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var shape = Shape({
-  x: 320,
-  y: 480
-}).addChildTo(this)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/81ae38a5&#34;&gt;[runstantで実行]&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;moveBy&lt;/strong&gt;関数を使えば、&lt;strong&gt;x, y&lt;/strong&gt;の移動量で位置を変更することができます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.setPosition(320, 480).moveBy(100, 200);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/af6327d3&#34;&gt;[runstantで実行]&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;他に、&lt;strong&gt;Vector2&lt;/strong&gt;クラスを使ってベクトル値の加算で位置指定する方法もあります。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var v = Vector2(100, 200);
-shape.position.add(v);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/6a11250f&#34;&gt;[runstantで実行]&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeを生成してSceneに追加する</title>
-      <link>https://alkn203.github.io/blog/2017/04/20/locate-shape</link>
-      <pubDate>Thu, 20 Apr 2017 00:28:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/20/locate-shape</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;オブジェクトの基本形である&lt;strong&gt;Shape&lt;/strong&gt;を以下のように画面に表示します。
-位置を指定しなければ、画面左上に表示されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/locate-shape.gif&#34; alt=&#34;locate-shape&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/c5ac89af&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;shapeの追加&#34;&gt;Shapeの追加&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // Shapeを作成してシーンに追加
-    Shape().addChildTo(this);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;クラスを使って生成します。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;phina.js&lt;/strong&gt;は、コンストラクタの前に&lt;strong&gt;new&lt;/strong&gt;をつける必要はありません。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;addChildTo(this)&lt;/strong&gt;で現在の&lt;strong&gt;Scene&lt;/strong&gt;に追加します。&lt;strong&gt;this&lt;/strong&gt;は&lt;strong&gt;MainScene&lt;/strong&gt;を指しています。&lt;/li&gt;
-&lt;li&gt;位置が指定されていない時は、画面左上(0,0)を中心として表示されます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  // 継承
-  superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // Shapeを作成してシーンに追加
-    Shape().addChildTo(this);
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>phina.jsの基本テンプレートについて</title>
-      <link>https://alkn203.github.io/blog/2017/04/19/phina-template</link>
-      <pubDate>Wed, 19 Apr 2017 00:28:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/19/phina-template</guid>
-      <description>
-
-&lt;h2 id=&#34;phina-jsの基本テンプレート&#34;&gt;phina.jsの基本テンプレート&lt;/h2&gt;
-
-&lt;p&gt;私が&lt;strong&gt;phina.js&lt;/strong&gt;でコーディングをする時に使用しているテンプレートを紹介します。実行結果は以下のように黒い画面が表示されるだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-template.gif&#34; alt=&#34;phina-template&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8f0388a4&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  // 継承
-  superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // 以下にコードを書いていく
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;基本的には、&lt;strong&gt;MainScene&lt;/strong&gt;の&lt;strong&gt;init&lt;/strong&gt;関数内に自分のコードを書いていきます。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;this.backgroundColor&lt;/strong&gt;で背景色を指定しないと、デフォルトでは白になります。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;main&lt;/strong&gt;関数内の&lt;strong&gt;GameApp&lt;/strong&gt;関数では、&lt;strong&gt;startLabel&lt;/strong&gt;を&lt;strong&gt;main&lt;/strong&gt;としていますが、これは実行結果をすぐに確認するためにタイトル画面をスキップしたいからです。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;main&lt;/strong&gt;関数内の&lt;strong&gt;enableStats&lt;/strong&gt;関数は、画面左上に&lt;strong&gt;fps&lt;/strong&gt;を常時表示する便利な機能ですが、処理が重くなるので一旦コメントアウトしています。&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>円と円の衝突運動プログラム</title>
-      <link>https://alkn203.github.io/blog/2016/12/31/phina-circle-collision</link>
-      <pubDate>Sat, 31 Dec 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/12/31/phina-circle-collision</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のサンプル&#34;&gt;今回のサンプル&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;の作者&lt;a href=&#34;https://twitter.com/phi_jp&#34;&gt;phi&lt;/a&gt;さんの過去のブログ記事&lt;a href=&#34;http://tmlife.net/programming/javascript-tmlib-js-circle-collision.html&#34;&gt;[New] JavaScript ライブラリ tmlib.js で円同士の衝突プログラムを作ってみた&lt;/a&gt;を参考にして、円同士の衝突運動プログラムを作ってみました。
-こういった動きは物理エンジンに頼っても良いと思いますが、一度自分で書いてみることで理解が深まります。&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-circle-collision.png&#34; alt=&#34;phina-circle-collision&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;ソースコード&#34;&gt;ソースコード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
-// 定数
-var REBOUND  = 0.8;    // 反発係数
-var FRICTION = 0.99;   // 摩擦係数
-var GRAVITY  = 0.8;    // 重力
-var BALL_MAX_NUM = 15; // ボールの数
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  // 継承
-  superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // 画面の矩形
-    var scrRect = Rect(0, 0, 640, 960);
-    // ボールグループ
-    var ballGroup = DisplayElement().addChildTo(this);
-    var self = this;
-    // ランダムな場所にボールを作成
-    (BALL_MAX_NUM).times(function() {
-      var rx = Random.randint(scrRect.left, scrRect.right);
-      var ry = Random.randint(scrRect.top, scrRect.bottom);
-      var ball = Ball().addChildTo(ballGroup).setPosition(rx, ry);
-    });
-    // 参照用
-    this.ballGroup = ballGroup;
-    this.scrRect = scrRect;
-  },
-  // 毎フレーム更新
-  update: function() {
-    // ボール同士
-    this.checkHitBalls();
-    // ボールと壁
-    this.checkHitWalls();
-  },
-  // ボール同士の当たり判定処理
-  checkHitBalls: function() {
-    var balls = this.ballGroup.children;
-
-    balls.each(function(ball, i) {
-      balls.each(function(target, j) {
-        // 自分以外の相手
-        if (i !== j) {
-          // 衝突してたら
-          if (Collision.testCircleCircle(ball, target)) {
-            // 自分から相手へのベクトル
-            var abVec = Vector2.sub(target.position, ball.position);
-            var len = abVec.length();
-            if (len === 0) return;
-            // 正規化
-            abVec.normalize();
-            // 自分と相手の距離
-            var distance = (ball.radius + target.radius) - len;
-            // めり込んだ量の半分
-            var sinkVec = Vector2.mul(abVec, (distance / 2));
-            // それぞれで押し出す
-            ball.position.sub(sinkVec);
-            target.position.add(sinkVec);
-            // 反発ベクトルを求める
-            var V = Vector2;
-            var m0 = ball.m;
-            var m1 = target.m;
-            var e = REBOUND;
-            var vs = ball.physical.velocity;
-            var vo = target.physical.velocity;
-
-            var ma = ((m1 / (m0 + m1)) * (1 + e)) * V.dot(V.sub(vo, vs), abVec);
-            var mb = ((m0 / (m0 + m1)) * (1 + e)) * V.dot(V.sub(vs, vo), abVec);
-       
-            vs.add(V.mul(abVec, ma));
-            vo.add(V.mul(abVec, mb));
-          }
-        }
-      });    
-    });
-  },
-  // タッチ終了時
-  onpointend: function() {
-    // ボールを散らす
-    this.ballGroup.children.each(function(ball) {
-      ball.physical.velocity.random(0, 360, 32);
-    });
-  },
-  // ボールと壁との辺り判定
-  checkHitWalls: function() {
-    var balls = this.ballGroup.children;
-    var rect = this.scrRect;
-    
-    balls.each(function(ball) {
-      if (ball.top &amp;lt; rect.top) {
-        ball.top = rect.top;
-        ball.physical.velocity.y *= -1;
-      }
-      if (ball.bottom &amp;gt; rect.bottom) {
-        ball.bottom = rect.bottom;
-        ball.physical.velocity.y *= -1;
-      }
-      if (ball.left &amp;lt; rect.left) {
-        ball.left = rect.left;
-        ball.physical.velocity.x *= -1;
-      }
-      if (ball.right &amp;gt; rect.right) {
-        ball.right = rect.right;
-        ball.physical.velocity.x *= -1;
-      }
-    });
-  },
-});
-/*
- * ボールクラス
- */
-phina.define(&#39;Ball&#39;, {
-  // CircleShapeを継承
-  superClass: &#39;CircleShape&#39;,
   // コンストラクタ
   init: function() {
     // 親クラス初期化
-    this.superInit({
-      fill: null,
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    var self = this;
+    // スプライト画像を大量作成
+    (32).times(function(i) {
+      var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(self);
+      var half = sprite.width / 2;
+      // ランダムな位置
+      sprite.x = Random.randint(half, 640 - half);
+      sprite.y = Random.randint(half, 960 - half);
+      // タッチを有効にする
+      sprite.setInteractive(true);
+      // タッチイベント登録
+      sprite.onpointstart = function() {
+        // 削除
+        sprite.remove();
+      };
     });
-    // 重力
-    this.physical.gravity.set(0, GRAVITY);
-    // 摩擦
-    this.physical.friction = FRICTION;
-    // 半径
-    this.radius = Random.randint(25, 50);
-    // 面積 = 質量にする
-    this.m = Math.PI * this.radius * this.radius;
-    // 初期移動量
-    this.physical.velocity.random(0, 360, 32);
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;タッチして削除&#39;,
+    // MainScene から開始
+    //startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>タッチしている位置に徐々にSpriteを移動させる</title>
+      <link>https://alkn203.github.io/blog/2017/05/24/touching-and-move</link>
+      <pubDate>Wed, 24 May 2017 23:19:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/24/touching-and-move</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;タッチしている位置に徐々にスプライトを移動させる方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/onpointmove.gif&#34; alt=&#34;onpointmove.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/de52206d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;移動先を管理して一定の割合で減速させる&#34;&gt;移動先を管理して一定の割合で減速させる&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 移動先を管理する変数
+    var targetX = sprite.x;
+    var targetY = sprite.y;
+    // タッチ開始
+    this.onpointstart = function(e) {
+      // 移動先を設定
+      targetX = e.pointer.x;
+      targetY = e.pointer.y;
+    };
+    // タッチ保持イベント
+    this.onpointmove = function(e) {
+      // 移動先を設定
+      targetX = e.pointer.x;
+      targetY = e.pointer.y;
+    };
+    // 更新
+    this.update = function(app) {
+      // タッチ中のみスプライトを動かす
+      if (app.pointer.getPointing()) {
+        // 徐々にタッチした位置に近づける
+        var moveX = (targetX - sprite.x) * 0.25;
+        var moveY = (targetY - sprite.y) * 0.25;
+        sprite.moveBy(moveX, moveY);
+      }
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;移動先を管理する変数&lt;strong&gt;targetX&lt;/strong&gt;と&lt;strong&gt;targetY&lt;/strong&gt;を作成します。&lt;/li&gt;
+&lt;li&gt;タッチ時に移動先を更新します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;app.pointer.getPointing()&lt;/strong&gt;で現在タッチされてるかを取得できます。&lt;/li&gt;
+&lt;li&gt;移動先とスプライトの現在の位置から方向ベクトルを求めて、一定割合で速度を減らして移動させます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
+};
+// 定数
+var SPEED = 4;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(this);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 移動先を管理する変数
+    var targetX = sprite.x;
+    var targetY = sprite.y;
+        // タッチ開始
+    this.onpointstart = function(e) {
+        // 移動先を設定
+        targetX = e.pointer.x;
+        targetY = e.pointer.y;
+      };
+    // タッチ保持イベント
+    this.onpointmove = function(e) {
+      // 移動先を設定
+        targetX = e.pointer.x;
+        targetY = e.pointer.y;
+    };
+    // 更新
+    this.update = function(app) {
+        // タッチ中のみスプライトを動かす
+        if (app.pointer.getPointing()) {
+            // 徐々にタッチした位置に近づける
+            var moveX = (targetX - sprite.x) * 0.25;
+            var moveY = (targetY - sprite.y) * 0.25;
+            sprite.moveBy(moveX, moveY);
+        }
+      };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;徐々に移動&#39;,
+    // MainScene から開始
+    //startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>タッチした位置にSpriteを移動させる</title>
+      <link>https://alkn203.github.io/blog/2017/05/24/touch-and-move</link>
+      <pubDate>Wed, 24 May 2017 22:19:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/24/touch-and-move</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;タッチした位置にスプライトを移動させる方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/onpointstart.gif&#34; alt=&#34;onpointstart.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/60f0531d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;イベントからタッチ座標を取得して移動させる&#34;&gt;イベントからタッチ座標を取得して移動させる&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチイベント
+    this.onpointstart = function(e) {
+      // スプライトをタッチ位置に
+      sprite.x = e.pointer.x;
+      sprite.y = e.pointer.y;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;this&lt;/strong&gt;つまり&lt;strong&gt;MainScene&lt;/strong&gt;はデフォルトでタッチが有効になってますので、&lt;strong&gt;onpointstart&lt;/strong&gt;でタッチイベントを取得します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;e.pointer&lt;/strong&gt;にタッチ座標が入っているので、&lt;strong&gt;x, y&lt;/strong&gt;プロパティを使用してスプライトを移動させています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
+};
+// 定数
+var SPEED = 4;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(this);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // タッチイベント
+    this.onpointstart = function(e) {
+      // スプライトをタッチ位置に
+      sprite.x = e.pointer.x;
+      sprite.y = e.pointer.y;
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;タッチ先に移動&#39;,
+    // MainScene から開始
+    //startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteをキーボードで操作する</title>
+      <link>https://alkn203.github.io/blog/2017/05/24/keyboard-control</link>
+      <pubDate>Wed, 24 May 2017 22:18:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/24/keyboard-control</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライトをキーボードで動かす方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/keyboard-control.gif&#34; alt=&#34;keyboard-control.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/1d78bbe7&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;getkeyメソッドの使い方&#34;&gt;getKeyメソッドの使い方&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 毎フレーム処理
+    sprite.update = function(app) {
+      var key = app.keyboard;
+      // 上下左右移動
+      if (key.getKey(&#39;left&#39;)) { sprite.x -= SPEED; }
+      if (key.getKey(&#39;right&#39;)) { sprite.x += SPEED; }
+      if (key.getKey(&#39;up&#39;)) { sprite.y -= SPEED; }
+      if (key.getKey(&#39;down&#39;)) { sprite.y += SPEED; }
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;app&lt;/strong&gt;経由で&lt;strong&gt;keyboard&lt;/strong&gt;を入手しています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;getKey&lt;/strong&gt;は、引数で指定されたキーが押されているかを返します。&lt;/li&gt;
+&lt;li&gt;各方向キーが押されているかを判定して、適切な方向にスプライトを移動させています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
+};
+// 定数
+var SPEED = 4;
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(this);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+     // 毎フレーム処理
+    sprite.update = function(app) {
+      var key = app.keyboard;
+      // 上下左右移動
+      if (key.getKey(&#39;left&#39;)) { sprite.x -= SPEED; }
+      if (key.getKey(&#39;right&#39;)) { sprite.x += SPEED; }
+      if (key.getKey(&#39;up&#39;)) { sprite.y -= SPEED; }
+      if (key.getKey(&#39;down&#39;)) { sprite.y += SPEED; }
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    title: &#39;キーボード操作&#39;,
+    // MainScene から開始
+    //startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ラベルのフォントを指定する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/change-label-font</link>
+      <pubDate>Mon, 22 May 2017 22:18:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/22/change-label-font</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;ラベルのフォントを変える方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/change-label-font.gif&#34; alt=&#34;change-label-font.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/e2928435&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;fontfamilyプロパティでフォントを指定する&#34;&gt;fontFamilyプロパティでフォントを指定する&lt;/h3&gt;
+
+&lt;p&gt;ラベルのフォントは&lt;strong&gt;fontFamily&lt;/strong&gt;で指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+      fill: &#39;blue&#39;,
+      fontFamily: &amp;quot;&#39;Consolas&#39;, &#39;Monaco&#39;, &#39;ＭＳ ゴシック&#39;&amp;quot;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+      fill: &#39;blue&#39;,
+      fontFamily: &amp;quot;&#39;Consolas&#39;, &#39;Monaco&#39;, &#39;ＭＳ ゴシック&#39;&amp;quot;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
   },
 });
 /*
@@ -956,333 +491,118 @@ phina.main(function() {
     // MainScene から開始
     startLabel: &#39;main&#39;,
   });
+  // fps表示
+  //app.enableStats();
   // 実行
   app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/75048ec9&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>クラス継承をしてみよう</title>
-      <link>https://alkn203.github.io/blog/2016/12/23/phina-advent-23th</link>
-      <pubDate>Fri, 23 Dec 2016 00:01:08 +0900</pubDate>
+      <title>ラベルの文字色を指定する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/change-label-color</link>
+      <pubDate>Mon, 22 May 2017 22:17:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/12/23/phina-advent-23th</guid>
+      <guid>https://alkn203.github.io/blog/2017/05/22/change-label-color</guid>
       <description>
 
-&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の23日目の記事です。&lt;/p&gt;
+&lt;p&gt;ラベルの文字色を変える方法について説明します。&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;22日目：&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;Three.jsとPhina.js使った何か by kjunichiさん&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;24日目：&lt;a href=&#34;http://qiita.com/emadurandal/items/63e262df75b279dda253&#34;&gt;phina.jsとGLBoostの連携について by emadurandalさん&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/change-label-color.gif&#34; alt=&#34;change-label-color.gif&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;クラス継承&#34;&gt;クラス継承&lt;/h2&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3e5bcda5&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;を使い慣れてくると、&lt;strong&gt;既存のクラスに機能を追加&lt;/strong&gt;したいと思うことがあります。もちろんイチから作るのもありですが、ちょっとした機能追加であれば既存のクラスを継承したクラスを作った方が効率的です。今回は&lt;strong&gt;Button&lt;/strong&gt;クラスを例にその方法を説明します。&lt;/p&gt;
+&lt;h3 id=&#34;fillプロパティで色を指定する&#34;&gt;fillプロパティで色を指定する&lt;/h3&gt;
 
-&lt;h2 id=&#34;animatebuttonクラスを作る&#34;&gt;AnimateButtonクラスを作る&lt;/h2&gt;
+&lt;p&gt;ラベルの文字色は&lt;strong&gt;fill&lt;/strong&gt;で指定します。&lt;/p&gt;
 
-&lt;p&gt;現在の&lt;strong&gt;Button&lt;/strong&gt;クラスの仕様はシンプルで、最低限の機能しかありません。今回はこの&lt;strong&gt;Button&lt;/strong&gt;クラスを継承して&lt;strong&gt;AnimateButton&lt;/strong&gt;というクラスを新しく作りたいと思います。追加する仕様は単純で、&lt;strong&gt;「ボタンを押している間は縮小して押しているように見せる」&lt;/strong&gt;です。（下のボタンは画像なので押せません）&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-23th.png&#34; alt=&#34;phina-advent-23th&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;手順１-buttonクラスのソースをコピーする&#34;&gt;手順１ Buttonクラスのソースをコピーする&lt;/h3&gt;
-
-&lt;p&gt;本来であれば、&lt;strong&gt;ローカル環境にソースをダウンロード→エディタで編集→ビルド→テスト&lt;/strong&gt;というのが手順かもしれませんが、今回は簡単な継承例ということでソースを丸ごとコピーして、&lt;strong&gt;runstant&lt;/strong&gt;上で作業します。コピー場所はコードの冒頭にします。(phina.globalize()よりも前)&lt;/p&gt;
-
-&lt;p&gt;以下が&lt;strong&gt;Button&lt;/strong&gt;クラスのソースです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
- * @class phina.ui.Button
- * Button
- */
-phina.define(&#39;phina.ui.Button&#39;, {
-  superClass: &#39;phina.display.Shape&#39;,
-  /**
-   * @constructor
-   */
-  init: function(options) {
-    options = (options || {}).$safe(phina.ui.Button.defaults);
-    this.superInit(options);
-
-    this.cornerRadius = options.cornerRadius;
-    this.text         = options.text;
-    this.fontColor    = options.fontColor;
-    this.fontSize     = options.fontSize;
-    this.fontWeight     = options.fontWeight;
-    this.fontFamily   = options.fontFamily;
-
-    this.setInteractive(true);
-    this.on(&#39;pointend&#39;, function() {
-      this.flare(&#39;push&#39;);
-    });
-  },
-  prerender: function(canvas) {
-    canvas.roundRect(-this.width/2, -this.height/2, this.width, this.height, this.cornerRadius);
-  },
-
-  postrender: function(canvas) {
-    var context = canvas.context;
-    // text
-    var font = &amp;quot;{fontWeight} {fontSize}px {fontFamily}&amp;quot;.format(this);
-    context.font = font;
-    context.textAlign = &#39;center&#39;;
-    context.textBaseline = &#39;middle&#39;;
-    context.fillStyle = this.fontColor;
-    context.fillText(this.text, 0, 0);
-  },
-
-  _static: {
-    defaults: {
-      width: 200,
-      height: 80,
-      backgroundColor: &#39;transparent&#39;,
-      fill: &#39;hsl(200, 80%, 60%)&#39;,
-      stroke: null,
-
-      cornerRadius: 8,
-      text: &#39;Hello&#39;,
-      fontColor: &#39;white&#39;,
-      fontSize: 32,
-      fontWeight: &#39;&#39;,
-      fontFamily: &amp;quot;&#39;HiraKakuProN-W3&#39;&amp;quot;, // Hiragino or Helvetica,
-    },
-  },
-
-  _defined: function() {
-    phina.display.Shape.watchRenderProperty.call(this, &#39;cornerRadius&#39;);
-    phina.display.Shape.watchRenderProperty.call(this, &#39;text&#39;);
-    phina.display.Shape.watchRenderProperty.call(this, &#39;fontColor&#39;);
-    phina.display.Shape.watchRenderProperty.call(this, &#39;fontSize&#39;);
-    phina.display.Shape.watchRenderProperty.call(this, &#39;fontFamily&#39;);
-  },
-
-});
-
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+      fill: &#39;blue&#39;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;手順２-クラス名を変更し-不要な部分を削除する&#34;&gt;手順２ クラス名を変更し、不要な部分を削除する&lt;/h3&gt;
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
 
-&lt;p&gt;クラス名を変更し、更に&lt;strong&gt;phina.ui.Button&lt;/strong&gt;を継承するように変更します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
-   * @class phina.ui.AnimateButton
-   * AnimateButton
-   */
-  phina.define(&#39;phina.ui.AnimateButton&#39;, {
-    superClass: &#39;phina.ui.Button&#39;,
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;見た目や基本動作は&lt;strong&gt;Button&lt;/strong&gt;クラスのものを使うので基底クラスに関する部分は削除し、以下のようにスッキリさせます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
-   * @class phina.ui.AnimateButton
-   * AnimateButton
-   */
-  phina.define(&#39;phina.ui.AnimateButton&#39;, {
-    superClass: &#39;phina.ui.Button&#39;,
-    /**
-     * @constructor
-     */
-    init: function(options) {
-      options = (options || {}).$safe(phina.ui.Button.defaults);
-      this.superInit(options);
-    },
-    
-    _static: {
-      defaults: {
-      },
-    },
-  });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;手順３-押している間の見た目を変更する&#34;&gt;手順３　押している間の見た目を変更する&lt;/h3&gt;
-
-&lt;p&gt;押している間は少し縮小させたいので、&lt;strong&gt;pointstay&lt;/strong&gt;イベント内に処理を書きます。
-&lt;strong&gt;scaleMin&lt;/strong&gt;は後のプロパティ設定で説明します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// プッシュ時の処理を追加
-this.on(&#39;pointstay&#39;, function() {
-  // 少し縮小
-  this.setScale(scaleMin, scaleMin);
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;押し終わった後は元のサイズに戻さないといけないので、&lt;strong&gt;pointend&lt;/strong&gt;イベント内に処理を書きます。
-&lt;strong&gt;1.0&lt;/strong&gt;が元のサイズです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;this.on(&#39;pointend&#39;, function() {
-  // 元に戻す
-  this.setScale(1.0, 1.0);
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;オプション-クラス特有プロパティを設定できるようにする&#34;&gt;オプション　クラス特有プロパティを設定できるようにする&lt;/h3&gt;
-
-&lt;p&gt;折角ですので、&lt;strong&gt;AnimateButton&lt;/strong&gt;クラス特有のプロパティをコンストラクタで指定できるようにします。
-今回は、縮小サイズを指定できるようにしたいと思います。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;init: function(options) {
-  options = (options || {}).$safe(phina.ui.AnimateButton.defaults);
-  this.superInit(options);
-  // 独自プロパティ
-  var scaleMin = options.scaleMin;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;$safe&lt;/strong&gt;はプロパティ（連想配列）をマージする関数で、&lt;strong&gt;options&lt;/strong&gt;で与えられた値とデフォルトで定義されている値を結合します。
-プロパティ名がバッティングした場合、&lt;strong&gt;options&lt;/strong&gt;で与えられた値をデフォルトの値で上書きすることはありません。&lt;/p&gt;
-
-&lt;p&gt;独自プロパティの値は、&lt;strong&gt;options&lt;/strong&gt;からもらいます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;_static: {
-  defaults: {
-    scaleMin: 0.95,
-  },
-},
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;独自プロパティのデフォルト値は、上のように書きます。これで、コンストラクタで値を渡して指定できるようになります。&lt;/p&gt;
-
-&lt;h2 id=&#34;完成コード&#34;&gt;完成コード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;/**
- * @class phina.ui.AnimateButton
- * AnimateButton
- */
-phina.define(&#39;phina.ui.AnimateButton&#39;, {
-  superClass: &#39;phina.ui.Button&#39;,
-  /**
-   * @constructor
-   */
-  init: function(options) {
-    options = (options || {}).$safe(phina.ui.AnimateButton.defaults);
-    this.superInit(options);
-    // 独自プロパティ
-    var scaleMin = options.scaleMin;
-    // プッシュ時の処理を追加
-    this.on(&#39;pointstay&#39;, function() {
-      // 少し縮小
-      this.setScale(scaleMin, scaleMin);
-    });
-    this.on(&#39;pointend&#39;, function() {
-      // 元に戻す
-      this.setScale(1.0, 1.0);
-    });
-  },
-  
-  _static: {
-    defaults: {
-      scaleMin: 0.95,
-    },
-  },
-});
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
 // グローバルに展開
 phina.globalize();
 /*
-* メインシーン
-*/
+ * メインシーン
+ */
 phina.define(&amp;quot;MainScene&amp;quot;, {
-// 継承
-superClass: &#39;DisplayScene&#39;,
-// 初期化
-init: function() {
-  // 親クラス初期化
-  this.superInit();
-  
-  var txt = &#39;Push me&#39;;
-  // デフォルトのボタン
-  Button({text: txt}).addChildTo(this)
-          .setPosition(this.gridX.center(), this.gridY.center(-2))
-          .onpush = function() {
-            console.log(&#39;Default&#39;);  
-          };
-  // 拡張ボタン
-  AnimateButton({text: txt}).addChildTo(this)
-                 .setPosition(this.gridX.center(), this.gridY.center(2))
-                 .onpush = function() {
-                   console.log(&#39;Animate&#39;);
-                 };
-},
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+      fill: &#39;blue&#39;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+  },
 });
 /*
-* メイン処理
-*/
+ * メイン処理
+ */
 phina.main(function() {
-// アプリケーションを生成
-var app = GameApp({
-  // MainScene から開始
-  startLabel: &#39;main&#39;,
-});
-// 実行
-app.run();
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9c1f8097&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
-
-&lt;p&gt;説明をだいぶ端折ってしまいましたが、&lt;strong&gt;phina.js&lt;/strong&gt;でのクラス継承についての説明は以上です。このように拡張したクラスは自分専用に使っても良いですし、他のユーザーにも使ってもらいたいということであれば、&lt;a href=&#34;https://github.com/phi-jp/phina.js&#34;&gt;Github&lt;/a&gt;でプルリクエストをしても良いでしょう。&lt;strong&gt;phina.js&lt;/strong&gt;への理解も深まりますので、お勧めです。&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Collisionクラスを使った当たり判定</title>
-      <link>https://alkn203.github.io/blog/2016/12/16/phina-advent-16th</link>
-      <pubDate>Fri, 16 Dec 2016 00:01:08 +0900</pubDate>
+      <title>ラベル(文字)を表示する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/show-label</link>
+      <pubDate>Mon, 22 May 2017 22:16:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/12/16/phina-advent-16th</guid>
+      <guid>https://alkn203.github.io/blog/2017/05/22/show-label</guid>
       <description>
 
-&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の16日目の記事です。&lt;/p&gt;
+&lt;p&gt;ゲーム制作には欠かせない&lt;strong&gt;ラベル&lt;/strong&gt;を表示する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/show-label.gif&#34; alt=&#34;show-label.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d23ea2d3&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;15日目：&lt;a href=&#34;http://qiita.com/minimo/items/8aca8ee80196ad045b87&#34;&gt;phina.jsとFirebaseで簡単にオンラインゲームを作ってみる by minimoさん&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;17日目：&lt;a href=&#34;http://qiita.com/minimo/items/b55b792c2fa19964acb4&#34;&gt;phina.jsでTiledMapEditorを利用するy minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;上のサンプルでは、スプライトをタッチする度に速度が遅くなっていきます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;collisionクラスについて&#34;&gt;Collisionクラスについて&lt;/h2&gt;
+&lt;h3 id=&#34;labelクラスを使ってラベル-文字-を表示する&#34;&gt;Labelクラスを使ってラベル（文字）を表示する&lt;/h3&gt;
 
-&lt;p&gt;&lt;strong&gt;phina.geom.Collision&lt;/strong&gt;は、当たり判定を行うためのクラスです。
-&lt;strong&gt;phina.js&lt;/strong&gt;の当たり判定で良く使うのは、&lt;strong&gt;phina.app.Object2d&lt;/strong&gt;クラスの&lt;strong&gt;hitTest&lt;/strong&gt;メソッドかと思いますが、このメソッドを使うためには以下のようにインスタンス経由となります。&lt;/p&gt;
+&lt;p&gt;以下がラベルを画面の中心に表示するコード例です。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;obj.hitTest(target);
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;対して、&lt;strong&gt;Collision&lt;/strong&gt;クラスのメソッドは全て&lt;strong&gt;static&lt;/strong&gt;なメソッドとなっています。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;text&lt;/strong&gt;プロパティが表示する文字です。他に&lt;strong&gt;fontSize&lt;/strong&gt;、&lt;strong&gt;fontWeight&lt;/strong&gt;、&lt;strong&gt;fontFamily&lt;/strong&gt;などのプロパティがあります。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;Collision.メソッド名(引数1, 引数2);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;collisionクラスのメソッド&#34;&gt;Collisionクラスのメソッド&lt;/h2&gt;
-
-&lt;h3 id=&#34;testcirclecircle&#34;&gt;testCircleCircle&lt;/h3&gt;
-
-&lt;p&gt;円同士が重なっているかを判定します。&lt;/p&gt;
-
-&lt;h3 id=&#34;testrectrect&#34;&gt;testRectRect&lt;/h3&gt;
-
-&lt;p&gt;矩形同士が重なっているかを判定します。&lt;/p&gt;
-
-&lt;h3 id=&#34;testcirclerect&#34;&gt;testCircleRect&lt;/h3&gt;
-
-&lt;p&gt;円と矩形が重なってるかを判定します。&lt;/p&gt;
-
-&lt;h3 id=&#34;testcircleline&#34;&gt;testCircleLine&lt;/h3&gt;
-
-&lt;p&gt;円と線分が重なってるかを判定します。&lt;/p&gt;
-
-&lt;h2 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h2&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-16th.png&#34; alt=&#34;phina-advent-16th&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
 phina.globalize();
@@ -1296,98 +616,11 @@ phina.define(&amp;quot;MainScene&amp;quot;, {
   init: function() {
     // 親クラス初期化
     this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // ラベル1
-    this.label1 = Label({
-      text: &#39;図形をドラッグして重ねよう&#39;,
-      fill: &#39;white&#39;,
-      fontSize: 48,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-6));
-    // ラベル2
-    this.label2 = Label({
-      fill: &#39;white&#39;,
-      fontSize: 48,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(6));
-    // 円1
-    var circle1 = CircleShape({
-      fill: null,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(-2));
-    // ドラッグ可能にする
-    Draggable().attachTo(circle1);
-    // 円2
-    var circle2 = CircleShape({
-      fill: null,
-    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center(2));
-    // ドラッグ可能にする
-    Draggable().attachTo(circle2); 
-    // 矩形1
-    var rect1 = RectangleShape({
-      fill: null,
-    }).addChildTo(this).setPosition(this.gridX.center(-3), this.gridY.center());
-    Draggable().attachTo(rect1);
-    // 矩形2
-    var rect2 = RectangleShape({
-      fill: null,
-    }).addChildTo(this).setPosition(this.gridX.center(3), this.gridY.center());
-    Draggable().attachTo(rect2);
-    // canvas要素描画用
-    var elem  = PlainElement({
-      width: this.gridX.width,
-      height: this.gridY.width, 
+    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
     }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
-    // canvasパラメータ指定
-    elem.canvas.context.strokeStyle = &#39;white&#39;;
-    elem.canvas.context.lineWidth = 4;
-    // 線分の両端の座標
-    this.points = [Vector2(this.gridX.center(-3), this.gridY.center(-3)),
-                   Vector2(this.gridX.center(3), this.gridY.center(3))];
-    
-    var p1 = this.points[0];
-    var p2 = this.points[1];
-    // 線を引く
-    elem.canvas.drawLine(p1.x, p1.y, p2.x, p2.y);
-    // 参照用
-    this.circle1 = circle1;
-    this.circle2 = circle2;
-    this.rect1 = rect1;
-    this.rect2 = rect2;
-  },
-
-  update: function() {
-    var c1 = this.circle1;
-    var c2 = this.circle2;
-    var r1 = this.rect1;
-    var r2 = this.rect2;
-    // 円同士の当たり判定
-    if (Collision.testCircleCircle(c1, c2)) {
-      this.label2.text = &#39;Circle And Circle&#39;;
-      return;
-    }
-    // 矩形同士の当たり判定
-    if (Collision.testRectRect(r1, r2)) {
-      this.label2.text = &#39;Rect And Rect&#39;;
-      return;  
-    }
-    // 円と矩形の当たり判定
-    if (Collision.testCircleRect(c1, r1) || Collision.testCircleRect(c1, r2) ||
-        Collision.testCircleRect(c2, r1) || Collision.testCircleRect(c2, r2)) {
-          this.label2.text = &#39;Circle And Rect&#39;;
-          return;  
-    }
-
-    var p1 = this.points[0];
-    var p2 = this.points[1];
-    var bc1 = Circle(c1.x, c1.y, c1.radius);
-    var bc2 = Circle(c2.x, c2.y, c2.radius);
-    // 円と線分の当たり判定
-    if (Collision.testCircleLine(bc1, p1, p2) ||
-        Collision.testCircleLine(bc2, p1, p2)) {
-          this.label2.text = &#39;Circle And Line&#39;;
-          return;  
-    }
-    
-    this.label2.text = &#39;&#39;;
   },
 });
 /*
@@ -1399,243 +632,900 @@ phina.main(function() {
     // MainScene から開始
     startLabel: &#39;main&#39;,
   });
+  // fps表示
+  //app.enableStats();
   // 実行
   app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9872a6f6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
-
-&lt;p&gt;現在の&lt;strong&gt;Collision&lt;/strong&gt;クラスで大体の当たり判定の処理はできるかと思いますが、&lt;strong&gt;線分と線分&lt;/strong&gt;、&lt;strong&gt;矩形と線分&lt;/strong&gt;、&lt;strong&gt;多角形と多角形&lt;/strong&gt;といった当たり判定を追加しても良いかもしれません。ライブラリ開発に少しでもコントリビュートしていけるのが&lt;strong&gt;phina.js&lt;/strong&gt;の醍醐味でもあります。&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Flowを使った非同期処理の基本</title>
-      <link>https://alkn203.github.io/blog/2016/12/12/phina-advent-12th</link>
-      <pubDate>Mon, 12 Dec 2016 00:01:08 +0900</pubDate>
+      <title>フレームアニメーション速度を動的に変更する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/change-anim-speed</link>
+      <pubDate>Mon, 22 May 2017 22:15:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/2016/12/12/phina-advent-12th</guid>
+      <guid>https://alkn203.github.io/blog/2017/05/22/change-anim-speed</guid>
       <description>
 
-&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;p&gt;この記事は、&lt;a href=&#34;http://qiita.com/advent-calendar/2016/phinajs&#34;&gt;phina.js Advent Calendar 2016&lt;/a&gt; の12日目の記事です。&lt;/p&gt;
+&lt;p&gt;外部ファイルとして読み込まれたフレームアニメーション設定を後から変更する方法について説明します。
+今回はフレームアニメーションの速度を変更します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/change-anim-speed.gif&#34; alt=&#34;change-anim-speed.gif&#34; /&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;11日目：&lt;a href=&#34;http://qiita.com/tamochu3141/items/8094aec3348dc9a6ae9d&#34;&gt;phina.jsでの多人数参加型ゲームの作製 by tamochu3141さん&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;13日目：&lt;a href=&#34;http://qiita.com/minimo/items/27020fdb66375f1f868b&#34;&gt;phina.jsでGamePadを使う by minimoさん&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;下のサンプルでは、スプライトをタッチする度に速度が遅くなっていきます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;非同期処理&#34;&gt;非同期処理&lt;/h2&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d13981a6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;p&gt;基本的にプログラムはソースに書かれたの順序で実行されます。これは一般的に&lt;strong&gt;同期処理&lt;/strong&gt;と呼んでいます。
-一方で、処理の一部を特定の処理が終わるまで待ってから実行するなど、書かれた順序に依存しない処理を&lt;strong&gt;非同期処理&lt;/strong&gt;と呼んでおり、時間のかかる処理をバックグランドで実行させておく場合になどによく使用されます。&lt;/p&gt;
+&lt;h3 id=&#34;フレームアニメーション設定を外部ファイルに定義&#34;&gt;フレームアニメーション設定を外部ファイルに定義&lt;/h3&gt;
 
-&lt;h2 id=&#34;flowとは&#34;&gt;Flowとは&lt;/h2&gt;
+&lt;p&gt;フレームアニメーション設定は外部ファイルとして定義して、アセットとして読み込むこともできます。&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;には、&lt;strong&gt;Flow&lt;/strong&gt;という非同期処理を実装するためのクラスが用意されています。&lt;strong&gt;javascript&lt;/strong&gt;に詳しい人なら、&lt;strong&gt;EcmaScript6&lt;/strong&gt;の&lt;strong&gt;Promise&lt;/strong&gt;と言えばピンと来るかもしれません。(そう言う私もそれほど詳しくありませんが）
-&lt;strong&gt;Flow&lt;/strong&gt;はその&lt;strong&gt;Promise&lt;/strong&gt;と基本的に同じ機能を&lt;strong&gt;phina.js&lt;/strong&gt;で実装したものです。&lt;strong&gt;tmlib.js&lt;/strong&gt;時代も&lt;strong&gt;Flow&lt;/strong&gt;というクラス自体はありましたが、中身は大幅に違っています。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// フレームアニメーション情報
+  spritesheet: {
+    &#39;tomapiko_ss&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss&#39;,
+  },
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-advent-12th.png&#34; alt=&#34;15puzzle-tut-2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
+&lt;h3 id=&#34;アニメーションのfreaquencyプロパティ&#34;&gt;アニメーションのfreaquencyプロパティ&lt;/h3&gt;
 
-&lt;h2 id=&#34;flowの使い方&#34;&gt;Flowの使い方&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;      // アニメーション速度変更
+      anim.ss.getAnimation(&#39;left&#39;).frequency += 1;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;では、早速使い方を見ていきましょう。
-以下がサンプルコードです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;anim&lt;/strong&gt;を&lt;strong&gt;FrameAnimation&lt;/strong&gt;クラスのインスタンスとした場合、&lt;strong&gt;ss&lt;/strong&gt;で&lt;strong&gt;SpriteSheet&lt;/strong&gt;を参照することができます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;getAnimation&lt;/strong&gt;で指定したアニメーションを参照することができるので、そのプロパティ&lt;strong&gt;freaquency&lt;/strong&gt;の値を変更します。&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // フレームアニメーション情報
+  spritesheet: {
+    &#39;tomapiko_ss&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss&#39;,
+  },
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
   superClass: &#39;DisplayScene&#39;,
   // コンストラクタ
   init: function() {
     // 親クラス初期化
     this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-  
-    var self = this;
-    var duration = 2000;
-    // flow設定
-    var flow = Flow(function(resolve) {
-      RectangleShape()
-        .addChildTo(self)
-        .setPosition(self.gridX.center(), 0)
-        .tweener.to({y: self.gridY.center()}, duration)
-        .call(function() {
-          resolve();
-        });
-    });
-
-    var rect = RectangleShape().addChildTo(this);
-    rect.setPosition(self.gridX.center(1), self.gridY.center(1));
-    // 非同期処理(resoveで呼ばれる)
-    flow.then(function() {
-      rect.tweener.to({y: self.gridY.width}, duration).play();
-    });
-    // 同期処理
-    RectangleShape()
-      .addChildTo(self)
-      .setPosition(self.gridX.center(-1), self.gridY.center(1))
-      .tweener.to({y: self.gridY.width}, duration);
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;left&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // タッチを有効に
+    sprite.setInteractive(true);
+    // スプライトのタッチ処理
+    sprite.onpointend = function() {
+      // アニメーション速度変更
+      anim.ss.getAnimation(&#39;left&#39;).frequency += 1;
+    };
   },
 });
-// メイン
+/*
+ * メイン処理
+ */
 phina.main(function() {
+  // アプリケーションを生成
   var app = GameApp({
+    // MainScene から開始
     startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
   });
+  // fps表示
+  //app.enableStats();
+  // 実行
   app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/017e556a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;実行すると、左下の矩形は実行と同時に下に移動しますが、右下の矩形は上の矩形が止まってから移動を開始します。&lt;/p&gt;
-
-&lt;h2 id=&#34;コード説明&#34;&gt;コード説明&lt;/h2&gt;
-
-&lt;h3 id=&#34;flowの設定&#34;&gt;Flowの設定&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// flow設定
-var flow = Flow(function(resolve) {
-  RectangleShape()
-    .addChildTo(self)
-    .setPosition(self.gridX.center(), 0)
-    .tweener.to({y: self.gridY.center()}, duration)
-    .call(function() {
-      resolve(&#39;flow done&#39;);
-      console.log(message);
-    }).play();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;非同期で実行したい処理を&lt;strong&gt;Flow&lt;/strong&gt;内に記述します。&lt;/li&gt;
-&lt;li&gt;処理が終わった後は、&lt;strong&gt;resolve&lt;/strong&gt;を呼び出します。&lt;/li&gt;
-&lt;li&gt;上の例では、&lt;strong&gt;tweener&lt;/strong&gt;を使って一定時間かけて画面中央まで移動した後に、&lt;strong&gt;resolve&lt;/strong&gt;をコールするようにしています。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;後処理の記述&#34;&gt;後処理の記述&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// resoveで実行される
-flow.then(function() {
-  rect.tweener.to({y: self.gridY.width}, duration).play();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;resolve&lt;/strong&gt;が呼ばれると、&lt;strong&gt;Flow&lt;/strong&gt;クラスのメソッド&lt;strong&gt;then&lt;/strong&gt;が実行されるため、この中に後から実行したい処理を記述します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;複数のflowを取り扱う&#34;&gt;複数のFlowを取り扱う&lt;/h3&gt;
-
-&lt;p&gt;これまでは1つの&lt;strong&gt;Flow&lt;/strong&gt;オブジェクトを取り扱ってきました。
-1つであれば&lt;strong&gt;tweener&lt;/strong&gt;を使えば似たような処理が出来なくもないですが、さらに&lt;strong&gt;Flow&lt;/strong&gt;では複数の非同期処理をウォッチすることができます。
-サンプルコードは以下のとおりです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-  
-    var self = this;
-    var flows = [];
+</description>
+    </item>
     
-    (10).times(function(i) {
-      // flow作成
-      var flow = Flow(function(resolve) {
-        var x = Random.randint(64, self.gridX.width - 64);
-        var y = Random.randint(64, self.gridY.width - 64);
-        var duration = Random.randint(500, 5000); 
-        // ランダムな位置に円を作成
-        CircleShape()
-          .addChildTo(self)
-          .setPosition(x, y)
-          .tweener.fadeOut(duration) // フェードアウト
-          .call(function() {
-            resolve(i + &#39;done&#39;);
-          }).play();
-        });
-        // 配列に追加
-        flows.push(flow);
-    });
-    // 全てのflow実行後
-    Flow.all(flows).then(function(messages) {
-      console.log(&#39;all done!&#39;, messages);
-    });
+    <item>
+      <title>Sprite の進行方向に応じて表示する向きを変更する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/reverse-sprite-dir</link>
+      <pubDate>Mon, 22 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/22/reverse-sprite-dir</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;前回のTipsでは、スプライトは右に移動しても左方向を向いたままです。
+そこで今回は、スプライトの向きと移動方向が一致するようにします。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/reverse-sprite-dir.gif&#34; alt=&#34;reverse-sprite-dir.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3e687aa0&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトと画面端との判定&#34;&gt;スプライトと画面端との判定&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;関数内に処理を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+        // 向きを反転する
+        sprite.scaleX *= -1;
+      }
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;付け加えたのは1行だけで、&lt;strong&gt;sprite.scaleX *= -1&lt;/strong&gt;とすることで向きを反転させることができます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 初期速度
+    sprite.vx = -2;
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+        // 向きを反転する
+        sprite.scaleX *= -1;
+      }
+    };
   },
 });
-// メイン
+/*
+ * メイン処理
+ */
 phina.main(function() {
+  // アプリケーションを生成
   var app = GameApp({
+    // MainScene から開始
     startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
   });
+  // fps表示
+  //app.enableStats();
+  // 実行
   app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteを画面外に出ないように制御する</title>
+      <link>https://alkn203.github.io/blog/2017/05/20/bounce-move-sprite</link>
+      <pubDate>Sat, 20 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/20/bounce-move-sprite</guid>
+      <description>
 
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/9665202b&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
 
-&lt;ul&gt;
-&lt;li&gt;実行すると、ランダムな位置に円が表示されランダムな時間でフェードアウトします。&lt;/li&gt;
-&lt;li&gt;最後の円がフェードアウトしてから、メッセージがコンソールに表示されます。&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;前回のTipsではスプライトは左に向かって移動しますが、最後は画面端から消えてしまいます。そこで今回は、スプライトを画面外に出ないように制御する方法について説明します。&lt;/p&gt;
 
-&lt;h2 id=&#34;コード説明-1&#34;&gt;コード説明&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/bounce-move-sprite.gif&#34; alt=&#34;bounce-move-sprite.gif&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;flowの配列を作って追加する&#34;&gt;Flowの配列を作って追加する&lt;/h3&gt;
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d62ea254&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var flows = [];
+&lt;h3 id=&#34;スプライトと画面端との判定&#34;&gt;スプライトと画面端との判定&lt;/h3&gt;
 
-(10).times(function(i) {
-  // flow作成
-  var flow = Flow(function(resolve) {
-    var x = Random.randint(64, self.gridX.width - 64);
-    var y = Random.randint(64, self.gridY.width - 64);
-    var duration = Random.randint(500, 5000); 
-    // ランダムな位置に円を作成
-    CircleShape()
-      .addChildTo(self)
-      .setPosition(x, y)
-      .tweener.fadeOut(duration) // フェードアウト
-      .call(function() {
-        resolve(i + &#39;done&#39;);
-      }).play();
-    });
-    // 配列に追加
-    flows.push(flow);
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;関数内に処理を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 初期速度
+    sprite.vx = -2;
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+      }
+    };
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Flow&lt;/strong&gt;を格納する配列を作って&lt;strong&gt;push&lt;/strong&gt;しています。&lt;/li&gt;
+&lt;li&gt;関数の前で、後に計算し易いように初期速度を&lt;strong&gt;vx&lt;/strong&gt;という変数に一旦入れます。&lt;/li&gt;
+&lt;li&gt;画面左端は&lt;strong&gt;0&lt;/strong&gt;で、デフォルトで右端は&lt;strong&gt;640&lt;/strong&gt;ですので、スプライトの&lt;strong&gt;left&lt;/strong&gt;と&lt;strong&gt;right&lt;/strong&gt;でそれぞれ判定して、いずれかを超えた場合は速度を反転するようにしています。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;flow-allで全てのflowをウォッチ&#34;&gt;Flow.allで全てのFlowをウォッチ&lt;/h3&gt;
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// 全てのflow実行後
-Flow.all(flows).then(function(messages) {
-  console.log(&#39;all done!&#39;, messages);
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 初期速度
+    sprite.vx = -2;
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+      }
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteをフレームアニメーションしながら移動させる</title>
+      <link>https://alkn203.github.io/blog/2017/05/16/frame-move-sprite</link>
+      <pubDate>Tue, 16 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/16/frame-move-sprite</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライトをフレームアニメーションしながら移動させる方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/frame-move-sprite.gif&#34; alt=&#34;frame-move-sprite.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/762f81e9&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトを移動させる&#34;&gt;スプライトを移動させる&lt;/h3&gt;
+
+&lt;p&gt;フレームアニメーションは自動で管理されていますので、&lt;strong&gt;update&lt;/strong&gt;メソッド内に移動処理を書くだけで大丈夫です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x -= 2;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x -= 2;
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>スプライトにフレームアニメーションをさせる</title>
+      <link>https://alkn203.github.io/blog/2017/05/15/frameanimation-sprite</link>
+      <pubDate>Mon, 15 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/15/frameanimation-sprite</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライトにフレームアニメーションをさせる方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/frameanimation-sprite.gif&#34; alt=&#34;frameanimation-sprite.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/b8bd67e6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトシート画像を用意する&#34;&gt;スプライトシート画像を用意する&lt;/h3&gt;
+
+&lt;p&gt;スプライトシート画像とは、以下のようにアニメーション用のコマをシートの様に並べた画像です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/tomapiko_ss.png&#34; alt=&#34;tomapiko_ss.png&#34; /&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Flow.all&lt;/strong&gt;の引数にウォッチしたい&lt;strong&gt;Flow&lt;/strong&gt;の配列を代入すると、与えれられた全ての非同期処理の終了をウォッチすることができます。&lt;/li&gt;
-&lt;li&gt;今回は配列でまとめて代入しましたが、個々に&lt;strong&gt;Flow&lt;/strong&gt;を作成して代入することもできます。&lt;/li&gt;
+&lt;li&gt;上の画像だと、横6x縦3の計18コマから成り立っています。&lt;/li&gt;
+&lt;li&gt;ゲーム作成ではコマのことを&lt;strong&gt;フレーム&lt;/strong&gt;と呼ぶことが多いです。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+&lt;h3 id=&#34;スプライトシート画像を読み込む&#34;&gt;スプライトシート画像を読み込む&lt;/h3&gt;
 
-&lt;p&gt;説明不足のところもあるかもしれませんが、今回紹介した&lt;strong&gt;Flow&lt;/strong&gt;を使うことによって、&lt;strong&gt;phina.js&lt;/strong&gt;における非同期処理をよりスマートにコーディングすることができると思いますので、皆も色々と試してみて下さい。&lt;/p&gt;
+&lt;p&gt;通常の画像と同じように&lt;strong&gt;ASSETS&lt;/strong&gt;として読み込みます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;フレームアニメーション情報を読み込む&#34;&gt;フレームアニメーション情報を読み込む&lt;/h3&gt;
+
+&lt;p&gt;次に、フレームアニメーション情報が定義された&lt;strong&gt;json&lt;/strong&gt;形式のファイルを読み込みます。
+今回はファイルからではなく&lt;strong&gt;ASEETS&lt;/strong&gt;として、コード内に定義しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;frames&lt;/strong&gt;にアニメーションに使いたいフレーム番号の範囲を書きます。&lt;strong&gt;0&lt;/strong&gt;から始まることに注意してください。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;next&lt;/strong&gt;に次のアニメーションを指定します。同じ名前にするとループします。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;frequency&lt;/strong&gt;でアニメーションの間隔を指定します。小さくすれば速くなり、大きくすれば遅くなります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;スプライトシート画像の作成&#34;&gt;スプライトシート画像の作成&lt;/h3&gt;
+
+&lt;p&gt;スプライトシート画像は、通常の画像と同じく&lt;strong&gt;Sprite&lt;/strong&gt;クラスを使って作成しますが、アセット名の次の引数で&lt;strong&gt;１フレームの画像サイズ&lt;/strong&gt;を指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;フレームアニメーションの設定&#34;&gt;フレームアニメーションの設定&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定
+    anim.gotoAndPlay(&#39;walk&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;FrameAnimation&lt;/strong&gt;クラスのコンストラクタにスプライトシートのアセット名を指定して、スプライトにアタッチします。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;gotoAndPlay&lt;/strong&gt;関数にアニメーション名を指定すると、そのアニメーションが自動で再生されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteを透明にする</title>
+      <link>https://alkn203.github.io/blog/2017/05/14/alpha-sprite</link>
+      <pubDate>Sun, 14 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/14/alpha-sprite</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライトを透明にする方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/alpha-sprite.gif&#34; alt=&#34;alpha-sprite.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/21f2a1e1&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;スプライトを透明にする-alpha&#34;&gt;スプライトを透明にする（alpha）&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Sprite&lt;/strong&gt;の&lt;strong&gt;alpha&lt;/strong&gt;プロパティを変更します。初期値は&lt;strong&gt;1.0&lt;/strong&gt;で&lt;strong&gt;0&lt;/strong&gt;に近づくにつれて透明度が増していきます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 徐々に透明にする
+    sprite.update = function() {
+      if (sprite.alpha &amp;lt; 0.01) {
+        sprite.alpha = 0;
+        return;
+      }
+      sprite.alpha -= 0.01;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;スプライトの&lt;strong&gt;update&lt;/strong&gt;関数を利用して徐々に透明にしています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;canvas&lt;/strong&gt;の仕様で&lt;strong&gt;alpha&lt;/strong&gt;が負の値になると透明度が無効になるため、条件式で&lt;strong&gt;0&lt;/strong&gt;にしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;##サンプルコード&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト作成
+    var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(this);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 徐々に透明にする
+    sprite.update = function() {
+      if (sprite.alpha &amp;lt; 0.01) {
+        sprite.alpha = 0;
+        return;
+      }
+      sprite.alpha -= 0.01;
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteを拡大・縮小させる（setScale使用）</title>
+      <link>https://alkn203.github.io/blog/2017/05/13/resize-sprite</link>
+      <pubDate>Sat, 13 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/13/resize-sprite</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライト画像に拡大・縮小率を指定する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/resize-sprite.gif&#34; alt=&#34;resize-sprite.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/e7e075a0&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトの拡大-縮小-setscale&#34;&gt;スプライトの拡大・縮小（setScale）&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Sprite&lt;/strong&gt;の拡大・縮小率を指定するには&lt;strong&gt;setScale&lt;/strong&gt;関数を使用します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // スプライト拡大
+    sprite.setScale(2.0, 2.0);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;1.0&lt;/strong&gt;を基準として、小さければ縮小、大きければ拡大になります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト作成
+    var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(this);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // スプライト拡大
+    sprite.setScale(2.0, 2.0);
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    //startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteを回転させる（setRotation）</title>
+      <link>https://alkn203.github.io/blog/2017/05/13/rotate-sprite2</link>
+      <pubDate>Sat, 13 May 2017 20:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/13/rotate-sprite2</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライト画像の回転角度を指定する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/rotate-sprite2.gif&#34; alt=&#34;rotate-sprite2.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7af9afc0&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトの回転角度指定&#34;&gt;スプライトの回転角度指定&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Sprite&lt;/strong&gt;の回転角度を指定するには、&lt;strong&gt;setRotation&lt;/strong&gt;関数を使用します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// スプライト回転
+sprite.setRotation(45);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;引数はラジアン(radian)ではなく&lt;strong&gt;度(degree)&lt;/strong&gt;です。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko.png&#39;,
+  },
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;).addChildTo(this);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // スプライト回転
+    sprite.setRotation(45);
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

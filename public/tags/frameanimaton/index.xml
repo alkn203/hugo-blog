@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Frameanimaton on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/frameanimaton/</link>
+    <description>Recent content in Frameanimaton on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Mon, 22 May 2017 22:15:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/frameanimaton/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>フレームアニメーション速度を動的に変更する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/change-anim-speed</link>
+      <pubDate>Mon, 22 May 2017 22:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/22/change-anim-speed</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;外部ファイルとして読み込まれたフレームアニメーション設定を後から変更する方法について説明します。
+今回はフレームアニメーションの速度を変更します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/change-anim-speed.gif&#34; alt=&#34;change-anim-speed.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;下のサンプルでは、スプライトをタッチする度に速度が遅くなっていきます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d13981a6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;フレームアニメーション設定を外部ファイルに定義&#34;&gt;フレームアニメーション設定を外部ファイルに定義&lt;/h3&gt;
+
+&lt;p&gt;フレームアニメーション設定は外部ファイルとして定義して、アセットとして読み込むこともできます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// フレームアニメーション情報
+  spritesheet: {
+    &#39;tomapiko_ss&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss&#39;,
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;アニメーションのfreaquencyプロパティ&#34;&gt;アニメーションのfreaquencyプロパティ&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;      // アニメーション速度変更
+      anim.ss.getAnimation(&#39;left&#39;).frequency += 1;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;anim&lt;/strong&gt;を&lt;strong&gt;FrameAnimation&lt;/strong&gt;クラスのインスタンスとした場合、&lt;strong&gt;ss&lt;/strong&gt;で&lt;strong&gt;SpriteSheet&lt;/strong&gt;を参照することができます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;getAnimation&lt;/strong&gt;で指定したアニメーションを参照することができるので、そのプロパティ&lt;strong&gt;freaquency&lt;/strong&gt;の値を変更します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // フレームアニメーション情報
+  spritesheet: {
+    &#39;tomapiko_ss&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/tmss/tomapiko.tmss&#39;,
+  },
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;left&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // タッチを有効に
+    sprite.setInteractive(true);
+    // スプライトのタッチ処理
+    sprite.onpointend = function() {
+      // アニメーション速度変更
+      anim.ss.getAnimation(&#39;left&#39;).frequency += 1;
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Sprite の進行方向に応じて表示する向きを変更する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/reverse-sprite-dir</link>
+      <pubDate>Mon, 22 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/22/reverse-sprite-dir</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;前回のTipsでは、スプライトは右に移動しても左方向を向いたままです。
+そこで今回は、スプライトの向きと移動方向が一致するようにします。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/reverse-sprite-dir.gif&#34; alt=&#34;reverse-sprite-dir.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3e687aa0&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトと画面端との判定&#34;&gt;スプライトと画面端との判定&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;関数内に処理を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+        // 向きを反転する
+        sprite.scaleX *= -1;
+      }
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;付け加えたのは1行だけで、&lt;strong&gt;sprite.scaleX *= -1&lt;/strong&gt;とすることで向きを反転させることができます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 初期速度
+    sprite.vx = -2;
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+        // 向きを反転する
+        sprite.scaleX *= -1;
+      }
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteを画面外に出ないように制御する</title>
+      <link>https://alkn203.github.io/blog/2017/05/20/bounce-move-sprite</link>
+      <pubDate>Sat, 20 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/20/bounce-move-sprite</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;前回のTipsではスプライトは左に向かって移動しますが、最後は画面端から消えてしまいます。そこで今回は、スプライトを画面外に出ないように制御する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/bounce-move-sprite.gif&#34; alt=&#34;bounce-move-sprite.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d62ea254&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトと画面端との判定&#34;&gt;スプライトと画面端との判定&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;関数内に処理を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 初期速度
+    sprite.vx = -2;
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+      }
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;関数の前で、後に計算し易いように初期速度を&lt;strong&gt;vx&lt;/strong&gt;という変数に一旦入れます。&lt;/li&gt;
+&lt;li&gt;画面左端は&lt;strong&gt;0&lt;/strong&gt;で、デフォルトで右端は&lt;strong&gt;640&lt;/strong&gt;ですので、スプライトの&lt;strong&gt;left&lt;/strong&gt;と&lt;strong&gt;right&lt;/strong&gt;でそれぞれ判定して、いずれかを超えた場合は速度を反転するようにしています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 初期速度
+    sprite.vx = -2;
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x += sprite.vx;
+      // 画面端との判定
+      if (sprite.left &amp;lt; 0 || 640 &amp;lt; sprite.right) {
+        // 速度を反転する
+        sprite.vx *= -1;
+      }
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spriteをフレームアニメーションしながら移動させる</title>
+      <link>https://alkn203.github.io/blog/2017/05/16/frame-move-sprite</link>
+      <pubDate>Tue, 16 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/16/frame-move-sprite</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライトをフレームアニメーションしながら移動させる方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/frame-move-sprite.gif&#34; alt=&#34;frame-move-sprite.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/762f81e9&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトを移動させる&#34;&gt;スプライトを移動させる&lt;/h3&gt;
+
+&lt;p&gt;フレームアニメーションは自動で管理されていますので、&lt;strong&gt;update&lt;/strong&gt;メソッド内に移動処理を書くだけで大丈夫です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x -= 2;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;サンプルコード&#34;&gt;サンプルコード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定する
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+    // 更新イベント
+    sprite.update = function() {
+      // 移動
+      sprite.x -= 2;
+    };
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>スプライトにフレームアニメーションをさせる</title>
+      <link>https://alkn203.github.io/blog/2017/05/15/frameanimation-sprite</link>
+      <pubDate>Mon, 15 May 2017 21:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/15/frameanimation-sprite</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;スプライトにフレームアニメーションをさせる方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/frameanimation-sprite.gif&#34; alt=&#34;frameanimation-sprite.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/b8bd67e6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;スプライトシート画像を用意する&#34;&gt;スプライトシート画像を用意する&lt;/h3&gt;
+
+&lt;p&gt;スプライトシート画像とは、以下のようにアニメーション用のコマをシートの様に並べた画像です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/tomapiko_ss.png&#34; alt=&#34;tomapiko_ss.png&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;上の画像だと、横6x縦3の計18コマから成り立っています。&lt;/li&gt;
+&lt;li&gt;ゲーム作成ではコマのことを&lt;strong&gt;フレーム&lt;/strong&gt;と呼ぶことが多いです。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;スプライトシート画像を読み込む&#34;&gt;スプライトシート画像を読み込む&lt;/h3&gt;
+
+&lt;p&gt;通常の画像と同じように&lt;strong&gt;ASSETS&lt;/strong&gt;として読み込みます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;フレームアニメーション情報を読み込む&#34;&gt;フレームアニメーション情報を読み込む&lt;/h3&gt;
+
+&lt;p&gt;次に、フレームアニメーション情報が定義された&lt;strong&gt;json&lt;/strong&gt;形式のファイルを読み込みます。
+今回はファイルからではなく&lt;strong&gt;ASEETS&lt;/strong&gt;として、コード内に定義しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;frames&lt;/strong&gt;にアニメーションに使いたいフレーム番号の範囲を書きます。&lt;strong&gt;0&lt;/strong&gt;から始まることに注意してください。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;next&lt;/strong&gt;に次のアニメーションを指定します。同じ名前にするとループします。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;frequency&lt;/strong&gt;でアニメーションの間隔を指定します。小さくすれば速くなり、大きくすれば遅くなります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;スプライトシート画像の作成&#34;&gt;スプライトシート画像の作成&lt;/h3&gt;
+
+&lt;p&gt;スプライトシート画像は、通常の画像と同じく&lt;strong&gt;Sprite&lt;/strong&gt;クラスを使って作成しますが、アセット名の次の引数で&lt;strong&gt;１フレームの画像サイズ&lt;/strong&gt;を指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;フレームアニメーションの設定&#34;&gt;フレームアニメーションの設定&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定
+    anim.gotoAndPlay(&#39;walk&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;FrameAnimation&lt;/strong&gt;クラスのコンストラクタにスプライトシートのアセット名を指定して、スプライトにアタッチします。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;gotoAndPlay&lt;/strong&gt;関数にアニメーション名を指定すると、そのアニメーションが自動で再生されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+// アセット
+var ASSETS = {
+  // 画像
+  image: {
+    &#39;tomapiko&#39;: &#39;https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png&#39;,
+  },
+  // スプライトシート
+  spritesheet: {
+    &amp;quot;tomapiko_ss&amp;quot;:
+    {
+      // フレーム情報
+      &amp;quot;frame&amp;quot;: {
+        &amp;quot;width&amp;quot;: 64, // 1フレームの画像サイズ（横）
+        &amp;quot;height&amp;quot;: 64, // 1フレームの画像サイズ（縦）
+        &amp;quot;cols&amp;quot;: 6, // フレーム数（横）
+        &amp;quot;rows&amp;quot;: 3, // フレーム数（縦）
+      },
+      // アニメーション情報
+      &amp;quot;animations&amp;quot; : {
+        &amp;quot;walk&amp;quot;: { // アニメーション名
+          &amp;quot;frames&amp;quot;: [12,13,14], // フレーム番号範囲
+          &amp;quot;next&amp;quot;: &amp;quot;walk&amp;quot;, // 次のアニメーション
+          &amp;quot;frequency&amp;quot;: 6, // アニメーション間隔
+        },
+      }
+    },
+  }
+};
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // コンストラクタ
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // 背景
+    this.backgroundColor = &#39;skyblue&#39;;
+    // スプライト画像作成
+    var sprite = Sprite(&#39;tomapiko&#39;, 64, 64).addChildTo(this);
+    // スプライトにフレームアニメーションをアタッチ
+    var anim = FrameAnimation(&#39;tomapiko_ss&#39;).attachTo(sprite);
+    // アニメーションを指定
+    anim.gotoAndPlay(&#39;walk&#39;);
+    // 初期位置
+    sprite.x = this.gridX.center();
+    sprite.y = this.gridY.center();
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+    // アセット読み込み
+    assets: ASSETS,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

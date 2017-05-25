@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Clear on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/clear/</link>
+    <description>Recent content in Clear on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 02 May 2017 00:15:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/clear/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>特定の種類のイベントを全て削除する</title>
+      <link>https://alkn203.github.io/blog/2017/05/02/delete-specify-event</link>
+      <pubDate>Tue, 02 May 2017 00:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/02/delete-specify-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;特定の種類のイベントを全て削除する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;clear-メソッド&#34;&gt;clear メソッド&lt;/h3&gt;
+
+&lt;p&gt;特定のイベントの登録を全て削除するには、以下のように&lt;strong&gt;clear&lt;/strong&gt;を使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.clear(&#39;enterframe&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下の例では、&lt;strong&gt;enterframe&lt;/strong&gt;イベントを2つ登録しており、タッチするとそれが削除されるようにしています。結果として、&lt;strong&gt;shape&lt;/strong&gt;のサイズ拡大が止まります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 更新イベント登録
+    shape.on(&#39;enterframe&#39;, function() {
+      shape.width++;  
+    });
+    // 更新イベント更新登録
+    shape.on(&#39;enterframe&#39;, function() {
+      shape.height++;  
+    });
+    // タッチイベント登録
+    shape.on(&#39;pointstart&#39;, function() {
+      // 特定の種類のイベント登録を全て削除する
+      shape.clear(&#39;enterframe&#39;);
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d6d50d82&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

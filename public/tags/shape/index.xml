@@ -6,8 +6,203 @@
     <description>Recent content in Shape on Keep Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Wed, 26 Apr 2017 00:13:06 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 02 May 2017 00:15:06 +0900</lastBuildDate>
     <atom:link href="https://alkn203.github.io/blog/tags/shape/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>特定の種類のイベントを全て削除する</title>
+      <link>https://alkn203.github.io/blog/2017/05/02/delete-specify-event</link>
+      <pubDate>Tue, 02 May 2017 00:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/02/delete-specify-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;特定の種類のイベントを全て削除する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;clear-メソッド&#34;&gt;clear メソッド&lt;/h3&gt;
+
+&lt;p&gt;特定のイベントの登録を全て削除するには、以下のように&lt;strong&gt;clear&lt;/strong&gt;を使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.clear(&#39;enterframe&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下の例では、&lt;strong&gt;enterframe&lt;/strong&gt;イベントを2つ登録しており、タッチするとそれが削除されるようにしています。結果として、&lt;strong&gt;shape&lt;/strong&gt;のサイズ拡大が止まります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 更新イベント登録
+    shape.on(&#39;enterframe&#39;, function() {
+      shape.width++;  
+    });
+    // 更新イベント更新登録
+    shape.on(&#39;enterframe&#39;, function() {
+      shape.height++;  
+    });
+    // タッチイベント登録
+    shape.on(&#39;pointstart&#39;, function() {
+      // 特定の種類のイベント登録を全て削除する
+      shape.clear(&#39;enterframe&#39;);
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d6d50d82&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>一度だけ発行されるイベントを登録する</title>
+      <link>https://alkn203.github.io/blog/2017/05/02/one-event</link>
+      <pubDate>Tue, 02 May 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/02/one-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;登録したイベントを１回だけ発行する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;one-メソッド&#34;&gt;one メソッド&lt;/h3&gt;
+
+&lt;p&gt;１回だけ発行するイベントは&lt;strong&gt;one&lt;/strong&gt;を使って登録すると便利です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチ関数（一度のみ実行）
+    shape.one(&#39;pointstart&#39;, function() {
+        alert(&amp;quot;タッチされました&amp;quot;);
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/551c7449&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;実行すると、タッチイベントが1回だけしか発生しないのが分かります。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>登録したイベントを削除する</title>
+      <link>https://alkn203.github.io/blog/2017/04/30/delete-event</link>
+      <pubDate>Sun, 30 Apr 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/30/delete-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;登録したイベントを削除する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;イベントの削除&#34;&gt;イベントの削除&lt;/h2&gt;
+
+&lt;p&gt;イベントを削除するためには、&lt;strong&gt;off&lt;/strong&gt;メソッドを使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチ関数（一度のみ実行）
+    shape.one(&#39;pointstart&#39;, function() {
+        alert(&amp;quot;タッチされました&amp;quot;);
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8ce700ac&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;off&lt;/strong&gt;では第2引数に関数を指定する必要があるため、&lt;strong&gt;touchFunc&lt;/strong&gt;として別に定義しています。&lt;/li&gt;
+&lt;li&gt;実行すると、タッチイベントが1回だけしか発生しないのが分かります。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shapeに独自のイベントを登録する</title>
+      <link>https://alkn203.github.io/blog/2017/04/28/original-event</link>
+      <pubDate>Fri, 28 Apr 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/28/original-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対して独自のイベントを登録・発行する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;独自イベントの登録-on-イベント名&#34;&gt;独自イベントの登録（on + イベント名）&lt;/h3&gt;
+
+&lt;p&gt;独自イベントを登録するためには、&lt;strong&gt;on&lt;/strong&gt; + &lt;strong&gt;イベント名&lt;/strong&gt;の関数を&lt;strong&gt;shape&lt;/strong&gt;に実装します。
+今回はイベント名を&lt;strong&gt;hit&lt;/strong&gt;としたいので&lt;strong&gt;onhit&lt;/strong&gt;としました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;　　// hitイベント登録
+    shape.onhit = function() {
+      alert(&#39;Hit!&#39;);  
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;独自イベント発行&#34;&gt;独自イベント発行&lt;/h3&gt;
+
+&lt;p&gt;イベントの発行は、&lt;strong&gt;flare(イベント名)&lt;/strong&gt;で行います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;     // タッチイベント登録
+    shape.onpointstart = function() {
+      // hitイベント発行
+      shape.flare(&#39;hit&#39;);
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/c57dbef8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shapeのタッチイベントを登録する</title>
+      <link>https://alkn203.github.io/blog/2017/04/27/touch-shape</link>
+      <pubDate>Thu, 27 Apr 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/27/touch-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対してタッチイベントを登録する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;タッチイベント-onpointstart&#34;&gt;タッチイベント（onpointstart）&lt;/h3&gt;
+
+&lt;p&gt;タッチイベントを登録するためには、&lt;strong&gt;shape&lt;/strong&gt;の&lt;strong&gt;onpointstart&lt;/strong&gt;関数を実装します。
+その前に、&lt;strong&gt;setInteractive(true)&lt;/strong&gt;としてタッチ自体を有効にする必要があります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチ可能にする
+    shape.setInteractive(true);
+    // タッチイベント登録
+    shape.onpointstart = function() {
+      alert(&#39;タッチされました&#39;);
+    };
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/f25e4ad6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;タッチイベント登録-on-pointstart&#34;&gt;タッチイベント登録（on + pointstart）&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;on&lt;/strong&gt;と&lt;strong&gt;enterframe&lt;/strong&gt;の組み合わせの時と同様に複数のメソッドを登録可能で、その内容が登録順に実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチイベント登録
+    shape.on(&#39;pointstart&#39;, function() {
+      alert(&#39;タッチされました&#39;);
+    });
+    // タッチイベント登録
+    shape.on(&#39;pointstart&#39;, function() {
+      shape.backgroundColor = &#39;blue&#39;;  
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/fe769fe5&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Shapeの更新イベントを登録する</title>
@@ -478,6 +673,51 @@ phina.main(function() {
     </item>
     
     <item>
+      <title>Shapeを透明化・非表示にする</title>
+      <link>https://alkn203.github.io/blog/2017/04/22/frameanimation-shape</link>
+      <pubDate>Sat, 22 Apr 2017 12:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/22/frameanimation-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;を透明化または非表示にします。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-template.gif&#34; alt=&#34;phina-template.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7e1a191a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;shapeの透明化&#34;&gt;Shapeの透明化&lt;/h3&gt;
+
+&lt;p&gt;透明にするには&lt;strong&gt;alpha&lt;/strong&gt;プロパティに&lt;strong&gt;0&lt;/strong&gt;を指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.alpha = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;alpha&lt;/strong&gt;プロパティには&lt;strong&gt;0から1&lt;/strong&gt;が指定できるので、好みの透明度にすることができます。&lt;/p&gt;
+
+&lt;h3 id=&#34;shapeの非表示&#34;&gt;Shapeの非表示&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;では、透明化の他に&lt;strong&gt;hide&lt;/strong&gt;メソッドでオブジェクトそのものを非表示にすることができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.hide();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3df6a8b8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;再表示するには、&lt;strong&gt;show&lt;/strong&gt;メソッドを使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.show();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;透明化と非表示の違い&#34;&gt;透明化と非表示の違い&lt;/h3&gt;
+
+&lt;p&gt;透明化ではオブジェクト自体は存在するので、当たり判定やタッチ処理は有効ですが、非表示にした場合は描画自体されないので、当たり判定やタッチ処理は無効になります。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Shapeのサイズを指定する</title>
       <link>https://alkn203.github.io/blog/2017/04/22/resize-shape</link>
       <pubDate>Sat, 22 Apr 2017 00:28:06 +0900</pubDate>
@@ -534,60 +774,6 @@ phina.main(function() {
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/1a3e59cf&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Shapeの背景色を指定する</title>
-      <link>https://alkn203.github.io/blog/2017/04/22/background-shape</link>
-      <pubDate>Sat, 22 Apr 2017 00:28:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2017/04/22/background-shape</guid>
-      <description>
-
-&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;の背景色を指定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/background-shape.gif&#34; alt=&#34;backgruond-shape.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;背景色指定&#34;&gt;背景色指定&lt;/h2&gt;
-
-&lt;p&gt;背景色は&lt;strong&gt;backgroundColor&lt;/strong&gt;プロパティで指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.backgroundColor = &#39;red&#39;;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/57cab291&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;他の指定方法&#34;&gt;他の指定方法&lt;/h2&gt;
-
-&lt;h3 id=&#34;16進数&#34;&gt;16進数&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;css&lt;/strong&gt;と同様に指定できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.backgroundColor = &#39;#ffff00&#39;;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/6a5a9d1d&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;rgb&#34;&gt;RGB&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;Rgb&lt;/strong&gt;クラスを使って指定できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.backgroundColor = `rgb(0, 255, 255)`;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/cb651549&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;hsl&#34;&gt;hsl&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;css&lt;/strong&gt;と同様に指定できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.backgroundColor = `hsl(300, 75%, 50%)`;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/accb7a5a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -729,268 +915,6 @@ phina.main(function() {
   app.run();
 });
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>オブジェクトのグループ間移動のサンプル</title>
-      <link>https://alkn203.github.io/blog/2016/02/18/phina-group-change</link>
-      <pubDate>Thu, 18 Feb 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/02/18/phina-group-change</guid>
-      <description>
-
-&lt;h3 id=&#34;今回のサンプル&#34;&gt;今回のサンプル&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;phina.js&lt;/strong&gt;において複数のオブジェクトを取り扱う時には、自ずとグループ管理が必須になってきます。
-グループ管理には、&lt;strong&gt;DisplayElement&lt;/strong&gt;(旧CanvasElement)を活用しますが、例えば、AグループとBグループがあった場合&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;Aグループの要素.addChildTo(Bグループ);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;とすることで、&lt;strong&gt;要素はAグループからBグループへ移動&lt;/strong&gt;します。今回のサンプルでは、この仕様を利用して&lt;strong&gt;落下するオブジェクトと固定されたオブジェクトの当たり判定&lt;/strong&gt;を行っています。&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-group-change.png&#34; alt=&#34;phina-group-change&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;phina.globalize();
-// 定数
-var SCREEN_HEIGHT = 960;
-// メインシーン
-phina.define(&#39;MainScene&#39;, {
-  superClass: &#39;DisplayScene&#39;,
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;gray&#39;;
-    // 落下グループ
-    this.dynamicGroup = DisplayElement().addChildTo(this);
-    // 固定グループ
-    this.staticGroup = DisplayElement().addChildTo(this);
-  },
-  // 毎フレーム更新
-  update: function(app) {
-    // 一定フレーム毎にブロック作成
-    if (app.frame % 50 === 0) {
-      Block().addChildTo(this.dynamicGroup)
-             .setPosition(this.gridX.center(Random.randint(-1, 1)), 0)
-             .physical.gravity.set(0, 0.25);
-    }
-    
-    var self = this;
-    // 画面下との当たり判定
-    this.dynamicGroup.children.each(function(block) {
-      if (block.bottom &amp;gt; SCREEN_HEIGHT) {
-        block.disable();
-        // 位置補正
-        block.bottom = SCREEN_HEIGHT;
-        // 固定グループへ移動
-        block.addChildTo(self.staticGroup);
-      }  
-    });
-    // 固定ブロックとの当たり判定
-    this.dynamicGroup.children.each(function(block) {
-      self.staticGroup.children.each(function(target) {
-        if (block.hitTestElement(target)) {
-          block.disable();
-          block.bottom = target.top;
-          block.addChildTo(self.staticGroup);
-        }  
-      });
-    });
-  },
-});
-// ブロッククラス
-phina.define(&#39;Block&#39;, {
-  // RectangleShapeクラスを継承
-  superClass: &#39;RectangleShape&#39;,
-  // コンストラクタ
-  init: function() {
-    this.superInit({
-      width: 40,
-    });
-  },
-  // 固定ブロック仕様にする
-  disable: function() {
-    this.physical.gravity.y = 0;
-    this.physical.velocity.y = 0;
-    this.fill = &#39;silver&#39;;
-  },
-});
-// メイン
-phina.main(function() {
-  var app = GameApp({
-    startLabel: &#39;main&#39;,
-  });
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8421fe5a&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ShapeとCanvas描画を組み合わせたサンプル（時計Shape）</title>
-      <link>https://alkn203.github.io/blog/2016/02/16/phina-canvas2</link>
-      <pubDate>Tue, 16 Feb 2016 23:59:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/2016/02/16/phina-canvas2</guid>
-      <description>
-
-&lt;h3 id=&#34;今回の内容&#34;&gt;今回の内容&lt;/h3&gt;
-
-&lt;p&gt;以前に&lt;strong&gt;tmlib.js&lt;/strong&gt;で作った物を&lt;strong&gt;phina.js&lt;/strong&gt;にリファクタリングしてみました。
-&lt;strong&gt;Shape&lt;/strong&gt;を通常の&lt;strong&gt;canvas&lt;/strong&gt;と見なせますので、今回の時計に限らず、&lt;strong&gt;canvas&lt;/strong&gt;で描けるものは全て&lt;strong&gt;Shape&lt;/strong&gt;として取り扱うことができます。&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/phina-canvas2.png&#34; alt=&#34;phina-canvas2&#34; /&gt;&lt;/center&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
-phina.globalize();
-// 定数
-var SCREEN_WIDTH = 640;
-var SCREEN_HEIGHT = 960;
-var CENTER_X = SCREEN_WIDTH / 2;
-var CENTER_Y = SCREEN_HEIGHT / 2;
-/*
- * メインシーン
- */
-phina.define(&amp;quot;MainScene&amp;quot;, {
-  // 継承
-  superClass: &#39;DisplayScene&#39;,
-  // 初期化
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = &#39;black&#39;;
-    // 時計Shapeを作成
-    this.clock = ClockShape({
-      width: 320, // 幅
-      height: 320, // 高さ
-      fill: &amp;quot;silver&amp;quot;,
-      stroke: &amp;quot;gray&amp;quot;,
-    }).addChildTo(this).setPosition(320, 480);
-    
-    this.clock.physical.gravity.y = 0.5;
-  },
-  // 毎フレーム更新
-  update: function() {
-    // canvasを再描画するようにフラグを立てる
-    this.clock._dirtyDraw = true;
-    
-    if (this.clock.bottom &amp;gt; 960) {
-      this.clock.physical.force(0, -10);
-    }
-  },
-});
-/*
- * 時計Shapeクラス
- */ 
-phina.define(&#39;ClockShape&#39;, {
-  // Shapeクラスを継承
-  superClass: &#39;Shape&#39;,
-  // コンストラクタ
-  init: function(options) {
-    this.superInit(options);
-    this.backgroundColor = &#39;transparent&#39;;
-  },
-  // 自身のcanvasの描画内容
-  prerender: function(canvas) {
-    // 描画領域クリア
-    canvas.clear();
-    // スタイル指定
-    canvas.fillStyle = this.fill;
-    canvas.strokeStyle = this.stroke;
-    // 半径
-    var radius = this.radius;
-    // canvasの中心
-    var cx = 0;
-    var cy = 0;
-    var baseW = radius / 50;
-    // 時計盤描画
-    canvas.fillCircle(cx, cy, radius);
-    canvas.lineWidth = baseW;
-    canvas.strokeCircle(cx, cy, radius - 2);
-    canvas.lineWidth = baseW * 2;
-    canvas.strokeCircle(cx, cy, radius * 9.0 / 10);
-    // 目盛終点
-    var tr = radius * 8.3 / 10;
-    // 角度
-    var deg = 0;
-    canvas.lineWidth = baseW;
-    // 繰り返し
-    (60).times(function(i) {
-      // 目盛始点（5分毎の目盛か判定）
-      var fr = deg % 30 === 0 ? radius * 7.5 / 10 : radius * 8.0 / 10; 
-      // 目盛描画
-      var rad = Math.degToRad(deg);
-      var fromX = cx + fr * Math.cos(rad);
-      var fromY = cx + fr * Math.sin(rad);
-      var toX = cx + tr * Math.cos(rad);
-      var toY = cx + tr * Math.sin(rad);
-      canvas.drawLine(fromX, fromY, toX, toY);
-      // 角度を進める
-      deg += 6;
-    });
-    // 現在の時刻
-    var d = new Date();
-    // 時は12時間表記へ
-    var hour = d.getHours() - 12;
-    var minute = d.getMinutes();
-    var second = d.getSeconds();
-    // 短針の長さ
-    var hr = radius * 6.0 / 10;
-    // 長針、秒針の長さ
-    var sr = radius * 7.7 / 10;
-    // 角度補正値
-    var adj = 90;
-    // 短針描画
-    this.drawRadialLine(cx, cy, hr, hour * 30 + minute / 2 - adj);
-    // 長針描画
-    this.drawRadialLine(cx, cy, sr, minute * 6 - adj);
-    // 秒針描画
-    canvas.lineWidth = baseW / 2;
-    this.drawRadialLine(cx, cy, sr, second * 6 - adj);
-    this.drawRadialLine(cx, cy, -radius * 2.0 / 10, second * 6 - adj);
-    // 中央円
-    canvas.save();
-    canvas.fillStyle = canvas.strokeStyle;
-    canvas.fillCircle(cx, cy, radius * 0.4 / 10);
-    canvas.restore();
-  },
-  // 中心から放射状に線を描画
-  drawRadialLine: function(cx, cy, radius, deg) {
-    var rad = Math.degToRad(deg);
-    // 円周上の点計算
-    var toX = cx + radius * Math.cos(rad);
-    var toY = cy + radius * Math.sin(rad);
-    // 線描画
-    this.canvas.drawLine(cx, cy, toX, toY);
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    // MainScene から開始
-    startLabel: &#39;main&#39;,
-  });
-  // fps表示
-  //app.enableStats();
-  // 実行
-  app.run();
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/7610ec35&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

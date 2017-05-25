@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Event on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/event/</link>
+    <description>Recent content in Event on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 02 May 2017 00:15:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/event/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>特定の種類のイベントを全て削除する</title>
+      <link>https://alkn203.github.io/blog/2017/05/02/delete-specify-event</link>
+      <pubDate>Tue, 02 May 2017 00:15:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/02/delete-specify-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;特定の種類のイベントを全て削除する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;clear-メソッド&#34;&gt;clear メソッド&lt;/h3&gt;
+
+&lt;p&gt;特定のイベントの登録を全て削除するには、以下のように&lt;strong&gt;clear&lt;/strong&gt;を使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;shape.clear(&#39;enterframe&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下の例では、&lt;strong&gt;enterframe&lt;/strong&gt;イベントを2つ登録しており、タッチするとそれが削除されるようにしています。結果として、&lt;strong&gt;shape&lt;/strong&gt;のサイズ拡大が止まります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // 更新イベント登録
+    shape.on(&#39;enterframe&#39;, function() {
+      shape.width++;  
+    });
+    // 更新イベント更新登録
+    shape.on(&#39;enterframe&#39;, function() {
+      shape.height++;  
+    });
+    // タッチイベント登録
+    shape.on(&#39;pointstart&#39;, function() {
+      // 特定の種類のイベント登録を全て削除する
+      shape.clear(&#39;enterframe&#39;);
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d6d50d82&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>一度だけ発行されるイベントを登録する</title>
+      <link>https://alkn203.github.io/blog/2017/05/02/one-event</link>
+      <pubDate>Tue, 02 May 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/02/one-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;登録したイベントを１回だけ発行する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;one-メソッド&#34;&gt;one メソッド&lt;/h3&gt;
+
+&lt;p&gt;１回だけ発行するイベントは&lt;strong&gt;one&lt;/strong&gt;を使って登録すると便利です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチ関数（一度のみ実行）
+    shape.one(&#39;pointstart&#39;, function() {
+        alert(&amp;quot;タッチされました&amp;quot;);
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/551c7449&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;実行すると、タッチイベントが1回だけしか発生しないのが分かります。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>登録したイベントを削除する</title>
+      <link>https://alkn203.github.io/blog/2017/04/30/delete-event</link>
+      <pubDate>Sun, 30 Apr 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/30/delete-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;登録したイベントを削除する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;イベントの削除&#34;&gt;イベントの削除&lt;/h2&gt;
+
+&lt;p&gt;イベントを削除するためには、&lt;strong&gt;off&lt;/strong&gt;メソッドを使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチ関数（一度のみ実行）
+    shape.one(&#39;pointstart&#39;, function() {
+        alert(&amp;quot;タッチされました&amp;quot;);
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/8ce700ac&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;off&lt;/strong&gt;では第2引数に関数を指定する必要があるため、&lt;strong&gt;touchFunc&lt;/strong&gt;として別に定義しています。&lt;/li&gt;
+&lt;li&gt;実行すると、タッチイベントが1回だけしか発生しないのが分かります。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shapeに独自のイベントを登録する</title>
+      <link>https://alkn203.github.io/blog/2017/04/28/original-event</link>
+      <pubDate>Fri, 28 Apr 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/28/original-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対して独自のイベントを登録・発行する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;独自イベントの登録-on-イベント名&#34;&gt;独自イベントの登録（on + イベント名）&lt;/h3&gt;
+
+&lt;p&gt;独自イベントを登録するためには、&lt;strong&gt;on&lt;/strong&gt; + &lt;strong&gt;イベント名&lt;/strong&gt;の関数を&lt;strong&gt;shape&lt;/strong&gt;に実装します。
+今回はイベント名を&lt;strong&gt;hit&lt;/strong&gt;としたいので&lt;strong&gt;onhit&lt;/strong&gt;としました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;　　// hitイベント登録
+    shape.onhit = function() {
+      alert(&#39;Hit!&#39;);  
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;独自イベント発行&#34;&gt;独自イベント発行&lt;/h3&gt;
+
+&lt;p&gt;イベントの発行は、&lt;strong&gt;flare(イベント名)&lt;/strong&gt;で行います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;     // タッチイベント登録
+    shape.onpointstart = function() {
+      // hitイベント発行
+      shape.flare(&#39;hit&#39;);
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/c57dbef8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shapeのタッチイベントを登録する</title>
+      <link>https://alkn203.github.io/blog/2017/04/27/touch-shape</link>
+      <pubDate>Thu, 27 Apr 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/27/touch-shape</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対してタッチイベントを登録する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;タッチイベント-onpointstart&#34;&gt;タッチイベント（onpointstart）&lt;/h3&gt;
+
+&lt;p&gt;タッチイベントを登録するためには、&lt;strong&gt;shape&lt;/strong&gt;の&lt;strong&gt;onpointstart&lt;/strong&gt;関数を実装します。
+その前に、&lt;strong&gt;setInteractive(true)&lt;/strong&gt;としてタッチ自体を有効にする必要があります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチ可能にする
+    shape.setInteractive(true);
+    // タッチイベント登録
+    shape.onpointstart = function() {
+      alert(&#39;タッチされました&#39;);
+    };
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/f25e4ad6&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;タッチイベント登録-on-pointstart&#34;&gt;タッチイベント登録（on + pointstart）&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;on&lt;/strong&gt;と&lt;strong&gt;enterframe&lt;/strong&gt;の組み合わせの時と同様に複数のメソッドを登録可能で、その内容が登録順に実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // タッチイベント登録
+    shape.on(&#39;pointstart&#39;, function() {
+      alert(&#39;タッチされました&#39;);
+    });
+    // タッチイベント登録
+    shape.on(&#39;pointstart&#39;, function() {
+      shape.backgroundColor = &#39;blue&#39;;  
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/fe769fe5&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

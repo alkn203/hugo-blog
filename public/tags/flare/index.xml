@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Flare on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/flare/</link>
+    <description>Recent content in Flare on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Fri, 28 Apr 2017 00:13:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/flare/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Shapeに独自のイベントを登録する</title>
+      <link>https://alkn203.github.io/blog/2017/04/28/original-event</link>
+      <pubDate>Fri, 28 Apr 2017 00:13:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/04/28/original-event</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Shape&lt;/strong&gt;に対して独自のイベントを登録・発行する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/touch-shape.gif&#34; alt=&#34;touch-shape.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;独自イベントの登録-on-イベント名&#34;&gt;独自イベントの登録（on + イベント名）&lt;/h3&gt;
+
+&lt;p&gt;独自イベントを登録するためには、&lt;strong&gt;on&lt;/strong&gt; + &lt;strong&gt;イベント名&lt;/strong&gt;の関数を&lt;strong&gt;shape&lt;/strong&gt;に実装します。
+今回はイベント名を&lt;strong&gt;hit&lt;/strong&gt;としたいので&lt;strong&gt;onhit&lt;/strong&gt;としました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;　　// hitイベント登録
+    shape.onhit = function() {
+      alert(&#39;Hit!&#39;);  
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;独自イベント発行&#34;&gt;独自イベント発行&lt;/h3&gt;
+
+&lt;p&gt;イベントの発行は、&lt;strong&gt;flare(イベント名)&lt;/strong&gt;で行います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;     // タッチイベント登録
+    shape.onpointstart = function() {
+      // hitイベント発行
+      shape.flare(&#39;hit&#39;);
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/c57dbef8&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

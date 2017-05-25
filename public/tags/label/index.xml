@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Label on Keep Coding</title>
+    <link>https://alkn203.github.io/blog/tags/label/</link>
+    <description>Recent content in Label on Keep Coding</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Mon, 22 May 2017 22:18:06 +0900</lastBuildDate>
+    <atom:link href="https://alkn203.github.io/blog/tags/label/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ラベルのフォントを指定する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/change-label-font</link>
+      <pubDate>Mon, 22 May 2017 22:18:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/22/change-label-font</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;ラベルのフォントを変える方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/change-label-font.gif&#34; alt=&#34;change-label-font.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/e2928435&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;fontfamilyプロパティでフォントを指定する&#34;&gt;fontFamilyプロパティでフォントを指定する&lt;/h3&gt;
+
+&lt;p&gt;ラベルのフォントは&lt;strong&gt;fontFamily&lt;/strong&gt;で指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+      fill: &#39;blue&#39;,
+      fontFamily: &amp;quot;&#39;Consolas&#39;, &#39;Monaco&#39;, &#39;ＭＳ ゴシック&#39;&amp;quot;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+      fill: &#39;blue&#39;,
+      fontFamily: &amp;quot;&#39;Consolas&#39;, &#39;Monaco&#39;, &#39;ＭＳ ゴシック&#39;&amp;quot;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ラベルの文字色を指定する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/change-label-color</link>
+      <pubDate>Mon, 22 May 2017 22:17:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/22/change-label-color</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;ラベルの文字色を変える方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/change-label-color.gif&#34; alt=&#34;change-label-color.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/3e5bcda5&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;fillプロパティで色を指定する&#34;&gt;fillプロパティで色を指定する&lt;/h3&gt;
+
+&lt;p&gt;ラベルの文字色は&lt;strong&gt;fill&lt;/strong&gt;で指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+      fill: &#39;blue&#39;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+// グローバルに展開
+phina.globalize();
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+      fill: &#39;blue&#39;,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ラベル(文字)を表示する</title>
+      <link>https://alkn203.github.io/blog/2017/05/22/show-label</link>
+      <pubDate>Mon, 22 May 2017 22:16:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/2017/05/22/show-label</guid>
+      <description>
+
+&lt;h2 id=&#34;今回のtips&#34;&gt;今回のTips&lt;/h2&gt;
+
+&lt;p&gt;ゲーム制作には欠かせない&lt;strong&gt;ラベル&lt;/strong&gt;を表示する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://alkn203.github.io/blog/images/show-label.gif&#34; alt=&#34;show-label.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;&lt;a href=&#34;http://runstant.com/alkn203/projects/d23ea2d3&#34; target=&#34;_blank&#34;&gt;[runstantで確認]&lt;/a&gt;&lt;/center&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;上のサンプルでは、スプライトをタッチする度に速度が遅くなっていきます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;labelクラスを使ってラベル-文字-を表示する&#34;&gt;Labelクラスを使ってラベル（文字）を表示する&lt;/h3&gt;
+
+&lt;p&gt;以下がラベルを画面の中心に表示するコード例です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;text&lt;/strong&gt;プロパティが表示する文字です。他に&lt;strong&gt;fontSize&lt;/strong&gt;、&lt;strong&gt;fontWeight&lt;/strong&gt;、&lt;strong&gt;fontFamily&lt;/strong&gt;などのプロパティがあります。&lt;/p&gt;
+
+&lt;h3 id=&#34;コード&#34;&gt;コード&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// グローバルに展開
+phina.globalize();
+/*
+ * メインシーン
+ */
+phina.define(&amp;quot;MainScene&amp;quot;, {
+  // 継承
+  superClass: &#39;DisplayScene&#39;,
+  // 初期化
+  init: function() {
+    // 親クラス初期化
+    this.superInit();
+    // ラベル表示
+    Label({
+      text: &#39;Time is money&#39;,
+      fontSize: 64,
+    }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+  },
+});
+/*
+ * メイン処理
+ */
+phina.main(function() {
+  // アプリケーションを生成
+  var app = GameApp({
+    // MainScene から開始
+    startLabel: &#39;main&#39;,
+  });
+  // fps表示
+  //app.enableStats();
+  // 実行
+  app.run();
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
