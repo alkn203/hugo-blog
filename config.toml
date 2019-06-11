@@ -1,6 +1,6 @@
 baseurl = "https://alkn203.github.io/blog/"
 languageCode = "ja"
-title = "Keep Coding"
+title = "Keep On Coding"
 canonifyurls = true
 disqusShortname = "alkn203githubio"
 
@@ -10,11 +10,11 @@ tips = ":year/:month/:day/:filename"
 works = ":year/:month/:day/:filename"
 
 [Params]
-subtitle = "Tutorials And Tips For phina.js Users"
+subtitle = "javascriptのゲームライブラリphina.js、ゲーム制作、プログラミングなどについて"
 author = "alkn203"
 profileImage = "/images/alkn203.png"
-profileText = "javascript製のゲームライブラリphina.jsを愛用している趣味プログラマ。ファミコン世代。Hobbyist programmer/javascript/phina.js/retro games"
-copyrightYear = "2017"
+profileText = "javascript製のゲームライブラリphina.jsを愛用している趣味プログラマ。ファミコン世代。"
+copyrightYear = "2019"
 twitter = "alkn203"
 github = "alkn203"
 showsRSS = true
