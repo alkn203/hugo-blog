@@ -5,6 +5,7 @@ canonifyurls = true
 disqusShortname = "alkn203githubio"
 
 [permalinks]
+others = ":year/:month/:day/:filename"
 tutorials = ":year/:month/:day/:filename"
 tips = ":year/:month/:day/:filename"
 works = ":year/:month/:day/:filename"
@@ -18,6 +19,6 @@ copyrightYear = "2019"
 twitter = "alkn203"
 github = "alkn203"
 showsRSS = true
-analytics = "UA-69423602-1"
+#analytics = "UA-69423602-1"
 showsShare = true
 showsToc = true
