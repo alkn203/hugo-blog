@@ -2,27 +2,22 @@
 date = "2019-06-15T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js","tweener"]
-title = "【phina.js】パスに沿ったオブジェクト移動"
-eyecatch = "/images/movealongpath.gif"
+tags = ["phina.js","scroll","flow"]
+title = "【phina.js】色々なスクロールを試す"
+eyecatch = "/images/variousscroll.png"
 +++
 
-![movealongpath.gif](/images/movealongpath.gif)
-
-【phina.js】色々なスクロールを試す
->image
+![variousscroll.png](/images/variousscroll.png)
 
 ### はじめに
 横スクロールアクションゲームでは、画面のスクロール処理が欠かせませんが、スクロール１つでも結構奥が深いです。今回は**phina.js**で主だったスクロール処理を実装してみました。
 
 ### プレイヤー固定スクロール
 まずは以下のサンプルを確認してみて下さい。 プレイヤーの位置は画面の中心固定で画面がスクロールします。画面タッチでプレイヤーがジャンプして、障害物に当たると反転移動します。 中心には分かりやすいようにラインを表示しています。
->iframe
 
+<div class='runstant'><iframe src='https://runstant.com/alkn203/projects/3811749d/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
 
 [runstantで確認](https://runstant.com/alkn203/projects/3811749d)
-
-
 
 このパターンのスクロールは、特に難しい実装はないかと思います。 プレイヤーは動かさずに固定して、プレイヤー以外のオブジェクトをプレイヤーの移動方向と逆向きに動かすことで、プレイヤーが移動しているように見えます。
 
@@ -39,9 +34,10 @@ moveX: function() {
 
 ### 変則スクロール
 始めは固定スクロールと同じようにスクロールしますが、ステージの端に行くとスクロールが止まります。 そして、画面中央を超えると再びスクロールします。
-[f:id:alkn203:20190529180258g:plain]
 
-[http://runstant.com/alkn203/projects/b8219436:title]
+<div class='runstant'><iframe src='https://runstant.com/alkn203/projects/b8219436/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
+
+[runstantで確認](https://runstant.com/alkn203/projects/b8219436)
 
 このパターンのスクロールのポイントは、プレイヤー以外のオブジェクトの移動とプレイヤーのみの移動の切り替えです。 プレイヤーの横方向の状態をチェックする関数を用意して、その中で切り替えを行います。
 
@@ -75,8 +71,8 @@ moveX: function() {
        break;
 ```
 
-* 横方向の状態で、**MOVING_LEFT**はプレイヤーを固定して背景を動かす場合、**MOVING_LEFT_SELF**は背景を固定してプレイヤーを動かす場合としました。
-* **this.objectGroup.children.first**で一番最初（左端）のオブジェクトが参照できますので、それをfirstという変数に代入して位置の比較を行い、画面左端に現れたらプレイヤーのみの移動に切り替えています。
+-横方向の状態で、**MOVING_LEFT**はプレイヤーを固定して背景を動かす場合、**MOVING_LEFT_SELF**は背景を固定してプレイヤーを動かす場合としました。
+- **this.objectGroup.children.first**で一番最初（左端）のオブジェクトが参照できますので、それをfirstという変数に代入して位置の比較を行い、画面左端に現れたらプレイヤーのみの移動に切り替えています。
 
 ```javascript
 // 左移動中（プレイヤーのみ）
@@ -98,17 +94,15 @@ case 'MOVING_LEFT_SELF':
   }
   break;
 ```
-* 左向きのプレイヤーのみの移動からスクロールへの切り替えは、右端のオブジェクトが画面から見えなくなって、かつプレイヤーが画面中央を超えた時で判定しています。
-* これらの判定を右方向の移動に対しては、逆に行えば良いということになります。
+- 左向きのプレイヤーのみの移動からスクロールへの切り替えは、右端のオブジェクトが画面から見えなくなって、かつプレイヤーが画面中央を超えた時で判定しています。
+- これらの判定を右方向の移動に対しては、逆に行えば良いということになります。
 
 ### スライドスクロール
 初期のゼルダの伝説に代表されるように、プレイヤーが画面の端に到達すると画面がスライドしてスクロールするタイプです。
 
-[f:id:alkn203:20190529181107g:plain]
+<div class='runstant'><iframe src='https://runstant.com/alkn203/projects/534d0cda/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
 
-
-[http://runstant.com/alkn203/pojects/534d0cda:title]
-
+[runstantで確認](https://runstant.com/alkn203/pojects/534d0cda)
 
 このパターンのスクロールは、基本プレイヤーのみを動かしますが、画面をスライドする時には背景オブジェクトとプレイヤーをまとめて動かす必要があります。
 
@@ -136,9 +130,9 @@ case 'STOP':
   break;
 ```
 
-* プレイヤーが画面端に達したらプレイヤーの動きを止めて、**STOP**という新しい状態に遷移させます。
-* **STOP**では、その名の通り何も処理も行いません。
-* 新たに作った**scrollX**という関数を呼んで画面をスライドさせます。
+- プレイヤーが画面端に達したらプレイヤーの動きを止めて、**STOP**という新しい状態に遷移させます。
+- **STOP**では、その名の通り何も処理も行いません。
+- 新たに作った**scrollX**という関数を呼んで画面をスライドさせます。
 
 ```javascript
 // 画面スクロール
@@ -176,9 +170,9 @@ case 'STOP':
   },
 ```
 
-* スライドスクロールは、**tweener**と非同期処理を行うFlowで実装しています。
-* プレイヤーの移動方向とは逆に、オブジェクトとプレイヤーを１画面分まとめて動かしています。
-* **Flow**はオブジェクトとプレイヤーの分を作成して配列に追加して、**Flow.all**で全ての移動終了を検知した後に、プレイヤーを動かす状態に遷移させています。
-* **Flow**については、以下を参考にして下さい。
+- スライドスクロールは、**tweener**と非同期処理を行うFlowで実装しています。
+- プレイヤーの移動方向とは逆に、オブジェクトとプレイヤーを１画面分まとめて動かしています。
+- **Flow**はオブジェクトとプレイヤーの分を作成して配列に追加して、**Flow.all**で全ての移動終了を検知した後に、プレイヤーを動かす状態に遷移させています。
+- **Flow**については、以下を参考にして下さい。
 
-[https://qiita.com/alkn203/items/b39dc684d066b8a54ff2:embed:cite]
+[Flowで非同期処理を行う](https://qiita.com/alkn203/items/b39dc684d066b8a54ff2)
