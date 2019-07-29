@@ -2,7 +2,7 @@
 date = "2019-06-14T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js","tweener"]
+tags = ["phina.js","tweener","tips"]
 title = "【phina.js】パスに沿ったオブジェクト移動"
 eyecatch = "/images/movealongpath.gif"
 +++

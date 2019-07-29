@@ -2,7 +2,7 @@
 date = "2019-06-16T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js","アルゴリズム"]
+tags = ["phina.js","algorithm"]
 title = "【phina.js】バブルソートを視覚化してみた"
 eyecatch = "/images/bubble.gif"
 +++

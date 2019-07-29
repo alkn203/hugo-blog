@@ -2,7 +2,7 @@
 date = "2019-06-13T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js"]
+tags = ["phina.js","tips"]
 title = "【phina.js】上方向だけすり抜ける床を作る"
 eyecatch = "/images/onlyup.gif"
 +++

@@ -6,7 +6,7 @@ tags = ["phina.js"]
 title = "phina.js事始め"
 +++
 
-![logo](https://raw.githubusercontent.com/phinajs/phina.js/develop/logo.png)
+![logo.png](https://raw.githubusercontent.com/phinajs/phina.js/develop/logo.png)
 （ロゴはphinajs.comから借用）
 ### phina.jsについて
 
