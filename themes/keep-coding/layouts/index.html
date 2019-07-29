@@ -3,7 +3,8 @@
 <!-- Main Section Layout -->
 <main id="index" role="main" class="col span_9">
   <div class="article-header light-gray"><h1>Recent Articles</h1></div>
-  {{ range (.Paginator 10).Pages }}
+  {{ $paginator := .Paginate (where .Data.Pages "Type" "posts") }}
+  {{ range $paginator.Pages }}
     {{ .Render "summary" }}
   {{ end }}
 </main>
