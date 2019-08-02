@@ -3,7 +3,7 @@ date = "2019-06-19T20:55:06+09:00"
 draft = false
 slug = ""
 tags = ["phina.js","tutorials","shooting"]
-title = "【phina.js】2Dシューティングチュートリアル =プログラミングの準備="
+title = "【phina.js】2Dシューティングチュートリアル =第1回 プログラミングの準備="
 eyecatch = "/images/runstant.jpeg"
 +++
 
