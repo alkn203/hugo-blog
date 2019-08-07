@@ -6,10 +6,34 @@
     <description>Recent content in Tips on Keep On Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 15 Jun 2019 20:55:06 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 02 Jul 2019 20:55:06 +0900</lastBuildDate>
     
 	<atom:link href="https://alkn203.github.io/blog/tags/tips/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>【phina.js】Tweenerとupdateを使ってShapeの色を変化させる</title>
+      <link>https://alkn203.github.io/blog/posts/tips/phina-tweener-color/</link>
+      <pubDate>Tue, 02 Jul 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/posts/tips/phina-tweener-color/</guid>
+      <description>はじめに phina.jsのTweenerはキャラクターの動きをコントロールする場合などに使えるとても勉強な機能です。今回は、Tweenerとupdateを併用したTipsを紹介します。
+Shapeの色変化アニメーション Shapeの色を一定時間で変化させるアニメーションを作ります。方法は以下のとおりです。
+ Shapeにrgbの3つのプロパティを追加する。 Shapeのtweenerでプロパティの値を変化させる。 Shapeのupdateでプロパティの値を使って色を変化させる。  プロパティを追加する javascriptは、後から好きな時にプロパティを追加できる柔軟さを持ってますので、これを利用します。
+// shape var shape = StarShape().addChildTo(this); shape.setPosition(this.gridX.center(), this.gridY.center()); shape.radius = 128; // プロパティ追加 shape.r = 0; shape.g = 0; shape.b = 0;  プロパティ値を変化させる 追加したプロパティ値をtweenerで変化させます。
+// プロパティ値変化 shape.tweener.to({r: 10, g: 100, b: 200}, 2000) .to({r: 200, g: 200, b: 10}, 2000) .setLoop(true).play();  色を変化させる  updateでShapeの塗りつぶし色であるfillにプロパティ値を代入します。 rgbは文字列指定する必要があるため、formatメソッドの引数から渡しています。  // 毎フレーム処理 shape.update = function() { // 色指定 shape.fill = &#39;rgb({0}, {1}, {2})&#39;.</description>
+    </item>
+    
+    <item>
+      <title>【phina.js】タイマーゲージを作ってみた</title>
+      <link>https://alkn203.github.io/blog/posts/tips/phina-timergauge/</link>
+      <pubDate>Mon, 01 Jul 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/posts/tips/phina-timergauge/</guid>
+      <description>はじめに phina.jsには、体力ゲージの実装に使えるGaugeという便利なクラスが用意されています。今回、これをベースにゲームの制限時間表示によく見られるタイマーゲージを作ってみました。
+実行サンプル   runボタンを押すとゲージが経過時間で減っていきます。 pauseボタンで一時停止。recoverボタンで全回復します。  TimerGaugeクラスの仕様 以下のように、シーンに追加します。
+// タイマーゲージ var gauge = phina.ui.TimerGauge({ limitTime: 30, }).addChildTo(this); gauge.setPosition(this.gridX.center(), this.gridY.center());  プロパティ・メソッド・イベント    プロパティ 説明     limitTime 制限時間(秒） デフォルト値60       メソッド 説明     run タイマー作動   pause 一時停止   recover ゲージを満タンにする       イベント 説明     onfull ゲージが満タンになった時   onempty ゲージが空になった時     その他のプロパティは、継承元のphina.</description>
+    </item>
     
     <item>
       <title>【phina.js】色々なスクロールを試す</title>
