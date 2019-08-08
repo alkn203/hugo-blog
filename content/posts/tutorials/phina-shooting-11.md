@@ -7,7 +7,7 @@ title = "【phina.js】2Dシューティングチュートリアル =第11回 �
 eyecatch = "/images/11-title.gif"
 +++
 
-![11-title.gif](/images/11-title.gif)
+![11-title.gif](images/11-title.gif)
 
 ### はじめに
 [前回](/posts/tutorials/phina-shooting-10/)は、プレイヤーが画面外に出ないように移動に制限をかけました。今回は、タイトル画面を追加します。
