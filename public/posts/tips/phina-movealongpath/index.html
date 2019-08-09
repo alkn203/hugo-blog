@@ -15,7 +15,7 @@
 動作サンプル まずは以下のサンプルをご覧下さい。線に沿ってオブジェクトが移動します。
  runstantで確認
  オブジェクトの移動には、非同期処理が行えるtweenerを利用します。 tweenerの内部処理で使われている_add関数で処理をスタックさせています。 tweenerは、基本的にスタックされた順に非同期処理されるので、次の移動先である各頂点の位置を順番に与えることで、結果としてパスに沿った移動が可能になります。  課題  今回のサンプルでは、移動速度が一定になるように各頂点の距離が同一になるように配置しています。 一定の時間で移動させるのがtweenerの処理ですので、距離が変わると移動速度も変わることになります。 各頂点の距離に応じてdurationを変えると速度を一定にすることが可能になると思われますが、その辺は次回の課題にしたいと思います。  " />
-  <meta name="og:image" content="https://alkn203.github.io/blog/movealongpath.gif" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/posts/tips/phina-movealongpath/movealongpath.gif" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/posts/tips/phina-movealongpath/" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
@@ -46,6 +46,7 @@
       </div>
     </div>
   </header>
+
 
   
   <main id="single" role="main" class="col span_9">
@@ -209,6 +210,16 @@
   <a href="https://alkn203.github.io/blog/pages/about/">このブログについて</a>
   
   
+  <div class="article-header light-gray"><h1>Links</h1></div>
+  <ul class="none-ul">
+      <li>
+        <a href="https://qiita.com/alkn203/items/bca3222f6b409382fe20">
+        <div>phina.js Tips集</div>
+        </a>
+      </li>
+  </ul>
+  
+  
   <div class="article-header light-gray"><h1>Tags</h1></div>
     <ul class="none-ul">
       
@@ -315,7 +326,14 @@
 <script src="https://alkn203.github.io/blog/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
-
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-145323973-1', 'auto');
+	ga('send', 'pageview');
+</script>
 
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
