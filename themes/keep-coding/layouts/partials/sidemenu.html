@@ -7,20 +7,18 @@
     {{ with .Site.Params.author}}<div>{{ . }}</div>{{ end }}
     {{ with .Site.Params.profileText }}<div id="profile-text">{{ . }}</div>{{ end }}
   </div>
-  <!-- Social -->
-    <div id="social">
-      <table>
-        <tr>
-          {{ with .Site.Params.twitter }}<td><a href="https://twitter.com/{{ . }}" target="_blank"><i class="fa fa-twitter fa-2x"></i></a></td>{{ end }}
-          {{ with .Site.Params.facebook }}<td><a href="{{ . }}" target="_blank">Facebook</a></td>{{ end }}
-          {{ with .Site.Params.github }}<td><a href="https://github.com/{{ . }}" target="_blank"><i class="fa fa-github fa-2x"></i></a></td>{{ end }}
-        </tr>
-      </table>
-    </div>
+  <!-- Social Accounts -->
+  <div class="article-header light-gray"><h1>Social Accounts</h1></div>
+  <ul class="none-ul">
+    {{ with .Site.Params.twitter }}<li><a href="https://twitter.com/{{ . }}" target="_blank">Twitter</a></li>{{ end }}
+    {{ with .Site.Params.github }}<li><a href="https://github.com/{{ . }}" target="_blank">Github</a></li>{{ end }}
+    {{ with .Site.Params.qiita }}<li><a href="https://qiita.com/{{ . }}" target="_blank">Qiita</a></li>{{ end }}
+  </ul>
   <!-- About -->
   <div class="article-header light-gray"><h1>About this Site</h1></div>
-  <a href="{{ $.Site.BaseURL }}pages/about/">このブログについて</a>
-  
+  <ul class="none-ul">
+    <li><a href="{{ $.Site.BaseURL }}pages/about/">このブログについて</a></li>
+  </ul>
   <!-- Links -->
   <div class="article-header light-gray"><h1>Links</h1></div>
   <ul class="none-ul">
@@ -30,8 +28,7 @@
         </a>
       </li>
   </ul>
-  
-  <!-- Tags -->
+    <!-- Tags -->
   <div class="article-header light-gray"><h1>Tags</h1></div>
     <ul class="none-ul">
       {{ range $name, $value := $.Site.Taxonomies.tags }}

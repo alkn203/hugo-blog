@@ -3,6 +3,8 @@ languageCode = "ja"
 title = "Keep On Coding"
 canonifyurls = true
 disqusShortname = "alkn203githubio"
+pygmentsCodefences = true
+pygmentsUseClasses = true
 
 [permalinks]
 others = ":year/:month/:day/:filename"
@@ -18,7 +20,8 @@ profileText = "javascript製のゲームライブラリphina.jsを愛用して�
 copyrightYear = "2019"
 twitter = "alkn203"
 github = "alkn203"
+qiita = "alkn203"
 showsRSS = true
 analytics = "UA-145323973-1"
-showsShare = true
+showsShare = false
 showsToc = true
