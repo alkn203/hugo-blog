@@ -14,6 +14,7 @@ works = ":year/:month/:day/:filename"
 
 [Params]
 subtitle = "javascriptのゲームライブラリphina.js、ゲーム制作、プログラミングなどについて"
+description = "javascriptのゲームライブラリphina.jsに関するTipsやチュートリアル"
 author = "alkn203"
 profileImage = "/images/alkn203.png"
 profileText = "javascript製のゲームライブラリphina.jsを愛用している趣味プログラマ。ファミコン世代。"
@@ -25,3 +26,4 @@ showsRSS = true
 analytics = "UA-145323973-1"
 showsShare = false
 showsToc = true
+blogIcon = "images/alkn203.png"
