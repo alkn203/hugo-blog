@@ -3,7 +3,7 @@
   <!-- Profile -->
   <div class="article-header light-gray"><h1>About Me</h1></div>
   <div id="profile" style="text-align: center;">
-    {{ with .Site.Params.profileImage }}<div><img src="{{ . }}" width="64" height="64"></div>{{ end }}
+    <div><img src="https://www.gravatar.com/avatar/{{ md5 "alkn203@gmail.com" }}></div>
     {{ with .Site.Params.author}}<div>{{ . }}</div>{{ end }}
     {{ with .Site.Params.profileText }}<div id="profile-text">{{ . }}</div>{{ end }}
   </div>
