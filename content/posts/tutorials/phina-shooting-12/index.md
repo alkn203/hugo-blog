@@ -197,3 +197,6 @@ hitTestBulletToPlayer: function() {
 ```
 
 敵の弾とプレイヤーの当たり判定処理の中で**blinkTween**を参照して、**tweener**が動いている間は、無敵状態として扱い当たり判定をスキップしています。
+
+### リファレンス
+[[phina.js] 画像の色を変える方法(マスク)](https://qiita.com/simiraaaa/items/2a1cc7b0f92718d6eed6)
