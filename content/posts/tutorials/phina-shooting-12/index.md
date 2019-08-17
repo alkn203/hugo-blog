@@ -7,10 +7,12 @@ title = "【phina.js】2Dシューティングチュートリアル =第12回 �
 eyecatch = "playerblink.gif"
 +++
 
-![playerblink.gif](playerblink.gif)
-
 ### はじめに
 [前回](/posts/tutorials/phina-shooting-11/)は、ゲームのタイトルを作って、ゲーム開始と終了を実装しました。今回は、ゲームを面白くする要素として「敵のヒットポイント」と「弾の攻撃力」そして「敵ががダメージを受けた時のエフェクト」と「プレイヤーの無敵エフェクト」を実装します。
+
+![playerblink.gif](playerblink.gif)
+
+[実行サンプル(runstant)](https://runstant.com/alkn203/projects/41bb1cb1)
 
 ### 敵のHPとプレイヤーの攻撃力の実装
 
@@ -195,7 +197,3 @@ hitTestBulletToPlayer: function() {
 ```
 
 敵の弾とプレイヤーの当たり判定処理の中で**blinkTween**を参照して、**tweener**が動いている間は、無敵状態として扱い当たり判定をスキップしています。
-
-### 実行サンプル
-
-[実行サンプル(runstant)](https://runstant.com/alkn203/projects/41bb1cb1)

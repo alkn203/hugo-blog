@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="{{ .Title }}" />
   <meta name="og:description" content="{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.description }}{{ end }}" />
-  <meta name="og:image" content="{{ if .IsPage }}{{ .Permalink }}{{ .Params.eyecatch }}{{ else }}https://www.gravatar.com/avatar/{{ md5 . }}{{ end }}" />
+  <meta name="og:image" content="{{ if .IsPage }}{{ .Permalink }}{{ .Params.eyecatch }}{{ else }}https://www.gravatar.com/avatar/{{ md5 .Site.Params.gravatar }}{{ end }}" />
   <meta name="twitter:url" content="{{ .Permalink }}" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
