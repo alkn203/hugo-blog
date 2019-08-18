@@ -4,20 +4,11 @@
     <tr>
       <!-- Twitter -->
       <td>
-        <a href="http://twitter.com/intent/tweet?text={{ .Title }}&url={{ .Permalink }}" target="_blank"><i class="fa fa-twitter-square fa-2x twitter" aria-hidden="true"></i></a>
+        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="{{ .Title }}" data-hashtags="{{ .Site.Params.hashtags }}" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </td>
       <!-- Facebook -->
-      <td>
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ .Permalink }}" target="_blank"><i class="fa fa-facebook-square fa-2x facebook" aria-hidden="true"></i></a>
-      </td>
       <!-- Hatena Bookmark -->
-      <td>
-        <a href="http://b.hatena.ne.jp/entry/{{ .Permalink }}" target="_blank"><i class="fa fa-hatena hatena"></i></a>
-      </td>
       <!-- Pocket -->
-      <td>
-        <a href="https://getpocket.com/edit?url={{ .Permalink }}" target="_blank"><i class="fa fa-get-pocket fa-2x pocket" aria-hidden="true"></i></a>
-      </td>
     </tr>
   </table>
 </center>
