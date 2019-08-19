@@ -2,7 +2,7 @@
   <table>
     <tr>
       {{ $link := .Permalink }}
-      {{ with .Params.eyecatch }}<td rowspan="2"><a href="{{ $link }}"><img src="{{ $link }}{{ . }}" width="64" height="64"></a></td>{{ end }}
+      {{ with .Params.eyecatch }}<td rowspan="2"><a href="{{ $link }}"><img src="{{ $link }}{{ . }}"></a></td>{{ end }}
       <td><h2><a href="{{ $link }}">{{ .Title }} </a></h2></td>
     </tr>
     <tr><td>
