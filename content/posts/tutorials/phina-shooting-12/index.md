@@ -3,7 +3,7 @@ date = "2019-07-03T20:55:06+09:00"
 draft = false
 slug = ""
 tags = ["phina.js","tutorials","shooting"]
-title = "【phina.js】2Dシューティングチュートリアル =第12回 エネミーのHP、弾の攻撃力、アニメーションの追加="
+title = "【phina.js】2Dシューティングチュートリアル =第12回 エネミーのHP設定など="
 eyecatch = "playerblink.gif"
 +++
 
