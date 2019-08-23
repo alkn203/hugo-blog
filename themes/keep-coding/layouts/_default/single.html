@@ -28,6 +28,8 @@
     {{ if .Site.Params.showsShare }}
       {{ partial "share.html" . }}
     {{ end }}
+    <!-- show related articles> -->
+    {{ partial "related.html" . }}
 
     {{ partial "disqus.html" . }}
   </main>
