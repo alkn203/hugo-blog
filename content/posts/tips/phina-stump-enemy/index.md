@@ -3,7 +3,7 @@ date = "2019-08-23T20:55:06+09:00"
 draft = true
 slug = ""
 tags = ["phina.js","tips","map"]
-title = "【phina.js】敵を踏みつぶすエフェクトを作る"
+title = "【phina.js】マリオのような敵を踏みつぶすエフェクト"
 eyecatch = "mapdata.gif"
 +++
 
