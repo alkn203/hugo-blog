@@ -10,9 +10,9 @@
   <!-- Social Accounts -->
   <div class="article-header light-gray"><h1>Social Accounts</h1></div>
   <ul class="none-ul">
-    {{ with .Site.Params.twitter }}<li><a href="https://twitter.com/{{ . }}" target="_blank">Twitter</a></li>{{ end }}
-    {{ with .Site.Params.github }}<li><a href="https://github.com/{{ . }}" target="_blank">Github</a></li>{{ end }}
-    {{ with .Site.Params.qiita }}<li><a href="https://qiita.com/{{ . }}" target="_blank">Qiita</a></li>{{ end }}
+    {{ with .Site.Params.twitter }}<li><a href="https://twitter.com/{{ . }}" target="_blank">Twitter({{ . }})</a></li>{{ end }}
+    {{ with .Site.Params.github }}<li><a href="https://github.com/{{ . }}" target="_blank">Github({{ . }})</a></li>{{ end }}
+    {{ with .Site.Params.qiita }}<li><a href="https://qiita.com/{{ . }}" target="_blank">Qiita({{ . }})</a></li>{{ end }}
   </ul>
   <!-- About -->
   <div class="article-header light-gray"><h1>About this Site</h1></div>
@@ -28,7 +28,14 @@
         </a>
       </li>
   </ul>
-    <!-- Tags -->
+  <!-- Sections -->
+  <div class="article-header light-gray"><h1>Sections</h1></div>
+  <ul class="none-ul">
+    <li><a href="{{ $.Site.BaseURL }}tutorials/">Tutorials</a></li>
+    <li><a href="{{ $.Site.BaseURL }}tips/">Tips</a></li>
+    <li><a href="{{ $.Site.BaseURL }}works/">Works</a></li>
+  </ul>
+  <!-- Tags -->
   <div class="article-header light-gray"><h1>Tags</h1></div>
     <ul class="none-ul">
       {{ range $name, $value := $.Site.Taxonomies.tags }}

@@ -3,7 +3,7 @@
 <!-- Main Section Layout -->
 <main id="list" role="main" class="col span_9">
   <div class="article-header light-gray"><h1>{{ .Title }}</h1></div>
-  {{ $paginator := .Paginate (where .Data.Pages "Type" "posts") }}
+  {{ $paginator := .Paginate (where .Data.Pages "Section" "!=" "pages") }}
   {{ range $paginator.Pages }}
     {{ .Render "summary" }}
   {{ end }}
