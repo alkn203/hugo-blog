@@ -1,15 +1,17 @@
 +++
 date = "2019-08-24T20:55:06+09:00"
-draft = true
+draft = false
 slug = ""
 tags = ["origin"]
 title = "【phina.js】マリオのような敵を踏みつぶすエフェクト"
-eyecatch = "origin.gif"
+eyecatch = "stump.gif"
 +++
 
 ### はじめに
 マリオシリーズが代表するように、敵を上から踏みつけた時に敵が潰れるエフェクトはアクションゲームではもはや定番になっています。
 今回は、敵が潰れるエフェクトを**phina.js**で表現してみます。
+
+![stump.gif](stump.gif)
 
 [サンプルコード(runstant)](https://runstant.com/alkn203/projects/9ed08533)
 
