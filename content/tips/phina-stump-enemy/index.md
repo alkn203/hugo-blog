@@ -2,7 +2,7 @@
 date = "2019-08-24T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["origin"]
+tags = ["origin",]
 title = "【phina.js】マリオのような敵を踏みつぶすエフェクト"
 eyecatch = "stump.gif"
 +++
