@@ -2,7 +2,7 @@
 date = "2019-08-23T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js","tips","map"]
+tags = ["map"]
 title = "【phina.js】マップデータの読み込みにおける工夫"
 eyecatch = "mapdata.gif"
 +++
