@@ -2,7 +2,7 @@
 date = "2019-07-02T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js","tips","tweener"]
+tags = ["tweener"]
 title = "【phina.js】Tweenerとupdateを使ってShapeの色を変化させる"
 eyecatch = "tweenercolor.gif"
 +++
