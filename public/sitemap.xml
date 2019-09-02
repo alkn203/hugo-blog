@@ -163,6 +163,12 @@
   </url>
   
   <url>
+    <loc>https://alkn203.github.io/blog/tags/gauge/</loc>
+    <lastmod>2019-07-01T20:55:06+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://alkn203.github.io/blog/tags/github/</loc>
     <lastmod>2019-06-29T20:55:06+09:00</lastmod>
     <priority>0</priority>
@@ -206,7 +212,7 @@
   
   <url>
     <loc>https://alkn203.github.io/blog/tags/phina.js/</loc>
-    <lastmod>2019-08-23T20:55:06+09:00</lastmod>
+    <lastmod>2019-06-29T20:55:06+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -219,6 +225,12 @@
   <url>
     <loc>https://alkn203.github.io/blog/tags/scroll/</loc>
     <lastmod>2019-06-15T20:55:06+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://alkn203.github.io/blog/tags/shape/</loc>
+    <lastmod>2019-07-02T20:55:06+09:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -241,19 +253,7 @@
   </url>
   
   <url>
-    <loc>https://alkn203.github.io/blog/tags/tips/</loc>
-    <lastmod>2019-08-23T20:55:06+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://alkn203.github.io/blog/tutorials/</loc>
-    <lastmod>2019-07-03T20:55:06+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://alkn203.github.io/blog/tags/tutorials/</loc>
     <lastmod>2019-07-03T20:55:06+09:00</lastmod>
     <priority>0</priority>
   </url>
