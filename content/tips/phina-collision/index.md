@@ -2,7 +2,7 @@
 date = "2019-08-17T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js","tips","collision"]
+tags = ["collision"]
 title = "【phina.js】当たり判定について考える"
 eyecatch = "mycollision.gif"
 +++
