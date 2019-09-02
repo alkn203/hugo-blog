@@ -2,7 +2,7 @@
 date = "2019-06-15T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js","scroll","flow","tips"]
+tags = ["scroll","flow"]
 title = "【phina.js】色々なスクロールを試す"
 eyecatch = "variousscroll.png"
 +++
