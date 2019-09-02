@@ -2,7 +2,7 @@
 date = "2019-07-01T20:55:06+09:00"
 draft = false
 slug = ""
-tags = ["phina.js","extentions","tips"]
+tags = ["extentions","gauge"]
 title = "【phina.js】タイマーゲージを作ってみた"
 eyecatch = "timergauge.gif"
 +++
