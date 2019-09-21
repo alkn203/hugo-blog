@@ -13,7 +13,7 @@ eyecatch = "stump.gif"
 
 ![stump.gif](stump.gif)
 
-[サンプルコード(runstant)](https://runstant.com/alkn203/projects/9ed08533)
+[サンプルコード(runstant)](https://runstant.com/alkn203/projects/b748b651)
 
 ### オブジェクトのoriginを理解する
 * 今回の目的を実現するためには、オブジェクトの**origin**の変更を行う必要があります。
