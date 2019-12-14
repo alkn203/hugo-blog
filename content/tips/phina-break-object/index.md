@@ -12,7 +12,7 @@ eyecatch = "break.gif"
 
 ![break.gif](break.gif)
 
-[サンプルコード(runstant)](https://runstant.com/alkn203/projects/9ed08533)
+[サンプルコード(runstant)](https://runstant.com/alkn203/projects/d2add699)
 
 ### ブロックの動きを観察する
 マリオのブロックの壊れ方を自分なりに観察してみましたが、大まかには以下のように捉えることができると思います。
