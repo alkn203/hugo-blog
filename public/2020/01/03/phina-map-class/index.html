@@ -13,7 +13,7 @@
   <meta name="og:title" content="【phina.js】Mapクラスを作ってみた" />
   <meta name="og:description" content="はじめに RPGなどで固定マップで単純な当たり判定を行いたい時は、Mapデータと当たり判定データを読み込んで行う方法が便利です。 今回は、enchant.jsにあったMapクラスを参考にphina.js版を作ってみました。
 コンストラクタ var map = phina.util.Map({ tileWidth: 64, tileHeight: 64, imageName: &#39;tile&#39;, mapData: data, collisionData: collision, }).addChildTo(this);     プロパティ 説明     tileWidth タイルの幅   tileHeight タイルの高さ   imageName タイルセット画像の名前   mapData マップデータの2次元配列   collisionData タイル衝突判定用の2次元配列    メンバ関数    関数 説明     hitTest マップとの衝突判定を行う   checkTile タイルが何か調べる    おわりに 本格的なマップ作成には、タイルマップエディタが必要になってくると思いますが、簡単なゲームであれば、この程度の機能でも使えるのではないでしょうか。" />
-  <meta name="og:image" content="https://alkn203.github.io/blog/2020/01/03/phina-map-class/map.gif" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/2020/01/03/phina-map-class/map.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2020/01/03/phina-map-class/" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
@@ -111,6 +111,8 @@
 
 <p><strong>RPG</strong>などで固定マップで単純な当たり判定を行いたい時は、<strong>Map</strong>データと当たり判定データを読み込んで行う方法が便利です。
 今回は、<strong>enchant.js</strong>にあった<strong>Map</strong>クラスを参考に<strong>phina.js</strong>版を作ってみました。</p>
+
+<p><img src="map.png" alt="map.png" /></p>
 
 <h3 id="コンストラクタ">コンストラクタ</h3>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="nx">phina</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">Map</span><span class="p">({</span>
