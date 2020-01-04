@@ -1,15 +1,17 @@
 +++
-date = "2019-08-24T20:55:06+09:00"
-draft = true
+date = "2020-01-03T20:55:06+09:00"
+draft = false
 slug = ""
-tags = ["map"]
+tags = ["extension","map"]
 title = "【phina.js】Mapクラスを作ってみた"
-eyecatch = "map.gif"
+eyecatch = "map.png"
 +++
 
 ### はじめに
 **RPG**などで固定マップで単純な当たり判定を行いたい時は、**Map**データと当たり判定データを読み込んで行う方法が便利です。
-今回は、**enchant.js**にあったMapクラスを参考に**phina.js**版を作ってみました。
+今回は、**enchant.js**にあった**Map**クラスを参考に**phina.js**版を作ってみました。
+
+![map.png](map.png)
 
 ### コンストラクタ
 
@@ -39,6 +41,8 @@ var map = phina.util.Map({
 | hitTest       | マップとの衝突判定を行う       |
 | checkTile       | タイルが何か調べる       |
 
-
 ### おわりに
-実際には、敵が潰れたコマ画像を用意してフレームを切り替えた方が効率的かもしれません。今回の内容は、あくまでも１つのアプローチと考えてもらえればと思います。
+本格的なマップ作成には、タイルマップエディタが必要になってくると思いますが、簡単なゲームであれば、この程度の機能でも使えるのではないでしょうか。   
+
+* [サンプルコード(runstant)](https://runstant.com/alkn203/projects/05d8a818)
+* [ソースコード(Github)](https://github.com/alkn203/phina-extensions/blob/master/util/map.js) 
