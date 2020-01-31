@@ -12,10 +12,10 @@
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="【phina.js】シンプルなタイピングゲームを作ってみた" />
   <meta name="og:description" content="はじめに phina.jsでシンプルなタイピングゲームを作ってみました。 私はあまりタイピングは得意な方ではないので、自分で作っておきながら途中でゲームオーバーになりますが、皆さんはいかがでしょうか。
- 別画面でプレイする
+別画面でプレイする
  画面左から飛んでくるhtmlやjavascriptに関するキーワードをタイプするだけのゲームです。 大文字小文字は区別しません。  改定 2019/5/18 ライフ制導入
 カスタマイズ キーワード一覧は、以下のように改行区切りのテキストファイルからアセットとして読み込んでいますので、中身を変えれば 別言語のキーワードなどもイケると思います。
-// アセット var ASSETS = { // キーワード一覧  text: { &#39;keywords&#39;: &#39;https://cdn.jsdelivr.net/gh/alkn203/phina-games@master/keyword-shot/assets/keywords&#39;, }, };  リファレンス キーワード一覧は、以下のサイトから引用させて頂きました。ありがとうございます。 JavaScriptのキーワードとか予約語をかき集めてみた - Born Neet" />
+// アセットvar ASSETS = {// キーワード一覧 text: {&#39;keywords&#39;: &#39;https://cdn.jsdelivr.net/gh/alkn203/phina-games@master/keyword-shot/assets/keywords&#39;,},};リファレンス キーワード一覧は、以下のサイトから引用させて頂きました。ありがとうございます。 JavaScriptのキーワードとか予約語をかき集めてみた - Born Neet" />
   <meta name="og:image" content="https://alkn203.github.io/blog/2019/06/12/keywordshot/keywordshot.gif" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2019/06/12/keywordshot/" />
   <meta name="twitter:site" content="@alkn203" />
@@ -94,44 +94,31 @@
       
         <h2>Table of contents</h2>
         <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#はじめに">はじめに</a></li>
-<li><a href="#改定">改定</a></li>
-<li><a href="#カスタマイズ">カスタマイズ</a></li>
-<li><a href="#リファレンス">リファレンス</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#はじめに">はじめに</a></li>
+        <li><a href="#改定">改定</a></li>
+        <li><a href="#カスタマイズ">カスタマイズ</a></li>
+        <li><a href="#リファレンス">リファレンス</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
       
-      
-
-<p><img src="keywordshot.gif" alt="keywordshot" /></p>
-
+      <p><img src="keywordshot.gif" alt="keywordshot"></p>
 <h3 id="はじめに">はじめに</h3>
-
 <p><strong>phina.js</strong>でシンプルなタイピングゲームを作ってみました。
 私はあまりタイピングは得意な方ではないので、自分で作っておきながら途中でゲームオーバーになりますが、皆さんはいかがでしょうか。</p>
-
-<div class='runstant'><iframe src='https://alkn203.github.io/phina-games/keyword-shot/' width='100%' height='380px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
-
+<!-- raw HTML omitted -->
 <p><a href="https://alkn203.github.io/phina-games/keyword-shot/">別画面でプレイする</a></p>
-
 <ul>
 <li>画面左から飛んでくるhtmlやjavascriptに関するキーワードをタイプするだけのゲームです。</li>
 <li>大文字小文字は区別しません。</li>
 </ul>
-
 <h3 id="改定">改定</h3>
-
 <p>2019/5/18 ライフ制導入</p>
-
 <h3 id="カスタマイズ">カスタマイズ</h3>
-
 <p>キーワード一覧は、以下のように改行区切りのテキストファイルからアセットとして読み込んでいますので、中身を変えれば
 別言語のキーワードなどもイケると思います。</p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// アセット
@@ -139,11 +126,9 @@
   <span class="c1">// キーワード一覧
 </span><span class="c1"></span>  <span class="nx">text</span><span class="o">:</span> <span class="p">{</span>
     <span class="s1">&#39;keywords&#39;</span><span class="o">:</span> <span class="s1">&#39;https://cdn.jsdelivr.net/gh/alkn203/phina-games@master/keyword-shot/assets/keywords&#39;</span><span class="p">,</span>
-  <span class="p">},</span>
-<span class="p">};</span>
-</code></pre></div>
-<h3 id="リファレンス">リファレンス</h3>
-
+  <span class="p">}</span><span class="p">,</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h3 id="リファレンス">リファレンス</h3>
 <p>キーワード一覧は、以下のサイトから引用させて頂きました。ありがとうございます。
 <a href="http://blog.bornneet.com/Entry/262/">JavaScriptのキーワードとか予約語をかき集めてみた - Born Neet</a></p>
 
@@ -378,10 +363,10 @@
 
   <nav class="pagination-single" class="col span_3">>
     
-      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/06/11/about-phina/" rel="prev">phina.js事始め</a></span>
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/06/13/phina-up-direction/" rel="prev">【phina.js】上方向だけすり抜ける床を作る</a></span>
     
     
-      <span class="next"><a href="https://alkn203.github.io/blog/2019/06/13/phina-up-direction/" rel="next">【phina.js】上方向だけすり抜ける床を作る</a> &rarr;</span>
+      <span class="next"><a href="https://alkn203.github.io/blog/2019/06/11/about-phina/" rel="next">phina.js事始め</a> &rarr;</span>
     
   </nav>
 

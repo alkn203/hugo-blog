@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Phina.js on Keep On Coding</title>
+    <title>phina.js on Keep On Coding</title>
     <link>https://alkn203.github.io/blog/tags/phina.js/</link>
-    <description>Recent content in Phina.js on Keep On Coding</description>
+    <description>Recent content in phina.js on Keep On Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sat, 29 Jun 2019 20:55:06 +0900</lastBuildDate>
@@ -17,8 +17,7 @@
       <pubDate>Sat, 29 Jun 2019 20:55:06 +0900</pubDate>
       
       <guid>https://alkn203.github.io/blog/2019/06/29/quick-html5-game/</guid>
-      <description>はじめに ゲームを作っている人なら、自分の作ったゲームを誰かに遊んでもらいたい気持ちは皆持っていると思います。今では、スマホアプリを作ってプラットフォームで公開する方法がメジャーですが、初心者にとってはそう簡単にはいかないものです。
-中には、アプリ化まではいかないけど何かゲームを作って公開してみたいと思っている人もいるでしょう。そのようなときは、javascriptでhtml5ゲームを作って、Webで公開することをおすすめします。（もちろんhtml5ゲームをアプリ化する方法もあります）
+      <description>はじめに ゲームを作っている人なら、自分の作ったゲームを誰かに遊んでもらいたい気持ちは皆持っていると思います。今では、スマホアプリを作ってプラットフォームで公開する方法がメジャーですが、初心者にとってはそう簡単にはいかないものです。 中には、アプリ化まではいかないけど何かゲームを作って公開してみたいと思っている人もいるでしょう。そのようなときは、javascriptでhtml5ゲームを作って、Webで公開することをおすすめします。（もちろんhtml5ゲームをアプリ化する方法もあります）
 Webブラウザだけでゲームを作成して公開する 今回は、特別な環境構築をせずに、Webブラウザだけを使ってhtml5ゲームを公開する方法を紹介します。大まかな流れは以下のとおりです。
  runstantでコーティングする runstantプロジェクトをhtmlファイルとしてダウンロードする GitHubにゲーム公開用のリポジトリを作る htmlファイルをGitHubのリポジトリにアップロードする GitHubのリポジトリの設定でGitHub Pagesを有効にする  それでは、順番に説明していきます。
 runstantでコーティングする runstantは、phina.jsの生みの親であるphiさんが開発したWebブラウザ上で動くオンラインエディタで、ユーザー登録すれば誰でも利用することができます。 phina.jsの公式エディタでもあり、実際に様々なプログラムが作られて公開されています。
@@ -39,7 +38,7 @@ runstantプロジェクトをhtmlファイルとしてダウンロードする �
       
       <guid>https://alkn203.github.io/blog/2019/06/16/phina-bubblesort/</guid>
       <description>バブルソートとは プログラミングを習うと必ずと言って良いほど、最初に出てくるソートアルゴリズムです。 今回のコードは、phina.jsでそれを視覚化してみたものです。 要素が入れ替わる様子が何となく分かるかと思います。
-実行サンプル  コード バブルソート視覚化(runstant)
+実行サンプル コード バブルソート視覚化(runstant)
 参考にしたサイト バブルソート</description>
     </item>
     
@@ -50,10 +49,10 @@ runstantプロジェクトをhtmlファイルとしてダウンロードする �
       
       <guid>https://alkn203.github.io/blog/2019/06/12/keywordshot/</guid>
       <description>はじめに phina.jsでシンプルなタイピングゲームを作ってみました。 私はあまりタイピングは得意な方ではないので、自分で作っておきながら途中でゲームオーバーになりますが、皆さんはいかがでしょうか。
- 別画面でプレイする
+別画面でプレイする
  画面左から飛んでくるhtmlやjavascriptに関するキーワードをタイプするだけのゲームです。 大文字小文字は区別しません。  改定 2019/5/18 ライフ制導入
 カスタマイズ キーワード一覧は、以下のように改行区切りのテキストファイルからアセットとして読み込んでいますので、中身を変えれば 別言語のキーワードなどもイケると思います。
-// アセット var ASSETS = { // キーワード一覧  text: { &amp;#39;keywords&amp;#39;: &amp;#39;https://cdn.jsdelivr.net/gh/alkn203/phina-games@master/keyword-shot/assets/keywords&amp;#39;, }, };  リファレンス キーワード一覧は、以下のサイトから引用させて頂きました。ありがとうございます。 JavaScriptのキーワードとか予約語をかき集めてみた - Born Neet</description>
+// アセットvar ASSETS = {// キーワード一覧 text: {&amp;#39;keywords&amp;#39;: &amp;#39;https://cdn.jsdelivr.net/gh/alkn203/phina-games@master/keyword-shot/assets/keywords&amp;#39;,},};リファレンス キーワード一覧は、以下のサイトから引用させて頂きました。ありがとうございます。 JavaScriptのキーワードとか予約語をかき集めてみた - Born Neet</description>
     </item>
     
     <item>

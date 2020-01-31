@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Collision on Keep On Coding</title>
+    <title>collision on Keep On Coding</title>
     <link>https://alkn203.github.io/blog/tags/collision/</link>
-    <description>Recent content in Collision on Keep On Coding</description>
+    <description>Recent content in collision on Keep On Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sun, 01 Sep 2019 20:55:06 +0900</lastBuildDate>
@@ -20,7 +20,7 @@
       <description>はじめに 反射処理の代表的なものといえば、ブロック崩しですが、ブロック崩しの場合、縦方向あるいは横方向の速度の向きを反転させるだけなので、比較的簡単です。
 しかし、角度がついた壁に対して正確に反射させるにはそう単純にはいきません。この場合は、反射ベクトルというテクニックを使う必要があります。
 実行サンプル(runstant)
-Vecter2クラスのreflectメソッド  phina.jsのVector2クラスには、反射ベクトルを求めるreflectというメソッドが用意されています。 reflectメソッドは、入射ベクトルと壁の向きの法線ベクトルから反射ベクトルを求めて返します。  // 線分の法線ベクトル（正規化） var n = Vector2.normal(p1, p2).normalize(); // 反射ベクトル適用 var r = Vector2.reflect(this.circle.physical.velocity, n);  サンプルコード phina.globalize(); // メインシーン phina.define(&amp;#39;MainScene&amp;#39;, { superClass: &amp;#39;DisplayScene&amp;#39;, // コンストラクタ  init: function() { // 親クラス初期化  this.superInit(); // 背景色  this.backgroundColor = &amp;#39;#444&amp;#39;; // canvas要素描画用  var elem = PlainElement({ width: this.gridX.width, height: this.gridY.width, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center()); // canvasパラメータ指定  elem.canvas.context.strokeStyle = &amp;#39;white&amp;#39;; elem.canvas.context.lineWidth = 4; // 線分配列  this.</description>
+Vecter2クラスのreflectメソッド  phina.jsのVector2クラスには、反射ベクトルを求めるreflectというメソッドが用意されています。 reflectメソッドは、入射ベクトルと壁の向きの法線ベクトルから反射ベクトルを求めて返します。  // 線分の法線ベクトル（正規化） var n = Vector2.normal(p1, p2).normalize(); // 反射ベクトル適用 var r = Vector2.reflect(this.circle.physical.velocity, n); サンプルコード phina.globalize(); // メインシーン phina.define(&amp;#39;MainScene&amp;#39;, { superClass: &amp;#39;DisplayScene&amp;#39;, // コンストラクタ  init: function() { // 親クラス初期化  this.superInit(); // 背景色  this.backgroundColor = &amp;#39;#444&amp;#39;; // canvas要素描画用  var elem = PlainElement({ width: this.gridX.width, height: this.gridY.width, }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center()); // canvasパラメータ指定  elem.canvas.context.strokeStyle = &amp;#39;white&amp;#39;; elem.canvas.context.lineWidth = 4; // 線分配列  this.</description>
     </item>
     
     <item>
@@ -46,9 +46,9 @@ hitTestElementを使う  phina.app.Object2dを継承したクラスであれば�
       
       <guid>https://alkn203.github.io/blog/2019/06/13/phina-up-direction/</guid>
       <description>上方向だけすり抜ける床  ジャンプゲームなどでは、上方向にすり抜け下方向にはすり抜けない床がよくあります。 今回は基本的なジャンプ処理とともに、phina.jsを使って自分なりに実装してみました。  動作サンプル まずは以下のサンプルを確認して下さい。 画面タッチでキャラがジャンプしますが、上方向にはブロックをすり抜けて、その後に下のブロックに着地します。
- runstantで確認
+runstantで確認
 プレイヤーとブロックの作成 プレイヤーとブロックは、それぞれSpriteクラスを継承して作成しました。
-// プレイヤークラス phina.define(&amp;#39;Player&amp;#39;, { superClass: &amp;#39;Sprite&amp;#39;, // コンストラクタ  init: function() { // 親クラス初期化  this.superInit(&amp;#39;tomapiko&amp;#39;, SPRITE_SIZE, SPRITE_SIZE); // フレームアニメーションをアタッチ  this.anim = FrameAnimation(&amp;#39;tomapiko_ss&amp;#39;).attachTo(this); // スプライトシートのサイズにフィットさせない  this.anim.fit = false; // 縦移動速度  this.vy = 0; // サイズ変更  this.setSize(CHARA_SIZE, CHARA_SIZE); },   デフォルトのスプライトサイズから半分のサイズにしています。 FrameAnimationクラスのプロパティfitをfalseにしないと、スプライトシートに書いている切り出しサイズが適用されるので注意して下さい。  // ブロッククラス phina.define(&amp;#39;Block&amp;#39;, { superClass: &amp;#39;Sprite&amp;#39;, // コンストラクタ  init: function() { // 親クラス初期化  this.</description>
+// プレイヤークラスphina.define(&amp;#39;Player&amp;#39;, {superClass: &amp;#39;Sprite&amp;#39;,// コンストラクタ init: function() {// 親クラス初期化 this.superInit(&amp;#39;tomapiko&amp;#39;, SPRITE_SIZE, SPRITE_SIZE);// フレームアニメーションをアタッチ this.anim = FrameAnimation(&amp;#39;tomapiko_ss&amp;#39;).attachTo(this);// スプライトシートのサイズにフィットさせない this.anim.fit = false;// 縦移動速度 this.vy = 0;// サイズ変更 this.setSize(CHARA_SIZE, CHARA_SIZE);},  デフォルトのスプライトサイズから半分のサイズにしています。 FrameAnimationクラスのプロパティfitをfalseにしないと、スプライトシートに書いている切り出しサイズが適用されるので注意して下さい。  // ブロッククラスphina.define(&amp;#39;Block&amp;#39;, {superClass: &amp;#39;Sprite&amp;#39;,// コンストラクタ init: function() {// 親クラス初期化 this.</description>
     </item>
     
   </channel>

@@ -13,7 +13,7 @@
   <meta name="og:title" content="【phina.js】2Dシューティングチュートリアル =第1回 プログラミングの準備=" />
   <meta name="og:description" content="プログラミングの準備 今回のチュートリアルでは、phina.jsの公式オンラインエディタの位置付けであるRunstantを使用します。
 ひな形 私が普段使っている以下のひな形から作成します。
-// グローバルに展開 phina.globalize(); /* * メインシーン */ phina.define(&#34;MainScene&#34;, { // 継承  superClass: &#39;DisplayScene&#39;, // 初期化  init: function() { // 親クラス初期化  this.superInit(); // 背景色  this.backgroundColor = &#39;black&#39;; // 以下にコードを書いていく  }, // 毎フレーム更新処理  update: function() { // 以下にコードを書いていく  }, }); /* * メイン処理 */ phina.main(function() { // アプリケーションを生成  var app = GameApp({ // MainScene から開始  startLabel: &#39;main&#39;, }); // fps表示  //app." />
+// グローバルに展開phina.globalize();/** メインシーン*/phina.define(&#34;MainScene&#34;, {// 継承 superClass: &#39;DisplayScene&#39;,// 初期化 init: function() {// 親クラス初期化 this.superInit();// 背景色 this.backgroundColor = &#39;black&#39;;// 以下にコードを書いていく },// 毎フレーム更新処理 update: function() {// 以下にコードを書いていく  },});/** メイン処理*/phina.main(function() {// アプリケーションを生成 var app = GameApp({// MainScene から開始 startLabel: &#39;main&#39;,});// fps表示 //app." />
   <meta name="og:image" content="https://alkn203.github.io/blog/2019/06/19/phina-shooting-01/runstant.jpeg" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2019/06/19/phina-shooting-01/" />
   <meta name="twitter:site" content="@alkn203" />
@@ -90,31 +90,23 @@
       
         <h2>Table of contents</h2>
         <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#プログラミングの準備">プログラミングの準備</a></li>
-<li><a href="#ひな形">ひな形</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#プログラミングの準備">プログラミングの準備</a></li>
+        <li><a href="#ひな形">ひな形</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
       
-      
-
-<h3 id="プログラミングの準備">プログラミングの準備</h3>
-
+      <h3 id="プログラミングの準備">プログラミングの準備</h3>
 <p>今回のチュートリアルでは、<strong>phina.js</strong>の公式オンラインエディタの位置付けである<a href="https://runstant.com/">Runstant</a>を使用します。</p>
-
-<p><img src="runstant.jpeg" alt="runstant.jpeg" /></p>
-
+<p><img src="runstant.jpeg" alt="runstant.jpeg"></p>
 <h3 id="ひな形">ひな形</h3>
-
 <p>私が普段使っている以下の<a href="https://qiita.com/alkn203/items/09274a38a0f31ee0c1d5">ひな形</a>から作成します。</p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// グローバルに展開
-</span><span class="c1"></span><span class="nx">phina</span><span class="p">.</span><span class="nx">globalize</span><span class="p">();</span>
+</span><span class="c1"></span><span class="nx">phina</span><span class="p">.</span><span class="nx">globalize</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
 <span class="cm">/*
 </span><span class="cm"> * メインシーン
 </span><span class="cm"> */</span>
@@ -122,32 +114,32 @@
   <span class="c1">// 継承
 </span><span class="c1"></span>  <span class="nx">superClass</span><span class="o">:</span> <span class="s1">&#39;DisplayScene&#39;</span><span class="p">,</span>
   <span class="c1">// 初期化
-</span><span class="c1"></span>  <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class="c1"></span>  <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// 親クラス初期化
-</span><span class="c1"></span>    <span class="k">this</span><span class="p">.</span><span class="nx">superInit</span><span class="p">();</span>
+</span><span class="c1"></span>    <span class="k">this</span><span class="p">.</span><span class="nx">superInit</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
     <span class="c1">// 背景色
 </span><span class="c1"></span>    <span class="k">this</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">;</span>
     <span class="c1">// 以下にコードを書いていく
-</span><span class="c1"></span>  <span class="p">},</span>
+</span><span class="c1"></span>  <span class="p">}</span><span class="p">,</span>
   <span class="c1">// 毎フレーム更新処理
-</span><span class="c1"></span>  <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class="c1"></span>  <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// 以下にコードを書いていく  
-</span><span class="c1"></span>  <span class="p">},</span>
-<span class="p">});</span>
+</span><span class="c1"></span>  <span class="p">}</span><span class="p">,</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
 <span class="cm">/*
 </span><span class="cm"> * メイン処理
 </span><span class="cm"> */</span>
-<span class="nx">phina</span><span class="p">.</span><span class="nx">main</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="nx">phina</span><span class="p">.</span><span class="nx">main</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// アプリケーションを生成
-</span><span class="c1"></span>  <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">GameApp</span><span class="p">({</span>
+</span><span class="c1"></span>  <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">GameApp</span><span class="p">(</span><span class="p">{</span>
     <span class="c1">// MainScene から開始
 </span><span class="c1"></span>    <span class="nx">startLabel</span><span class="o">:</span> <span class="s1">&#39;main&#39;</span><span class="p">,</span>
-  <span class="p">});</span>
+  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
   <span class="c1">// fps表示
 </span><span class="c1"></span>  <span class="c1">//app.enableStats();
 </span><span class="c1"></span>  <span class="c1">// 実行
-</span><span class="c1"></span>  <span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">();</span>
-<span class="p">});</span>
+</span><span class="c1"></span>  <span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
 </code></pre></div>
     </article>
 
@@ -373,10 +365,10 @@
 
   <nav class="pagination-single" class="col span_3">>
     
-      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/06/16/phina-bubblesort/" rel="prev">【phina.js】バブルソートを視覚化してみた</a></span>
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/06/20/phina-shooting-02/" rel="prev">【phina.js】2Dシューティングチュートリアル =第2回 スプライトとフレームアニメーション=</a></span>
     
     
-      <span class="next"><a href="https://alkn203.github.io/blog/2019/06/20/phina-shooting-02/" rel="next">【phina.js】2Dシューティングチュートリアル =第2回 スプライトとフレームアニメーション=</a> &rarr;</span>
+      <span class="next"><a href="https://alkn203.github.io/blog/2019/06/16/phina-bubblesort/" rel="next">【phina.js】バブルソートを視覚化してみた</a> &rarr;</span>
     
   </nav>
 

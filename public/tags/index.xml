@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Keep On Coding</title>
@@ -6,49 +6,13 @@
     <description>Recent content in Tags on Keep On Coding</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 16 Jun 2019 20:55:06 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 03 Jan 2020 20:55:06 +0900</lastBuildDate>
     
 	<atom:link href="https://alkn203.github.io/blog/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Algorithm</title>
-      <link>https://alkn203.github.io/blog/tags/algorithm/</link>
-      <pubDate>Sun, 16 Jun 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/algorithm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Array</title>
-      <link>https://alkn203.github.io/blog/tags/array/</link>
-      <pubDate>Tue, 31 Dec 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/array/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Canvas</title>
-      <link>https://alkn203.github.io/blog/tags/canvas/</link>
-      <pubDate>Wed, 18 Sep 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/canvas/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Collision</title>
-      <link>https://alkn203.github.io/blog/tags/collision/</link>
-      <pubDate>Sun, 01 Sep 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/collision/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Extension</title>
+      <title>extension</title>
       <link>https://alkn203.github.io/blog/tags/extension/</link>
       <pubDate>Fri, 03 Jan 2020 20:55:06 +0900</pubDate>
       
@@ -57,7 +21,97 @@
     </item>
     
     <item>
-      <title>Extentions</title>
+      <title>map</title>
+      <link>https://alkn203.github.io/blog/tags/map/</link>
+      <pubDate>Fri, 03 Jan 2020 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/map/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>array</title>
+      <link>https://alkn203.github.io/blog/tags/array/</link>
+      <pubDate>Tue, 31 Dec 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/array/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>canvas</title>
+      <link>https://alkn203.github.io/blog/tags/canvas/</link>
+      <pubDate>Wed, 18 Sep 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/canvas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>collision</title>
+      <link>https://alkn203.github.io/blog/tags/collision/</link>
+      <pubDate>Sun, 01 Sep 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/collision/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>reflect</title>
+      <link>https://alkn203.github.io/blog/tags/reflect/</link>
+      <pubDate>Sun, 01 Sep 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/reflect/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vecter2</title>
+      <link>https://alkn203.github.io/blog/tags/vecter2/</link>
+      <pubDate>Sun, 01 Sep 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/vecter2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>origin</title>
+      <link>https://alkn203.github.io/blog/tags/origin/</link>
+      <pubDate>Sat, 24 Aug 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/origin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shooting</title>
+      <link>https://alkn203.github.io/blog/tags/shooting/</link>
+      <pubDate>Wed, 03 Jul 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/shooting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shape</title>
+      <link>https://alkn203.github.io/blog/tags/shape/</link>
+      <pubDate>Tue, 02 Jul 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/shape/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tweener</title>
+      <link>https://alkn203.github.io/blog/tags/tweener/</link>
+      <pubDate>Tue, 02 Jul 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/tweener/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>extentions</title>
       <link>https://alkn203.github.io/blog/tags/extentions/</link>
       <pubDate>Mon, 01 Jul 2019 20:55:06 +0900</pubDate>
       
@@ -66,25 +120,7 @@
     </item>
     
     <item>
-      <title>Flow</title>
-      <link>https://alkn203.github.io/blog/tags/flow/</link>
-      <pubDate>Sat, 15 Jun 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/flow/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Game</title>
-      <link>https://alkn203.github.io/blog/tags/game/</link>
-      <pubDate>Wed, 12 Jun 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/game/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Gauge</title>
+      <title>gauge</title>
       <link>https://alkn203.github.io/blog/tags/gauge/</link>
       <pubDate>Mon, 01 Jul 2019 20:55:06 +0900</pubDate>
       
@@ -102,7 +138,7 @@
     </item>
     
     <item>
-      <title>Html5</title>
+      <title>html5</title>
       <link>https://alkn203.github.io/blog/tags/html5/</link>
       <pubDate>Sat, 29 Jun 2019 20:55:06 +0900</pubDate>
       
@@ -111,25 +147,7 @@
     </item>
     
     <item>
-      <title>Map</title>
-      <link>https://alkn203.github.io/blog/tags/map/</link>
-      <pubDate>Fri, 03 Jan 2020 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/map/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Origin</title>
-      <link>https://alkn203.github.io/blog/tags/origin/</link>
-      <pubDate>Sat, 24 Aug 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/origin/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Phina.js</title>
+      <title>phina.js</title>
       <link>https://alkn203.github.io/blog/tags/phina.js/</link>
       <pubDate>Sat, 29 Jun 2019 20:55:06 +0900</pubDate>
       
@@ -138,16 +156,7 @@
     </item>
     
     <item>
-      <title>Reflect</title>
-      <link>https://alkn203.github.io/blog/tags/reflect/</link>
-      <pubDate>Sun, 01 Sep 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/reflect/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Runstant</title>
+      <title>runstant</title>
       <link>https://alkn203.github.io/blog/tags/runstant/</link>
       <pubDate>Sat, 29 Jun 2019 20:55:06 +0900</pubDate>
       
@@ -156,7 +165,25 @@
     </item>
     
     <item>
-      <title>Scroll</title>
+      <title>algorithm</title>
+      <link>https://alkn203.github.io/blog/tags/algorithm/</link>
+      <pubDate>Sun, 16 Jun 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/algorithm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>flow</title>
+      <link>https://alkn203.github.io/blog/tags/flow/</link>
+      <pubDate>Sat, 15 Jun 2019 20:55:06 +0900</pubDate>
+      
+      <guid>https://alkn203.github.io/blog/tags/flow/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>scroll</title>
       <link>https://alkn203.github.io/blog/tags/scroll/</link>
       <pubDate>Sat, 15 Jun 2019 20:55:06 +0900</pubDate>
       
@@ -165,38 +192,11 @@
     </item>
     
     <item>
-      <title>Shape</title>
-      <link>https://alkn203.github.io/blog/tags/shape/</link>
-      <pubDate>Tue, 02 Jul 2019 20:55:06 +0900</pubDate>
+      <title>game</title>
+      <link>https://alkn203.github.io/blog/tags/game/</link>
+      <pubDate>Wed, 12 Jun 2019 20:55:06 +0900</pubDate>
       
-      <guid>https://alkn203.github.io/blog/tags/shape/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Shooting</title>
-      <link>https://alkn203.github.io/blog/tags/shooting/</link>
-      <pubDate>Wed, 03 Jul 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/shooting/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tweener</title>
-      <link>https://alkn203.github.io/blog/tags/tweener/</link>
-      <pubDate>Tue, 02 Jul 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/tweener/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Vecter2</title>
-      <link>https://alkn203.github.io/blog/tags/vecter2/</link>
-      <pubDate>Sun, 01 Sep 2019 20:55:06 +0900</pubDate>
-      
-      <guid>https://alkn203.github.io/blog/tags/vecter2/</guid>
+      <guid>https://alkn203.github.io/blog/tags/game/</guid>
       <description></description>
     </item>
     

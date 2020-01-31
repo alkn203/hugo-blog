@@ -13,7 +13,7 @@
   <meta name="og:title" content="【phina.js】マリオのような敵を踏みつぶすエフェクト" />
   <meta name="og:description" content="はじめに マリオシリーズが代表するように、敵を上から踏みつけた時に敵が潰れるエフェクトはアクションゲームではもはや定番になっています。 今回は、敵が潰れるエフェクトをphina.jsで表現してみます。
 サンプルコード(runstant)
-オブジェクトのoriginを理解する  今回の目的を実現するためには、オブジェクトのoriginの変更を行う必要があります。 phina.jsのオブジェクトにはoriginというプロパティがあり、位置指定、回転、拡大縮小の時の基準となっています。 Vector2クラス形式となっており、デフォルトは(0.5, 0.5）でオブジェクトの中心になっています。   敵が潰れるエフェクト  敵が潰れるアニメーションは、tweenerを用います。 ScaleYの値を変化させて縦に縮小させます。  // 縦方向に縮小 bugbow.tweener.clear().to({scaleY: 0.1}, 200);   期待する結果としては下方向に潰れて欲しいところですが、今のままだと中心に向かって縮小され、思い通りの結果になりません。 これはoriginがオブジェクトの中心になっているのが原因です。  originの変更と位置の調整  下に縮小するようにするためには、originを(0.5, 1.0)に変更します。 変更したoriginがオブジェクトの位置の基準となるため、変更したoriginの分だけ上にずらして位置調整します。  // origin変更 bugbow.setOrigin(0.5, 1.0); // 位置調整 bugbow.y &#43;= bugbow.height / 2; // 縦方向に縮小 bugbow.tweener.clear().to({scaleY: 0.1}, 200);  おわりに 実際には、敵が潰れたコマ画像を用意してフレームを切り替えた方が効率的かもしれません。今回の内容は、あくまでも１つのアプローチと考えてもらえればと思います。" />
+オブジェクトのoriginを理解する  今回の目的を実現するためには、オブジェクトのoriginの変更を行う必要があります。 phina.jsのオブジェクトにはoriginというプロパティがあり、位置指定、回転、拡大縮小の時の基準となっています。 Vector2クラス形式となっており、デフォルトは**(0.5, 0.5）**でオブジェクトの中心になっています。  敵が潰れるエフェクト  敵が潰れるアニメーションは、tweenerを用います。 ScaleYの値を変化させて縦に縮小させます。  // 縦方向に縮小 bugbow.tweener.clear().to({scaleY: 0.1}, 200);  期待する結果としては下方向に潰れて欲しいところですが、今のままだと中心に向かって縮小され、思い通りの結果になりません。 これはoriginがオブジェクトの中心になっているのが原因です。  originの変更と位置の調整  下に縮小するようにするためには、originを**(0.5, 1.0)**に変更します。 変更したoriginがオブジェクトの位置の基準となるため、変更したoriginの分だけ上にずらして位置調整します。  // origin変更 bugbow.setOrigin(0.5, 1.0); // 位置調整 bugbow.y &#43;= bugbow.height / 2; // 縦方向に縮小 bugbow.tweener.clear().to({scaleY: 0.1}, 200); おわりに 実際には、敵が潰れたコマ画像を用意してフレームを切り替えた方が効率的かもしれません。今回の内容は、あくまでも１つのアプローチと考えてもらえればと思います。" />
   <meta name="og:image" content="https://alkn203.github.io/blog/2019/08/24/phina-stump-enemy/stump.gif" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2019/08/24/phina-stump-enemy/" />
   <meta name="twitter:site" content="@alkn203" />
@@ -90,72 +90,54 @@
       
         <h2>Table of contents</h2>
         <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#はじめに">はじめに</a></li>
-<li><a href="#オブジェクトのoriginを理解する">オブジェクトのoriginを理解する</a></li>
-<li><a href="#敵が潰れるエフェクト">敵が潰れるエフェクト</a></li>
-<li><a href="#originの変更と位置の調整">originの変更と位置の調整</a></li>
-<li><a href="#おわりに">おわりに</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#はじめに">はじめに</a></li>
+        <li><a href="#オブジェクトのoriginを理解する">オブジェクトのoriginを理解する</a></li>
+        <li><a href="#敵が潰れるエフェクト">敵が潰れるエフェクト</a></li>
+        <li><a href="#originの変更と位置の調整">originの変更と位置の調整</a></li>
+        <li><a href="#おわりに">おわりに</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
       
-      
-
-<h3 id="はじめに">はじめに</h3>
-
+      <h3 id="はじめに">はじめに</h3>
 <p>マリオシリーズが代表するように、敵を上から踏みつけた時に敵が潰れるエフェクトはアクションゲームではもはや定番になっています。
 今回は、敵が潰れるエフェクトを<strong>phina.js</strong>で表現してみます。</p>
-
-<p><img src="stump.gif" alt="stump.gif" /></p>
-
+<p><img src="stump.gif" alt="stump.gif"></p>
 <p><a href="https://runstant.com/alkn203/projects/b748b651">サンプルコード(runstant)</a></p>
-
 <h3 id="オブジェクトのoriginを理解する">オブジェクトのoriginを理解する</h3>
-
 <ul>
 <li>今回の目的を実現するためには、オブジェクトの<strong>origin</strong>の変更を行う必要があります。</li>
 <li><strong>phina.js</strong>のオブジェクトには<strong>origin</strong>というプロパティがあり、位置指定、回転、拡大縮小の時の基準となっています。</li>
-<li><strong>Vector2</strong>クラス形式となっており、デフォルトは<strong>(0.5, 0.5）</strong>でオブジェクトの中心になっています。
-<br /></li>
+<li><strong>Vector2</strong>クラス形式となっており、デフォルトは**(0.5, 0.5）**でオブジェクトの中心になっています。</li>
 </ul>
-
-<p><img src="origin.gif" alt="origin.gif" /></p>
-
+<p><img src="origin.gif" alt="origin.gif"></p>
 <h3 id="敵が潰れるエフェクト">敵が潰れるエフェクト</h3>
-
 <ul>
 <li>敵が潰れるアニメーションは、<strong>tweener</strong>を用います。</li>
 <li><strong>ScaleY</strong>の値を変化させて縦に縮小させます。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// 縦方向に縮小
-</span><span class="c1"></span><span class="nx">bugbow</span><span class="p">.</span><span class="nx">tweener</span><span class="p">.</span><span class="nx">clear</span><span class="p">().</span><span class="nx">to</span><span class="p">({</span><span class="nx">scaleY</span><span class="o">:</span> <span class="mf">0.1</span><span class="p">},</span> <span class="mi">200</span><span class="p">);</span>
-</code></pre></div>
-<ul>
+</span><span class="c1"></span><span class="nx">bugbow</span><span class="p">.</span><span class="nx">tweener</span><span class="p">.</span><span class="nx">clear</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="p">{</span><span class="nx">scaleY</span><span class="o">:</span> <span class="mf">0.1</span><span class="p">}</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><ul>
 <li>期待する結果としては下方向に潰れて欲しいところですが、今のままだと中心に向かって縮小され、思い通りの結果になりません。</li>
 <li>これは<strong>origin</strong>がオブジェクトの中心になっているのが原因です。</li>
 </ul>
-
 <h3 id="originの変更と位置の調整">originの変更と位置の調整</h3>
-
 <ul>
-<li>下に縮小するようにするためには、<strong>origin</strong>を<strong>(0.5, 1.0)</strong>に変更します。</li>
+<li>下に縮小するようにするためには、<strong>origin</strong>を**(0.5, 1.0)**に変更します。</li>
 <li>変更した<strong>origin</strong>がオブジェクトの位置の基準となるため、変更した<strong>origin</strong>の分だけ上にずらして位置調整します。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// origin変更
-</span><span class="c1"></span><span class="nx">bugbow</span><span class="p">.</span><span class="nx">setOrigin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span><span class="c1"></span><span class="nx">bugbow</span><span class="p">.</span><span class="nx">setOrigin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="p">;</span>
 <span class="c1">// 位置調整
-</span><span class="c1"></span><span class="nx">bugbow</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="nx">bugbow</span><span class="p">.</span><span class="nx">height</span> <span class="err">/ 2;</span>
+</span><span class="c1"></span><span class="nx">bugbow</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="nx">bugbow</span><span class="p">.</span><span class="nx">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
 <span class="c1">// 縦方向に縮小
-</span><span class="c1"></span><span class="nx">bugbow</span><span class="p">.</span><span class="nx">tweener</span><span class="p">.</span><span class="nx">clear</span><span class="p">().</span><span class="nx">to</span><span class="p">({</span><span class="nx">scaleY</span><span class="o">:</span> <span class="mf">0.1</span><span class="p">},</span> <span class="mi">200</span><span class="p">);</span>
-</code></pre></div>
-<h3 id="おわりに">おわりに</h3>
-
+</span><span class="c1"></span><span class="nx">bugbow</span><span class="p">.</span><span class="nx">tweener</span><span class="p">.</span><span class="nx">clear</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="p">{</span><span class="nx">scaleY</span><span class="o">:</span> <span class="mf">0.1</span><span class="p">}</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h3 id="おわりに">おわりに</h3>
 <p>実際には、敵が潰れたコマ画像を用意してフレームを切り替えた方が効率的かもしれません。今回の内容は、あくまでも１つのアプローチと考えてもらえればと思います。</p>
 
     </article>
@@ -382,10 +364,10 @@
 
   <nav class="pagination-single" class="col span_3">>
     
-      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/08/23/phina-mapdata/" rel="prev">【phina.js】マップデータの読み込みにおける工夫</a></span>
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/09/01/phina-reflect/" rel="prev">【phina.js】反射ベクトルを使った反射処理</a></span>
     
     
-      <span class="next"><a href="https://alkn203.github.io/blog/2019/09/01/phina-reflect/" rel="next">【phina.js】反射ベクトルを使った反射処理</a> &rarr;</span>
+      <span class="next"><a href="https://alkn203.github.io/blog/2019/08/23/phina-mapdata/" rel="next">【phina.js】マップデータの読み込みにおける工夫</a> &rarr;</span>
     
   </nav>
 

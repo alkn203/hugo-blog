@@ -11,8 +11,7 @@
   
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="【phina.js 】Webブラウザだけでhtml5ゲームを作成して公開する" />
-  <meta name="og:description" content="はじめに ゲームを作っている人なら、自分の作ったゲームを誰かに遊んでもらいたい気持ちは皆持っていると思います。今では、スマホアプリを作ってプラットフォームで公開する方法がメジャーですが、初心者にとってはそう簡単にはいかないものです。
-中には、アプリ化まではいかないけど何かゲームを作って公開してみたいと思っている人もいるでしょう。そのようなときは、javascriptでhtml5ゲームを作って、Webで公開することをおすすめします。（もちろんhtml5ゲームをアプリ化する方法もあります）
+  <meta name="og:description" content="はじめに ゲームを作っている人なら、自分の作ったゲームを誰かに遊んでもらいたい気持ちは皆持っていると思います。今では、スマホアプリを作ってプラットフォームで公開する方法がメジャーですが、初心者にとってはそう簡単にはいかないものです。 中には、アプリ化まではいかないけど何かゲームを作って公開してみたいと思っている人もいるでしょう。そのようなときは、javascriptでhtml5ゲームを作って、Webで公開することをおすすめします。（もちろんhtml5ゲームをアプリ化する方法もあります）
 Webブラウザだけでゲームを作成して公開する 今回は、特別な環境構築をせずに、Webブラウザだけを使ってhtml5ゲームを公開する方法を紹介します。大まかな流れは以下のとおりです。
  runstantでコーティングする runstantプロジェクトをhtmlファイルとしてダウンロードする GitHubにゲーム公開用のリポジトリを作る htmlファイルをGitHubのリポジトリにアップロードする GitHubのリポジトリの設定でGitHub Pagesを有効にする  それでは、順番に説明していきます。
 runstantでコーティングする runstantは、phina.jsの生みの親であるphiさんが開発したWebブラウザ上で動くオンラインエディタで、ユーザー登録すれば誰でも利用することができます。 phina.jsの公式エディタでもあり、実際に様々なプログラムが作られて公開されています。
@@ -106,42 +105,27 @@ runstantプロジェクトをhtmlファイルとしてダウンロードする �
       
         <h2>Table of contents</h2>
         <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#はじめに">はじめに</a></li>
-<li><a href="#webブラウザだけでゲームを作成して公開する">Webブラウザだけでゲームを作成して公開する</a></li>
-<li><a href="#runstantでコーティングする">runstantでコーティングする</a>
-<ul>
-<li><a href="#phina-jsのひな形からゲームを作成">phina.jsのひな形からゲームを作成</a></li>
-<li><a href="#今回作ったゲーム">今回作ったゲーム</a></li>
-</ul></li>
-<li><a href="#runstantプロジェクトをhtmlファイルとしてダウンロードする">runstantプロジェクトをhtmlファイルとしてダウンロードする</a>
-<ul>
-<li><a href="#プロジェクトのダウンロード方法">プロジェクトのダウンロード方法</a></li>
-</ul></li>
-<li><a href="#githubにゲーム公開用のリポジトリを作る">GitHubにゲーム公開用のリポジトリを作る</a></li>
-<li><a href="#htmlファイルをgithubのリポジトリにアップロードする">htmlファイルをGitHubのリポジトリにアップロードする</a></li>
-<li><a href="#githubのリポジトリの設定でgithub-pagesを有効にする">GitHubのリポジトリの設定でGitHub Pagesを有効にする</a></li>
-<li><a href="#公開先">公開先</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#はじめに">はじめに</a></li>
+        <li><a href="#webブラウザだけでゲームを作成して公開する">Webブラウザだけでゲームを作成して公開する</a></li>
+        <li><a href="#runstantでコーティングする">runstantでコーティングする</a></li>
+        <li><a href="#runstantプロジェクトをhtmlファイルとしてダウンロードする">runstantプロジェクトをhtmlファイルとしてダウンロードする</a></li>
+        <li><a href="#githubにゲーム公開用のリポジトリを作る">GitHubにゲーム公開用のリポジトリを作る</a></li>
+        <li><a href="#htmlファイルをgithubのリポジトリにアップロードする">htmlファイルをGitHubのリポジトリにアップロードする</a></li>
+        <li><a href="#githubのリポジトリの設定でgithub-pagesを有効にする">GitHubのリポジトリの設定でGitHub Pagesを有効にする</a></li>
+        <li><a href="#公開先">公開先</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
       
-      
-
-<h3 id="はじめに">はじめに</h3>
-
-<p>ゲームを作っている人なら、自分の作ったゲームを誰かに遊んでもらいたい気持ちは皆持っていると思います。今では、スマホアプリを作ってプラットフォームで公開する方法がメジャーですが、初心者にとってはそう簡単にはいかないものです。<br />
+      <h3 id="はじめに">はじめに</h3>
+<p>ゲームを作っている人なら、自分の作ったゲームを誰かに遊んでもらいたい気持ちは皆持っていると思います。今では、スマホアプリを作ってプラットフォームで公開する方法がメジャーですが、初心者にとってはそう簡単にはいかないものです。 <br>
 中には、<strong>アプリ化まではいかないけど何かゲームを作って公開してみたい</strong>と思っている人もいるでしょう。そのようなときは、<strong>javascript</strong>で<strong>html5</strong>ゲームを作って、Webで公開することをおすすめします。（もちろんhtml5ゲームをアプリ化する方法もあります）</p>
-
 <h3 id="webブラウザだけでゲームを作成して公開する">Webブラウザだけでゲームを作成して公開する</h3>
-
 <p>今回は、特別な環境構築をせずに、Webブラウザだけを使って<strong>html5</strong>ゲームを公開する方法を紹介します。大まかな流れは以下のとおりです。</p>
-
 <ol>
 <li><strong>runstant</strong>でコーティングする</li>
 <li><strong>runstant</strong>プロジェクトを<strong>html</strong>ファイルとしてダウンロードする</li>
@@ -149,102 +133,66 @@ runstantプロジェクトをhtmlファイルとしてダウンロードする �
 <li><strong>html</strong>ファイルを<strong>GitHub</strong>のリポジトリにアップロードする</li>
 <li><strong>GitHub</strong>のリポジトリの設定で<strong>GitHub Pages</strong>を有効にする</li>
 </ol>
-
 <p>それでは、順番に説明していきます。</p>
-
 <h3 id="runstantでコーティングする">runstantでコーティングする</h3>
-
 <p><a href="https://runstant.com/">runstant</a>は、<strong>phina.js</strong>の生みの親である<a href="https://twitter.com/phi_jp">phi</a>さんが開発したWebブラウザ上で動くオンラインエディタで、ユーザー登録すれば誰でも利用することができます。 <strong>phina.js</strong>の公式エディタでもあり、実際に様々なプログラムが作られて公開されています。</p>
-
-<h4 id="phina-jsのひな形からゲームを作成">phina.jsのひな形からゲームを作成</h4>
-
+<h4 id="phinajsのひな形からゲームを作成">phina.jsのひな形からゲームを作成</h4>
 <p>これまでも触れていますが、普段私が使っている<a href="https://runstant.com/alkn203/projects/8f0388a4">phina.jsのひな形</a>から作ることで、簡単に始められます。</p>
-
 <h4 id="今回作ったゲーム">今回作ったゲーム</h4>
-
 <p>サンプルとして、制限時間内にどれだけ円をタッチできるかを競う単純なゲームを作りました。</p>
-
 <p><a href="https://runstant.com/alkn203/projects/21370e4b">Touch The Circle(runstant)</a></p>
-
 <h3 id="runstantプロジェクトをhtmlファイルとしてダウンロードする">runstantプロジェクトをhtmlファイルとしてダウンロードする</h3>
-
 <p>ゲームを作ったら、Webに公開するファイルの準備をする必要がありますが、<strong>runstant</strong>の便利な機能として、プロジェクトのダウンロードがあります。
 ダウンロードされたファイルは<strong>html</strong>形式で<strong>javascript</strong>のコード部分もパッケージ化されているので、このファイル１つあればゲームとして動作します。</p>
-
 <h4 id="プロジェクトのダウンロード方法">プロジェクトのダウンロード方法</h4>
-
-<p><img src="runstantdownload.gif" alt="runstantdownload.gif" /></p>
-
+<p><img src="runstantdownload.gif" alt="runstantdownload.gif"></p>
 <ul>
 <li><strong>runstant</strong>の画面下部にあるボタンをクリックすると、プロジェクトのダウンロードができます。ダウンロード先は任意の場所にして、ファイル名を<strong>index.html</strong>に変更して下さい。</li>
 </ul>
-
 <h3 id="githubにゲーム公開用のリポジトリを作る">GitHubにゲーム公開用のリポジトリを作る</h3>
-
 <p><a href="https://github.co.jp/">GitHub</a>は、プログラマなら誰もが知るようになりつつある、主にソースコードのバージョン管理を目的としたサービスです。
 今回は、この<strong>GitHub</strong>をゲームの公開用サーバとして利用します。</p>
-
 <p>ユーザー登録を行ったら、ゲーム公開用のリポジトリを作成します。</p>
-
 <ul>
 <li>ユーザーホーム画面で「New」ボタンをクリックします。</li>
 </ul>
-
-<p><img src="newrepository.gif" alt="newrepository.gif" /></p>
-
+<p><img src="newrepository.gif" alt="newrepository.gif"></p>
 <ol>
 <li>作成画面でリポジトリ名を入力します。</li>
 <li>公開範囲が「Public」になっているのを確認します。</li>
 <li>「リポジトリをREAD ME で初期化」にチェックを入れます。</li>
 <li>「Create repository」ボタンをクリックします。</li>
 </ol>
-
 <h3 id="htmlファイルをgithubのリポジトリにアップロードする">htmlファイルをGitHubのリポジトリにアップロードする</h3>
-
 <p>リポジトリの用意が出来たら、<strong>runstant</strong>からダウンロードした<strong>html</strong>ファイルをリポジトリにアップロードします。<strong>GitHub</strong>は、ローカル環境から<strong>git</strong>のコマンドを駆使して使うイメージがありますが、<strong>GitHub</strong>上のGUI操作でもファイルのアップロード程度はできます。</p>
-
-<p><img src="uploadfile.gif" alt="uploadfile.gif" /></p>
-
+<p><img src="uploadfile.gif" alt="uploadfile.gif"></p>
 <ul>
 <li>「Upload files」ボタンをクリックします。</li>
 </ul>
-
-<p><img src="uploadfile2.gif" alt="uploadfile2.gif" /></p>
-
+<p><img src="uploadfile2.gif" alt="uploadfile2.gif"></p>
 <ol>
 <li>上の領域にダウンロードした<strong>html</strong>ファイルをドラッグするか、ファイル選択ダイアログでファイルを選択します。</li>
 <li>「Commit Changes」ボタンをクリックします。</li>
 </ol>
-
-<p><img src="uploaded.gif" alt="uploaded.gif" /></p>
-
+<p><img src="uploaded.gif" alt="uploaded.gif"></p>
 <ul>
 <li>ファイルがアップロードされたのを確認します。</li>
 </ul>
-
 <h3 id="githubのリポジトリの設定でgithub-pagesを有効にする">GitHubのリポジトリの設定でGitHub Pagesを有効にする</h3>
-
-<p><img src="setting.gif" alt="setting.gif" /></p>
-
+<p><img src="setting.gif" alt="setting.gif"></p>
 <ul>
 <li>上部メニューから「Setting」をクリックします。</li>
 </ul>
-
-<p><img src="ghpages.gif" alt="ghpages.gif" /></p>
-
+<p><img src="ghpages.gif" alt="ghpages.gif"></p>
 <ul>
 <li>「github pages」を有効にします。以前は、<strong>git</strong> で<strong>gh-pages</strong>名でブランチを切って、<strong>push</strong>する必要がありましたが、現在は不要になっています。</li>
 </ul>
-
-<p><img src="ghpagescheck.gif" alt="ghpagescheck.gif" /></p>
-
+<p><img src="ghpagescheck.gif" alt="ghpagescheck.gif"></p>
 <ul>
 <li>上部に表示される アドレスが公開先のアドレスになります。</li>
 <li>反映されるまでには、少し時間がかかる場合もあるようです。</li>
 </ul>
-
 <h3 id="公開先">公開先</h3>
-
 <p><a href="https://alkn203.github.io/touchthecircle/">Touch The Circle</a></p>
 
     </article>
@@ -482,10 +430,10 @@ runstantプロジェクトをhtmlファイルとしてダウンロードする �
 
   <nav class="pagination-single" class="col span_3">>
     
-      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/06/28/phina-shooting-11/" rel="prev">【phina.js】2Dシューティングチュートリアル =第11回 タイトルをつける=</a></span>
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/07/01/phina-timergauge/" rel="prev">【phina.js】タイマーゲージを作ってみた</a></span>
     
     
-      <span class="next"><a href="https://alkn203.github.io/blog/2019/07/01/phina-timergauge/" rel="next">【phina.js】タイマーゲージを作ってみた</a> &rarr;</span>
+      <span class="next"><a href="https://alkn203.github.io/blog/2019/06/28/phina-shooting-11/" rel="next">【phina.js】2Dシューティングチュートリアル =第11回 タイトルをつける=</a> &rarr;</span>
     
   </nav>
 

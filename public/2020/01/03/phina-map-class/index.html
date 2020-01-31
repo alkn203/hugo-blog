@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary" />
   <meta name="og:title" content="【phina.js】Mapクラスを作ってみた" />
   <meta name="og:description" content="はじめに RPGなどで固定マップで単純な当たり判定を行いたい時は、Mapデータと当たり判定データを読み込んで行う方法が便利です。 今回は、enchant.jsにあったMapクラスを参考にphina.js版を作ってみました。
-コンストラクタ var map = phina.util.Map({ tileWidth: 64, tileHeight: 64, imageName: &#39;tile&#39;, mapData: data, collisionData: collision, }).addChildTo(this);     プロパティ 説明     tileWidth タイルの幅   tileHeight タイルの高さ   imageName タイルセット画像の名前   mapData マップデータの2次元配列   collisionData タイル衝突判定用の2次元配列    メンバ関数    関数 説明     hitTest マップとの衝突判定を行う   checkTile タイルが何か調べる    おわりに 本格的なマップ作成には、タイルマップエディタが必要になってくると思いますが、簡単なゲームであれば、この程度の機能でも使えるのではないでしょうか。" />
+コンストラクタ var map = phina.util.Map({ tileWidth: 64, tileHeight: 64, imageName: &#39;tile&#39;, mapData: data, collisionData: collision, }).addChildTo(this);    プロパティ 説明     tileWidth タイルの幅   tileHeight タイルの高さ   imageName タイルセット画像の名前   mapData マップデータの2次元配列   collisionData タイル衝突判定用の2次元配列    メンバ関数    関数 説明     hitTest マップとの衝突判定を行う   checkTile タイルが何か調べる    おわりに 本格的なマップ作成には、タイルマップエディタが必要になってくると思いますが、簡単なゲームであれば、この程度の機能でも使えるのではないでしょうか。" />
   <meta name="og:image" content="https://alkn203.github.io/blog/2020/01/03/phina-map-class/map.png" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2020/01/03/phina-map-class/" />
   <meta name="twitter:site" content="@alkn203" />
@@ -91,76 +91,61 @@
       
         <h2>Table of contents</h2>
         <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#はじめに">はじめに</a></li>
-<li><a href="#コンストラクタ">コンストラクタ</a></li>
-<li><a href="#メンバ関数">メンバ関数</a></li>
-<li><a href="#おわりに">おわりに</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#はじめに">はじめに</a></li>
+        <li><a href="#コンストラクタ">コンストラクタ</a></li>
+        <li><a href="#メンバ関数">メンバ関数</a></li>
+        <li><a href="#おわりに">おわりに</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
       
-      
-
-<h3 id="はじめに">はじめに</h3>
-
+      <h3 id="はじめに">はじめに</h3>
 <p><strong>RPG</strong>などで固定マップで単純な当たり判定を行いたい時は、<strong>Map</strong>データと当たり判定データを読み込んで行う方法が便利です。
 今回は、<strong>enchant.js</strong>にあった<strong>Map</strong>クラスを参考に<strong>phina.js</strong>版を作ってみました。</p>
-
-<p><img src="map.png" alt="map.png" /></p>
-
+<p><img src="map.png" alt="map.png"></p>
 <h3 id="コンストラクタ">コンストラクタ</h3>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="nx">phina</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">Map</span><span class="p">({</span>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="nx">phina</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">Map</span><span class="p">(</span><span class="p">{</span>
   <span class="nx">tileWidth</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
   <span class="nx">tileHeight</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
   <span class="nx">imageName</span><span class="o">:</span> <span class="s1">&#39;tile&#39;</span><span class="p">,</span>
   <span class="nx">mapData</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
   <span class="nx">collisionData</span><span class="o">:</span> <span class="nx">collision</span><span class="p">,</span>
-<span class="p">}).</span><span class="nx">addChildTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-</code></pre></div>
-<table>
+<span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">addChildTo</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><table>
 <thead>
 <tr>
 <th align="left">プロパティ</th>
 <th align="left">説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td align="left">tileWidth</td>
 <td align="left">タイルの幅</td>
 </tr>
-
 <tr>
 <td align="left">tileHeight</td>
 <td align="left">タイルの高さ</td>
 </tr>
-
 <tr>
 <td align="left">imageName</td>
 <td align="left">タイルセット画像の名前</td>
 </tr>
-
 <tr>
 <td align="left">mapData</td>
 <td align="left">マップデータの2次元配列</td>
 </tr>
-
 <tr>
 <td align="left">collisionData</td>
 <td align="left">タイル衝突判定用の2次元配列</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="メンバ関数">メンバ関数</h3>
-
 <table>
 <thead>
 <tr>
@@ -168,24 +153,19 @@
 <th align="left">説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td align="left">hitTest</td>
 <td align="left">マップとの衝突判定を行う</td>
 </tr>
-
 <tr>
 <td align="left">checkTile</td>
 <td align="left">タイルが何か調べる</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="おわりに">おわりに</h3>
-
 <p>本格的なマップ作成には、タイルマップエディタが必要になってくると思いますが、簡単なゲームであれば、この程度の機能でも使えるのではないでしょうか。</p>
-
 <ul>
 <li><a href="https://runstant.com/alkn203/projects/05d8a818">サンプルコード(runstant)</a></li>
 <li><a href="https://github.com/alkn203/phina-extensions/blob/master/util/map.js">ソースコード(Github)</a></li>
@@ -422,8 +402,8 @@
 
   <nav class="pagination-single" class="col span_3">>
     
-      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/12/31/phina-each-extension/" rel="prev">【phina.js】Arrayクラスのeach関数を拡張する</a></span>
     
+      <span class="next"><a href="https://alkn203.github.io/blog/2019/12/31/phina-each-extension/" rel="next">【phina.js】Arrayクラスのeach関数を拡張する</a> &rarr;</span>
     
   </nav>
 

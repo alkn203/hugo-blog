@@ -14,8 +14,8 @@
   <meta name="og:description" content="はじめに phina.jsのTweenerはキャラクターの動きをコントロールする場合などに使えるとても勉強な機能です。今回は、Tweenerとupdateを併用したTipsを紹介します。
 Shapeの色変化アニメーション Shapeの色を一定時間で変化させるアニメーションを作ります。方法は以下のとおりです。
  Shapeにrgbの3つのプロパティを追加する。 Shapeのtweenerでプロパティの値を変化させる。 Shapeのupdateでプロパティの値を使って色を変化させる。  プロパティを追加する javascriptは、後から好きな時にプロパティを追加できる柔軟さを持ってますので、これを利用します。
-// shape var shape = StarShape().addChildTo(this); shape.setPosition(this.gridX.center(), this.gridY.center()); shape.radius = 128; // プロパティ追加 shape.r = 0; shape.g = 0; shape.b = 0;  プロパティ値を変化させる 追加したプロパティ値をtweenerで変化させます。
-// プロパティ値変化 shape.tweener.to({r: 10, g: 100, b: 200}, 2000) .to({r: 200, g: 200, b: 10}, 2000) .setLoop(true).play();  色を変化させる  updateでShapeの塗りつぶし色であるfillにプロパティ値を代入します。 rgbは文字列指定する必要があるため、formatメソッドの引数から渡しています。  // 毎フレーム処理 shape.update = function() { // 色指定  shape.fill = &#39;rgb({0}, {1}, {2})&#39;." />
+// shapevar shape = StarShape().addChildTo(this);shape.setPosition(this.gridX.center(), this.gridY.center());shape.radius = 128;// プロパティ追加shape.r = 0;shape.g = 0;shape.b = 0;プロパティ値を変化させる 追加したプロパティ値をtweenerで変化させます。
+// プロパティ値変化shape.tweener.to({r: 10, g: 100, b: 200}, 2000).to({r: 200, g: 200, b: 10}, 2000).setLoop(true).play();色を変化させる  updateでShapeの塗りつぶし色であるfillにプロパティ値を代入します。 rgbは文字列指定する必要があるため、formatメソッドの引数から渡しています。  // 毎フレーム処理shape.update = function() {// 色指定 shape.fill = &#39;rgb({0}, {1}, {2})&#39;." />
   <meta name="og:image" content="https://alkn203.github.io/blog/2019/07/02/phina-tweener-color/tweenercolor.gif" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2019/07/02/phina-tweener-color/" />
   <meta name="twitter:site" content="@alkn203" />
@@ -94,81 +94,57 @@ Shapeの色変化アニメーション Shapeの色を一定時間で変化させ
       
         <h2>Table of contents</h2>
         <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#はじめに">はじめに</a></li>
-<li><a href="#shapeの色変化アニメーション">Shapeの色変化アニメーション</a>
-<ul>
-<li><a href="#プロパティを追加する">プロパティを追加する</a></li>
-<li><a href="#プロパティ値を変化させる">プロパティ値を変化させる</a></li>
-<li><a href="#色を変化させる">色を変化させる</a></li>
-</ul></li>
-<li><a href="#まとめ">まとめ</a></li>
-<li><a href="#実行サンプル">実行サンプル</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#はじめに">はじめに</a></li>
+        <li><a href="#shapeの色変化アニメーション">Shapeの色変化アニメーション</a></li>
+        <li><a href="#まとめ">まとめ</a></li>
+        <li><a href="#実行サンプル">実行サンプル</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
       
-      
-
-<p><img src="tweenercolor.gif" alt="tweenercolor.gif" /></p>
-
+      <p><img src="tweenercolor.gif" alt="tweenercolor.gif"></p>
 <h3 id="はじめに">はじめに</h3>
-
 <p><strong>phina.js</strong>の<strong>Tweener</strong>はキャラクターの動きをコントロールする場合などに使えるとても勉強な機能です。今回は、<strong>Tweener</strong>と<strong>update</strong>を併用したTipsを紹介します。</p>
-
 <h3 id="shapeの色変化アニメーション">Shapeの色変化アニメーション</h3>
-
 <p><strong>Shape</strong>の色を一定時間で変化させるアニメーションを作ります。方法は以下のとおりです。</p>
-
 <ul>
 <li><strong>Shape</strong>に<strong>rgb</strong>の3つのプロパティを追加する。</li>
 <li><strong>Shape</strong>の<strong>tweener</strong>でプロパティの値を変化させる。</li>
 <li><strong>Shape</strong>の<strong>update</strong>でプロパティの値を使って色を変化させる。</li>
 </ul>
-
 <h4 id="プロパティを追加する">プロパティを追加する</h4>
-
 <p><strong>javascript</strong>は、後から好きな時にプロパティを追加できる柔軟さを持ってますので、これを利用します。</p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// shape
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">shape</span> <span class="o">=</span> <span class="nx">StarShape</span><span class="p">().</span><span class="nx">addChildTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-<span class="nx">shape</span><span class="p">.</span><span class="nx">setPosition</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">gridX</span><span class="p">.</span><span class="nx">center</span><span class="p">(),</span> <span class="k">this</span><span class="p">.</span><span class="nx">gridY</span><span class="p">.</span><span class="nx">center</span><span class="p">());</span>
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">shape</span> <span class="o">=</span> <span class="nx">StarShape</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">addChildTo</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">shape</span><span class="p">.</span><span class="nx">setPosition</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">gridX</span><span class="p">.</span><span class="nx">center</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">gridY</span><span class="p">.</span><span class="nx">center</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
 <span class="nx">shape</span><span class="p">.</span><span class="nx">radius</span> <span class="o">=</span> <span class="mi">128</span><span class="p">;</span>
 <span class="c1">// プロパティ追加
 </span><span class="c1"></span><span class="nx">shape</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="nx">shape</span><span class="p">.</span><span class="nx">g</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="nx">shape</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</code></pre></div>
-<h4 id="プロパティ値を変化させる">プロパティ値を変化させる</h4>
-
+</code></pre></div><h4 id="プロパティ値を変化させる">プロパティ値を変化させる</h4>
 <p>追加したプロパティ値を<strong>tweener</strong>で変化させます。</p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// プロパティ値変化
-</span><span class="c1"></span><span class="nx">shape</span><span class="p">.</span><span class="nx">tweener</span><span class="p">.</span><span class="nx">to</span><span class="p">({</span><span class="nx">r</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">g</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">200</span><span class="p">},</span> <span class="mi">2000</span><span class="p">)</span>
-             <span class="p">.</span><span class="nx">to</span><span class="p">({</span><span class="nx">r</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span> <span class="nx">g</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">10</span><span class="p">},</span> <span class="mi">2000</span><span class="p">)</span>
-             <span class="p">.</span><span class="nx">setLoop</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="nx">play</span><span class="p">();</span>
-</code></pre></div>
-<h4 id="色を変化させる">色を変化させる</h4>
-
+</span><span class="c1"></span><span class="nx">shape</span><span class="p">.</span><span class="nx">tweener</span><span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">g</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">200</span><span class="p">}</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+             <span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span> <span class="nx">g</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">10</span><span class="p">}</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+             <span class="p">.</span><span class="nx">setLoop</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="p">.</span><span class="nx">play</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h4 id="色を変化させる">色を変化させる</h4>
 <ul>
 <li><strong>update</strong>で<strong>Shape</strong>の塗りつぶし色である<strong>fill</strong>にプロパティ値を代入します。</li>
 <li><strong>rgb</strong>は文字列指定する必要があるため、<strong>format</strong>メソッドの引数から渡しています。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// 毎フレーム処理
-</span><span class="c1"></span><span class="nx">shape</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class="c1"></span><span class="nx">shape</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// 色指定
-</span><span class="c1"></span>  <span class="nx">shape</span><span class="p">.</span><span class="nx">fill</span> <span class="o">=</span> <span class="s1">&#39;rgb({0}, {1}, {2})&#39;</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="nx">shape</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span> <span class="nx">shape</span><span class="p">.</span><span class="nx">g</span><span class="p">,</span> <span class="nx">shape</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span>    
-<span class="p">};</span>
-</code></pre></div>
-<h3 id="まとめ">まとめ</h3>
-
+</span><span class="c1"></span>  <span class="nx">shape</span><span class="p">.</span><span class="nx">fill</span> <span class="o">=</span> <span class="s1">&#39;rgb({0}, {1}, {2})&#39;</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="nx">shape</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span> <span class="nx">shape</span><span class="p">.</span><span class="nx">g</span><span class="p">,</span> <span class="nx">shape</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span><span class="p">;</span>    
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h3 id="まとめ">まとめ</h3>
 <p><strong>phina.js</strong>の<strong>tweener</strong>だけで完結する処理がメジャーですが、工夫次第でこのような表現もできるので、皆さんも色々と試してみて下さい。</p>
-
 <h3 id="実行サンプル">実行サンプル</h3>
-
 <p><a href="https://runstant.com/alkn203/projects/a7341442">サンプル(runstant)</a></p>
 
     </article>
@@ -402,10 +378,10 @@ Shapeの色変化アニメーション Shapeの色を一定時間で変化させ
 
   <nav class="pagination-single" class="col span_3">>
     
-      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/07/01/phina-timergauge/" rel="prev">【phina.js】タイマーゲージを作ってみた</a></span>
+      <span class="previous">&larr; <a href="https://alkn203.github.io/blog/2019/07/03/phina-shooting-12/" rel="prev">【phina.js】2Dシューティングチュートリアル =第12回 エネミーのHP設定など=</a></span>
     
     
-      <span class="next"><a href="https://alkn203.github.io/blog/2019/07/03/phina-shooting-12/" rel="next">【phina.js】2Dシューティングチュートリアル =第12回 エネミーのHP設定など=</a> &rarr;</span>
+      <span class="next"><a href="https://alkn203.github.io/blog/2019/07/01/phina-timergauge/" rel="next">【phina.js】タイマーゲージを作ってみた</a> &rarr;</span>
     
   </nav>
 
