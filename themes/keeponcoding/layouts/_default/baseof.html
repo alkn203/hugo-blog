@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="{{.Site.LanguageCode}}">
+<head>
+  <!-- Basic Page Needs -->
+  <meta charset="UTF-8">
+  <title>
+    {{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} | {{ .Site.Title }}{{ end }}
+  </title>
+  <!-- Mobile Specific Metas -->
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+  <!-- Twitter Card Metas -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="og:title" content="{{ .Title }}" />
+  <meta name="og:description" content="{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.description }}{{ end }}" />
+  <meta name="og:image" content="{{ if .IsPage }}{{ .Permalink }}{{ .Params.eyecatch }}{{ else }}https://www.gravatar.com/avatar/{{ md5 .Site.Params.gravatar }}{{ end }}" />
+  <meta name="twitter:url" content="{{ .Permalink }}" />
+  <meta name="twitter:site" content="@alkn203" />
+  <meta name="twitter:creator" content="@alkn203" /> 
+  <!-- HTTPS Canonical URL -->
+  <link rel="canonical" href="{{ .Permalink }}"/>
+  <!-- CSS -->
+<!--  <link rel="stylesheet" href="/css/sanitize.css"> -->
+  <link rel="stylesheet" href="/css/grid.css">
+  <link rel="stylesheet" href="/css/theme.css">
+<!--  <link rel="stylesheet" href="/css/syntax.css"> -->
+  <link rel="stylesheet" href="/css/custom.css">
+  <!-- RSS -->
+  <link href="{{ .Site.BaseURL }}index.xml" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
+  <link href="{{ .Site.BaseURL }}index.xml" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    {{ partial "header.html" . }}
+    <!-- Sidebar Section -->
+    {{ partial "sidebar.html" . }}
+    <!-- Main Section -->
+    {{ block "main" . }}
+    {{ end }}
+    <!-- Pagenator Section -->
+    {{ block "pagenator" . }}
+    {{ end }}
+    <!-- Fooater Section -->
+    {{ partial "footer.html" . }}

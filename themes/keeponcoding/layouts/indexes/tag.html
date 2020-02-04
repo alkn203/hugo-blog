@@ -1,0 +1,20 @@
+{{ partial "header.html" . }}
+
+  <!-- Main Section Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <main id="list" role="main" class="col span_9">
+    <div class="article-header light-gray"><h1>#{{ .Title }}</h1></div>
+    {{ $paginator := .Paginate (where .Data.Pages "Section" "!=" "pages") }}
+    {{ range $paginator.Pages }}
+      {{ .Render "summary" }}
+    {{ end }}
+  </main>
+
+  {{ partial "sidemenu.html" . }}
+
+  <!-- Paginator Section Layout -->
+  <nav class="col span_9">
+    {{ template "_internal/pagination.html" . }}
+  </nav>
+
+  {{ partial "footer.html" . }}
