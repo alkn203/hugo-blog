@@ -22,23 +22,42 @@
 <!--  <link rel="stylesheet" href="/css/sanitize.css"> -->
   <link rel="stylesheet" href="/css/grid.css">
   <link rel="stylesheet" href="/css/theme.css">
-<!--  <link rel="stylesheet" href="/css/syntax.css"> -->
+  <link rel="stylesheet" href="/css/syntax.css">
   <link rel="stylesheet" href="/css/custom.css">
-  <!-- RSS -->
-  <link href="{{ .Site.BaseURL }}index.xml" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
-  <link href="{{ .Site.BaseURL }}index.xml" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
 </head>
 <body>
   <div class="container">
     <!-- Header Section -->
-    {{ partial "header.html" . }}
+    <header role="banner" class="header">
+      {{ partial "header.html" . }}
+    </header>
     <!-- Sidebar Section -->
-    {{ partial "sidebar.html" . }}
+    <nav class="sidebar">
+      {{ partial "sidebar.html" . }}
+    </nav>
     <!-- Main Section -->
-    {{ block "main" . }}
-    {{ end }}
+    <main role="main" class="main">
+      {{ block "main" . }}
+      {{ end }}
+    </main>
     <!-- Pagenator Section -->
-    {{ block "pagenator" . }}
-    {{ end }}
+    <nav class="page">
+      {{ block "pagenator" . }}
+      {{ end }}
+    </nav>
     <!-- Fooater Section -->
-    {{ partial "footer.html" . }}
+    <footer role="contentinfo" class="footer">
+      {{ partial "footer.html" . }}
+    </footer>
+  </div>
+  <!-- google analytics -->
+{{ with .Site.Params.analytics }}<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', '{{ . }}', 'auto');
+	ga('send', 'pageview');
+</script>{{ end }}
+</body>
+</html>

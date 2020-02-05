@@ -1,60 +1,50 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 4fr;
-  grid-template-rows: 120px 1fr 60px 40px;
+  grid-template-rows: 60px 1fr 60px 40px;
 }
 
 .header {
   /* 列の1本目から3本目のグリッドラインまで */
-  grid-column-start: 1;
-  grid-column-end: 3;
+  grid-column: 1 / 3;
   /* 行の1本目から2本目のグリッドラインまで */
-  grid-row-start: 1;
-  grid-row-end: auto;
-  
+  grid-row: 1 / 2;
+
   background-color: lime
 }
 
 .sidebar {
   /* 列の1本目から2本目のグリッドラインまで */
-  grid-column-start: 1;
-  grid-column-end: auto;
-  /* 行の2本目から3本目のグリッドラインまで */
-  grid-row-start: 2;
-  grid-row-end: 4;
-  
+  grid-column: 1 / 2;
+  /* 行の2本目から4本目のグリッドラインまで */
+  grid-row: 2 / 3;
+
   background-color: skyblue
 }
 
 .main {
   /* 列の2本目から3本目のグリッドラインまで */
-  grid-column-start: 2;
-  grid-column-end: auto;
+  grid-column: 2 / 3;
   /* 行の2本目から3本目のグリッドラインまで */
-  grid-row-start: 2;
-  grid-row-end: auto;
+  grid-row: 2 / 3;
+
+  background-color: pink
 }
 
 .page {
   /* 列の2本目から3本目のグリッドラインまで */
-  grid-column-start: 2;
-  grid-column-end: auto;
+  grid-column: 2 / 3;
   /* 行の3本目から4本目のグリッドラインまで */
-  grid-row-start: 3;
-  grid-row-end: auto;
-  
+  grid-row: 3 / 4;
+
   background-color: yellow
 }
 
 .footer {
   /* 列の1本目から3本目のグリッドラインまで */
-  grid-column-start: 1;
-  grid-column-end: 3;
+  grid-column: 1 / 3;
   /* 行の4本目から5本目のグリッドラインまで */
-  grid-row-start: 4;
-  grid-row-end: auto;
-  
+  grid-row: 4 / 5;
+
   background-color: blue
 }
-
-

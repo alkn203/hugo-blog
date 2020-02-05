@@ -1,6 +1,14 @@
-<aside role="complementary" class="sidebar">
-  <h3>全セクションのリスト</h3>
-  {{ range .Site.Sections }}
-    <li><a href="{{ .RelPermalink }}">{{ .Title }}</a>
-  {{ end }}
-</aside> 
+  <h2>全ページのリスト</h2>
+
+  {{- define "hierarchy" }}
+    <ul>
+      {{- /* カレントセクション直下のセクションは再帰処理 */}}
+      {{- range .Sections }}
+        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{- template "hierarchy" . }}
+        </li>
+      {{- end }}
+    </ul>
+  {{- end }}
+
+  {{ template "hierarchy" .Site.Home }}
