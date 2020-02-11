@@ -18,7 +18,6 @@
   grid-column: 1 / 2;
   /* 行の2本目から4本目のグリッドラインまで */
   grid-row: 2 / 3;
-  background-color: skyblue
 }
 
 .main {
@@ -26,7 +25,6 @@
   grid-column: 2 / 3;
   /* 行の2本目から3本目のグリッドラインまで */
   grid-row: 2 / 3;
-  background-color: pink
 }
 
 .page {
@@ -47,10 +45,11 @@
 
 .summary-container {
   display: grid;
-  grid-template-columns: 128px 1fr;
+  grid-template-columns: 64px 1fr;
   grid-gap: 10px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #eee;
 }
 
 .eyecatch {
@@ -59,11 +58,26 @@
 }
 
 .eyecatch img {
-  width: 128px;
+  width: 64px;
   height: auto;
 }
 
 .summary-title {
   /* 列の2本目から3本目のグリッドラインまで */
   grid-column: 2 / 3;
+}
+
+.summary-title h3 {
+  padding-left: 0.2em;
+  border-left-style: none;
+}
+
+.summary-title a {
+  color: #494949;
+  text-decoration: none;
+}
+
+.summary-title a:hover {
+  color: #29abe2;
+  text-decoration: underline;
 }

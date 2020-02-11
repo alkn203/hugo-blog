@@ -2,28 +2,30 @@ body {
   background-color: #fff;
   font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
   font-size: 14px;
-  color: #666;
-  line-height: 1.6em;
+  color: #494949;
+  /*line-height: 1.6em;*/
   letter-spacing: 0.5px;
 }
 
 h1 {
-  padding-left: 0.5em;
-  padding-bottom: 0.5em;
-  /*文字色*/
-  color: #494949;
-  /*背景透明に*/
-  background: transparent;
-  /*左線*/
+  font-size: 19px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0.1em;
   border-left: solid 5px #29abe2;
-  /*下線*/
   border-bottom: solid 3px #29abe2;
 }
 
+h2 {
+  font-size: 17px;
+}
+
+h3, h4, h5, h6 {
+  font-size: 16px;
+}
+
 h2, h3, h4, h5, h6 {
-  padding-left: 0.5em;
-  color: #494949;
-  background: transparent;
+  padding-left: 0.2em;
   border-left: solid 5px #29abe2;
 }
 
@@ -34,10 +36,10 @@ h2, h3, h4, h5, h6 {
 .sidebar ul {
   list-style: none;
   padding-left: 1em;
+  margin-top: 5px;
 }
 
 .sidebar ul li {
-  margin-bottom: 10px;
   padding-left: 0;
 }
 
@@ -47,16 +49,8 @@ h2, h3, h4, h5, h6 {
 }
 
 .sidebar a:hover {
-  color: gold;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding-left: 1em;
-}
-
-.sidebar ul li {
-  padding-left: 0;
+  color: #29abe2;
+  text-decoration: underline;
 }
 
 nav ul.pagination {

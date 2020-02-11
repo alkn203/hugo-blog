@@ -1,13 +1,13 @@
+<h1>Sections</h1>
+{{- define "hierarchy" }}
+  <ul>
+    {{- /* カレントセクション直下のセクションは再帰処理 */}}
+    {{- range .Sections }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{- template "hierarchy" . }}
+      </li>
+    {{- end }}
+  </ul>
+{{- end }}
 
-  {{- define "hierarchy" }}
-    <ul>
-      {{- /* カレントセクション直下のセクションは再帰処理 */}}
-      {{- range .Sections }}
-        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a>
-          {{- template "hierarchy" . }}
-        </li>
-      {{- end }}
-    </ul>
-  {{- end }}
-
-  {{ template "hierarchy" .Site.Home }}
+{{ template "hierarchy" .Site.Home }}
