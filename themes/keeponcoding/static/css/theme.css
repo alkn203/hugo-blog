@@ -27,6 +27,29 @@ h2, h3, h4, h5, h6 {
   border-left: solid 5px #29abe2;
 }
 
+.sidebar {
+  font-size: 18px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 1em;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+  padding-left: 0;
+}
+
+.sidebar a {
+  color: #494949;
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  color: gold;
+}
+
 .sidebar ul {
   list-style: none;
   padding-left: 1em;
