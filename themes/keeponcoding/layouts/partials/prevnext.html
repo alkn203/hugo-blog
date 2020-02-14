@@ -1,0 +1,10 @@
+<div class="prevnext-container">
+  {{ with .PrevInSection }}
+    <div class="prev-arrow"></div>
+    <div class="prev-text"><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></div>
+  {{ end }}
+  {{ with .NextInSection }}
+    <div class="next-text"><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></div>
+    <div class="next-arrow"></div>
+  {{ end }}
+</div>

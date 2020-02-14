@@ -13,7 +13,7 @@ tips = ":year/:month/:day/:filename"
 works = ":year/:month/:day/:filename"
 
 [Params]
-subtitle = "javascriptのゲームライブラリphina.js、ゲーム制作、プログラミングなどについて"
+subtitle = "Tips and tutorials for phina.js users"
 description = "javascriptのゲームライブラリphina.jsに関するTipsやチュートリアル"
 author = "alkn203"
 gravatar = "alkn203@gmail.com"

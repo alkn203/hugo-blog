@@ -1,12 +1,23 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
-  <article>
-    <!-- check toc flag -->
-    {{ if .Site.Params.showsToc }}
-      <h2>Table of contents</h2>
-      {{ .TableOfContents }}
-    {{ end }}
-    <!-- Main article -->
-    {{ .Content }}
-  </article>
+  <div class="single-container">
+    <div class="single-title">
+      <h1>{{ .Title }}</h1>
+    </div>
+    <div class="single-modified">
+      {{ .Lastmod.Format "January 2, 2006" }}  
+    </div>
+    <div class="single-content">
+      <!-- check toc flag -->
+      {{ if .Site.Params.showsToc }}
+        <h2>Table of contents</h2>
+        {{ .TableOfContents }}
+      {{ end }}
+      <!-- Main article -->
+      {{ .Content }}
+    </div>
+  </div>
+{{ end }}
+
+{{ define "pagenator"}}
+  {{ partial "prevnext" . }}
 {{ end }}
