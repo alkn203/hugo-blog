@@ -1,6 +1,6 @@
 {{ define "main" }}
   <h1>Recent Articles</h1>
-  {{ $paginator := .Paginate .Site.RegularPages }}
+  {{ $paginator := .Paginate (where .Site.RegularPages "Type" "!=" "page") }}
   {{ range $paginator.Pages }}
       {{ .Render "summary" }}
   {{ end }}

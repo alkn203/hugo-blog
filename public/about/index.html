@@ -4,24 +4,23 @@
   
   <meta charset="UTF-8">
   <title>
-    【phina.js】シンプルなタイピングゲームを作ってみた | Keep On Coding
+    このブログについて | Keep On Coding
   </title>
   
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
   
   <meta name="twitter:card" content="summary" />
-  <meta name="og:title" content="【phina.js】シンプルなタイピングゲームを作ってみた" />
-  <meta name="og:description" content="はじめに phina.jsでシンプルなタイピングゲームを作ってみました。 私はあまりタイピングは得意な方ではないので、自分で作っておきながら途中でゲームオーバーになりますが、皆さんはいかがでしょうか。
-別画面でプレイする
- 画面左から飛んでくるhtmlやjavascriptに関するキーワードをタイプするだけのゲームです。 大文字小文字は区別しません。  改定 2019/5/18 ライフ制導入
-カスタマイズ キーワード一覧は、以下のように改行区切りのテキストファイルからアセットとして読み込んでいますので、中身を変えれば 別言語のキーワードなどもイケると思います。
-// アセットvar ASSETS = {// キーワード一覧 text: {&#39;keywords&#39;: &#39;https://cdn.jsdelivr.net/gh/alkn203/phina-games@master/keyword-shot/assets/keywords&#39;,},};リファレンス キーワード一覧は、以下のサイトから引用させて頂きました。ありがとうございます。 JavaScriptのキーワードとか予約語をかき集めてみた - Born Neet" />
-  <meta name="og:image" content="https://alkn203.github.io/blog/2019/06/12/keywordshot/keywordshot.gif" />
-  <meta name="twitter:url" content="https://alkn203.github.io/blog/2019/06/12/keywordshot/" />
+  <meta name="og:title" content="このブログについて" />
+  <meta name="og:description" content="このブログについて 当ブログは、趣味でプログラミングをしている管理人がjavascriptのゲームライブラリphina.jsに関するTipsなどを通して、ゲームプログラミングの楽しさを伝えることを目的としています。
+掲載されているコードについて 当ブログの記事に掲載されているコードはの取り扱いについては、個別に記述がない限り、特に使用制限はありません。記事中にリンクしているrunstantプロジェクトについても同様です。 当ブログに掲載されているコードをご自身のブログなどで引用された場合は、当ブログへリンクをして頂ければ嬉しいです。
+免責事項 当ブログに掲載された内容および当ブログからのリンク先への移動によって発生した損害等の一切の責任は、当ブログでは負いかねますので、ご了承ください。
+改訂履歴 2019年6月18日　作成" />
+  <meta name="og:image" content="https://alkn203.github.io/blog/about/" />
+  <meta name="twitter:url" content="https://alkn203.github.io/blog/about/" />
   <meta name="twitter:site" content="@alkn203" />
   <meta name="twitter:creator" content="@alkn203" /> 
   
-  <link rel="canonical" href="https://alkn203.github.io/blog/2019/06/12/keywordshot/"/>
+  <link rel="canonical" href="https://alkn203.github.io/blog/about/"/>
   
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/responsive.css">
@@ -53,13 +52,9 @@
 
   <main id="single" role="main" class="col span_9">
     <div class="article-header">
-      <h1>【phina.js】シンプルなタイピングゲームを作ってみた</h1>
+      <h1>このブログについて</h1>
       <div class="meta">
-        Jun 12, 2019 &nbsp;
-        
-          #<a href="https://alkn203.github.io/blog/tags/phina.js">phina.js</a>&nbsp;
-        
-          #<a href="https://alkn203.github.io/blog/tags/game">game</a>&nbsp;
+        Jun 16, 2019 &nbsp;
         
       </div>
     </div>
@@ -72,7 +67,7 @@
       <tr>
       
       <td>
-        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="【phina.js】シンプルなタイピングゲームを作ってみた" data-hashtags="phina_js,javascript,html5,gamedev" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="このブログについて" data-hashtags="phina_js,javascript,html5,gamedev" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </td>
       
       
@@ -97,40 +92,24 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#はじめに">はじめに</a></li>
-        <li><a href="#改定">改定</a></li>
-        <li><a href="#カスタマイズ">カスタマイズ</a></li>
-        <li><a href="#リファレンス">リファレンス</a></li>
+        <li><a href="#このブログについて">このブログについて</a></li>
+        <li><a href="#掲載されているコードについて">掲載されているコードについて</a></li>
+        <li><a href="#免責事項">免責事項</a></li>
+        <li><a href="#改訂履歴">改訂履歴</a></li>
       </ul>
     </li>
   </ul>
 </nav>
       
-      <p><img src="keywordshot.gif" alt="keywordshot"></p>
-<h3 id="はじめに">はじめに</h3>
-<p><strong>phina.js</strong>でシンプルなタイピングゲームを作ってみました。
-私はあまりタイピングは得意な方ではないので、自分で作っておきながら途中でゲームオーバーになりますが、皆さんはいかがでしょうか。</p>
-<!-- raw HTML omitted -->
-<p><a href="https://alkn203.github.io/phina-games/keyword-shot/">別画面でプレイする</a></p>
-<ul>
-<li>画面左から飛んでくるhtmlやjavascriptに関するキーワードをタイプするだけのゲームです。</li>
-<li>大文字小文字は区別しません。</li>
-</ul>
-<h3 id="改定">改定</h3>
-<p>2019/5/18 ライフ制導入</p>
-<h3 id="カスタマイズ">カスタマイズ</h3>
-<p>キーワード一覧は、以下のように改行区切りのテキストファイルからアセットとして読み込んでいますので、中身を変えれば
-別言語のキーワードなどもイケると思います。</p>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// アセット
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">ASSETS</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="c1">// キーワード一覧
-</span><span class="c1"></span>  <span class="nx">text</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s1">&#39;keywords&#39;</span><span class="o">:</span> <span class="s1">&#39;https://cdn.jsdelivr.net/gh/alkn203/phina-games@master/keyword-shot/assets/keywords&#39;</span><span class="p">,</span>
-  <span class="p">}</span><span class="p">,</span>
-<span class="p">}</span><span class="p">;</span>
-</code></pre></div><h3 id="リファレンス">リファレンス</h3>
-<p>キーワード一覧は、以下のサイトから引用させて頂きました。ありがとうございます。
-<a href="http://blog.bornneet.com/Entry/262/">JavaScriptのキーワードとか予約語をかき集めてみた - Born Neet</a></p>
+      <h3 id="このブログについて">このブログについて</h3>
+<p>当ブログは、趣味でプログラミングをしている管理人がjavascriptのゲームライブラリphina.jsに関するTipsなどを通して、ゲームプログラミングの楽しさを伝えることを目的としています。</p>
+<h3 id="掲載されているコードについて">掲載されているコードについて</h3>
+<p>当ブログの記事に掲載されているコードはの取り扱いについては、個別に記述がない限り、特に使用制限はありません。記事中にリンクしているrunstantプロジェクトについても同様です。
+当ブログに掲載されているコードをご自身のブログなどで引用された場合は、当ブログへリンクをして頂ければ嬉しいです。</p>
+<h3 id="免責事項">免責事項</h3>
+<p>当ブログに掲載された内容および当ブログからのリンク先への移動によって発生した損害等の一切の責任は、当ブログでは負いかねますので、ご了承ください。</p>
+<h3 id="改訂履歴">改訂履歴</h3>
+<p>2019年6月18日　作成</p>
 
     </article>
 
@@ -142,7 +121,7 @@
       <tr>
       
       <td>
-        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="【phina.js】シンプルなタイピングゲームを作ってみた" data-hashtags="phina_js,javascript,html5,gamedev" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="このブログについて" data-hashtags="phina_js,javascript,html5,gamedev" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </td>
       
       
@@ -161,13 +140,6 @@
     
     
 
-
-<h3>関連記事</h3>
-<ul>
-	
-	<li><a href="https://alkn203.github.io/blog/2019/06/11/about-phina/">phina.js事始め</a></li>
-	
-</ul>
 
 
     
