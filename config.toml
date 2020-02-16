@@ -2,7 +2,6 @@ baseurl = "https://alkn203.github.io/blog/"
 languageCode = "ja"
 title = "Keep On Coding"
 canonifyurls = true
-disqusShortname = "alkn203githubio"
 pygmentsCodefences = true
 pygmentsUseClasses = true
 
@@ -13,17 +12,13 @@ tips = ":year/:month/:day/:filename"
 works = ":year/:month/:day/:filename"
 
 [Params]
-subtitle = "Tips and tutorials for phina.js users"
-description = "javascriptのゲームライブラリphina.jsに関するTipsやチュートリアル"
+subtitle = "Tips and tutorials about phina.js"
+description = "Tips and tutorial about phina.js"
 author = "alkn203"
 gravatar = "alkn203@gmail.com"
-profileText = "Hobbyist programmer / javascript"
-copyrightYear = "2019"
+copyrightYear = "2020"
 twitter = "alkn203"
 github = "alkn203"
 qiita = "alkn203"
-showsRSS = true
 analytics = "UA-145323973-1"
-showsShare = true
-hashtags = "phina_js,javascript,html5,gamedev"
 showsToc = true

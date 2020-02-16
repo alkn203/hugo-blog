@@ -13,9 +13,10 @@
 </div>
 <div class="header-profile">
   <div class="header-profile-image">
+    <!-- Show gravatar icon -->
     <img src="https://www.gravatar.com/avatar/{{ md5 .Site.Params.gravatar }}">
   </div>
   <div class="header-profile-author">
-    alkn203
+    {{ .Site.Params.author }}
   </div>
 </div>
