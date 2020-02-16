@@ -2,7 +2,7 @@
 {{- define "hierarchy" }}
   <ul>
     {{- /* カレントセクション直下のセクションは再帰処理 */}}
-    {{- range .Sections }}
+    {{- range .Sections.ByWeight }}
       <li><a href="{{ .RelPermalink }}">{{ .Title }}</a>
         {{- template "hierarchy" . }}
       </li>

@@ -93,12 +93,13 @@
   </url>
   
   <url>
-    <loc>https://alkn203.github.io/blog/tags/shooting/</loc>
+    <loc>https://alkn203.github.io/blog/tutorials/2dshooting/</loc>
     <lastmod>2019-07-03T20:55:06+09:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://alkn203.github.io/blog/tutorials/</loc>
+    <loc>https://alkn203.github.io/blog/tags/shooting/</loc>
     <lastmod>2019-07-03T20:55:06+09:00</lastmod>
   </url>
   
@@ -284,6 +285,10 @@
   
   <url>
     <loc>https://alkn203.github.io/blog/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://alkn203.github.io/blog/tutorials/</loc>
   </url>
   
 </urlset>
