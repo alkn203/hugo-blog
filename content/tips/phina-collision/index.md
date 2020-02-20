@@ -9,30 +9,30 @@ eyecatch = "mycollision.gif"
 
 ![mycollision.gif](mycollision.gif)
 
-### はじめに
+## はじめに
 ゲーム作りにおいて、当たり判定ほど奥深く悩まされるものはないと言ってよいでしょう。   
 今回は、**phina.js**における当たり判定のアプローチについての自分なりの考察です。
 
-### hitTestElementを使う
+## hitTestElementを使う
 - **phina.app.Object2d**を継承したクラスであれば、**hitTestElement**を使えば手軽に当たり判定ができます。
 - 矩形同士での判定になりますので、一番手軽です。一方で、グラフィックが矩形より小さいと大雑把な判定になってしまうという欠点があります。
 
 > 参考記事   
 > [[phina.js-Tips-41] 当たり判定を行う（矩形判定）](https://qiita.com/alkn203/items/2e567ee47a4a1a8b8ee4)
 
-### Collisionを自前で用意する
+## Collisionを自前で用意する
 - [	【phina.js】2Dシューティングチュートリアル =第6回 当たり判定とアニメーションイベントとグループ=](https://alkn203.github.io/blog/posts/tutorials/phina-shooting-06/)で自前で作ったような**Collision**クラスを使う方法です。
 - 任意の位置やサイズに設定することができるので柔軟性があります。一方で、絶対座標と相対座標の関係に気を付けないと、正しい当たり判定ができないという欠点があります。
 
 > 参考記事   
 > [[phina.js]Colliderアクセサリを作ってみた話](https://qiita.com/alkn203/items/8c24d433e9eb8ea0f4bc)
 
-### 当たり判定用のShapeを親にしてスプライトなどを子として追加する
+## 当たり判定用のShapeを親にしてスプライトなどを子として追加する
 - **RectangleShape**や**CircleShape**を当たり判定の対象として、スプライトをその子要素として追加する方法です。
 - 絶対座標で当たり判定ができるというメリットがあります。
 - **Shape**を**hide**メソッドで隠すと子要素まで隠れてしまいますので、**Shape**のコンストラクタで**fill**と**stroke**を透明にすると見えないようにすることができます。
 
-### サンプルコード
+## サンプルコード
 
 [当たり判定を行う（当たり判定用矩形にスプライト追加）(runstant)](https://runstant.com/alkn203/projects/e0239f85)
 

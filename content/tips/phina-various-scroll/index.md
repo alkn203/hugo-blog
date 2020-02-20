@@ -9,10 +9,10 @@ eyecatch = "variousscroll.png"
 
 ![variousscroll.png](variousscroll.png)
 
-### はじめに
+## はじめに
 横スクロールアクションゲームでは、画面のスクロール処理が欠かせませんが、スクロール１つでも結構奥が深いです。今回は**phina.js**で主だったスクロール処理を実装してみました。
 
-### プレイヤー固定スクロール
+## プレイヤー固定スクロール
 まずは以下のサンプルを確認してみて下さい。 プレイヤーの位置は画面の中心固定で画面がスクロールします。画面タッチでプレイヤーがジャンプして、障害物に当たると反転移動します。 中心には分かりやすいようにラインを表示しています。
 
 <div class='runstant'><iframe src='https://runstant.com/alkn203/projects/3811749d/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
@@ -32,7 +32,7 @@ moveX: function() {
 },
 ```
 
-### 変則スクロール
+## 変則スクロール
 始めは固定スクロールと同じようにスクロールしますが、ステージの端に行くとスクロールが止まります。 そして、画面中央を超えると再びスクロールします。
 
 <div class='runstant'><iframe src='https://runstant.com/alkn203/projects/b8219436/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
@@ -97,7 +97,7 @@ case 'MOVING_LEFT_SELF':
 - 左向きのプレイヤーのみの移動からスクロールへの切り替えは、右端のオブジェクトが画面から見えなくなって、かつプレイヤーが画面中央を超えた時で判定しています。
 - これらの判定を右方向の移動に対しては、逆に行えば良いということになります。
 
-### スライドスクロール
+## スライドスクロール
 初期のゼルダの伝説に代表されるように、プレイヤーが画面の端に到達すると画面がスライドしてスクロールするタイプです。
 
 <div class='runstant'><iframe src='https://runstant.com/alkn203/projects/534d0cda/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>

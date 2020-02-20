@@ -9,16 +9,16 @@ eyecatch = "timergauge.gif"
 
 ![timergauge.gif](timergauge.gif)
 
-### はじめに
+## はじめに
 **phina.js**には、体力ゲージの実装に使える**Gauge**という便利なクラスが用意されています。今回、これをベースにゲームの制限時間表示によく見られるタイマーゲージを作ってみました。
 
-### 実行サンプル
+## 実行サンプル
 <div class='runstant'><iframe src='https://runstant.com/alkn203/projects/7eab89e2/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
 
 * runボタンを押すとゲージが経過時間で減っていきます。
 * pauseボタンで一時停止。recoverボタンで全回復します。
 
-### TimerGaugeクラスの仕様
+## TimerGaugeクラスの仕様
 以下のように、シーンに追加します。
 
 ```javascript
@@ -29,7 +29,7 @@ eyecatch = "timergauge.gif"
     gauge.setPosition(this.gridX.center(), this.gridY.center());
 ```
 
-#### プロパティ・メソッド・イベント
+## プロパティ・メソッド・イベント
 
 | プロパティ | 説明 |
 | ---  | --- |
@@ -48,7 +48,7 @@ eyecatch = "timergauge.gif"
 
 >その他のプロパティは、継承元の[**phina.ui.Gauge**](https://github.com/phinajs/phina.js/blob/develop/src/ui/gauge.js)クラスを参照して下さい。
 
-### 使用方法
+## 使用方法
 **html**ファイルで以下のように読み込みます。
 
 ```javascript
@@ -56,6 +56,6 @@ eyecatch = "timergauge.gif"
 <script src="https://cdn.jsdelivr.net/gh/alkn203/phina-extensions@master/ui/timergauge.js"></script>
 ```
 
-### ソースコード
+## ソースコード
 
 [Timer Gauge](https://github.com/alkn203/phina-extensions/blob/master/ui/timergauge.js)

@@ -7,7 +7,7 @@ title = "【phina.js】反射ベクトルを使った反射処理"
 eyecatch = "reflect.gif"
 +++
 
-### はじめに
+## はじめに
 反射処理の代表的なものといえば、ブロック崩しですが、ブロック崩しの場合、縦方向あるいは横方向の速度の向きを反転させるだけなので、比較的簡単です。   
 しかし、角度がついた壁に対して正確に反射させるにはそう単純にはいきません。この場合は、反射ベクトルというテクニックを使う必要があります。
 
@@ -15,7 +15,7 @@ eyecatch = "reflect.gif"
 
 [実行サンプル(runstant)](https://runstant.com/alkn203/projects/a1b7100b)
 
-### Vecter2クラスのreflectメソッド
+## Vecter2クラスのreflectメソッド
 * **phina.js**の**Vector2**クラスには、反射ベクトルを求める**reflect**というメソッドが用意されています。
 * **reflect**メソッドは、入射ベクトルと壁の向きの法線ベクトルから反射ベクトルを求めて返します。
 
@@ -26,7 +26,7 @@ var n = Vector2.normal(p1, p2).normalize();
 var r = Vector2.reflect(this.circle.physical.velocity, n);
 ```
 
-### サンプルコード
+## サンプルコード
 
 ```javascript
 phina.globalize();

@@ -52,7 +52,6 @@ h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 80px 1fr 40px 40px;
   grid-gap: 20px;
-  /*width: 1000px;*/
 }
 
 /* Header Section */
@@ -120,7 +119,7 @@ h2, h3, h4, h5, h6 {
 
 /* Sidebar Section */
 .sidebar {
-  grid-column: 1 / 4;
+  grid-column: 1 / 3;
   grid-row: 2 / 4;
 }
 
@@ -140,7 +139,7 @@ h2, h3, h4, h5, h6 {
 
 /* Main Section */
 .main {
-  grid-column: 4 / 13;
+  grid-column: 3 / 11;
   grid-row: 2 / 3;
 }
 
@@ -172,13 +171,28 @@ h2, h3, h4, h5, h6 {
   line-height: 1.6em;
 }
 
+.tocbar {
+  grid-column: 11 / 13;
+  /*  grid-row: 2 / 4; */
+  height: 400px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
 #TableOfContents ul {
   list-style: none;
+  padding-left: 10px;
 }
+#TableOfContents ul li {
+  margin-left: 0;
+  padding-left: 0;
+}
+
 
 /* Pagenator Sction */
 .page {
-  grid-column: 4 / 13;
+  grid-column: 4 / 11;
   grid-row: 3 / 4;
 }
 
@@ -282,11 +296,11 @@ nav.pagination-single a {
   background-color: #eee;
 }
 
-.eyecatch {
+.summary-eyecatch {
   grid-column: 1 / 2;
 }
 
-.eyecatch img {
+.summary-eyecatch img {
   width: 64px;
   height: auto;
 }
