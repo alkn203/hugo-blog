@@ -7,11 +7,11 @@ title = "【phina.js 】Webブラウザだけでhtml5ゲームを作成して公
 eyecatch = "runstantdownload.gif"
 +++
 
-### はじめに
+## はじめに
 ゲームを作っている人なら、自分の作ったゲームを誰かに遊んでもらいたい気持ちは皆持っていると思います。今では、スマホアプリを作ってプラットフォームで公開する方法がメジャーですが、初心者にとってはそう簡単にはいかないものです。    
 中には、**アプリ化まではいかないけど何かゲームを作って公開してみたい**と思っている人もいるでしょう。そのようなときは、**javascript**で**html5**ゲームを作って、Webで公開することをおすすめします。（もちろんhtml5ゲームをアプリ化する方法もあります）
 
-### Webブラウザだけでゲームを作成して公開する
+## Webブラウザだけでゲームを作成して公開する
 今回は、特別な環境構築をせずに、Webブラウザだけを使って**html5**ゲームを公開する方法を紹介します。大まかな流れは以下のとおりです。
 
 1. **runstant**でコーティングする
@@ -22,27 +22,27 @@ eyecatch = "runstantdownload.gif"
 
 それでは、順番に説明していきます。
 
-### runstantでコーティングする
+## runstantでコーティングする
 [runstant](https://runstant.com/)は、**phina.js**の生みの親である[phi](https://twitter.com/phi_jp)さんが開発したWebブラウザ上で動くオンラインエディタで、ユーザー登録すれば誰でも利用することができます。 **phina.js**の公式エディタでもあり、実際に様々なプログラムが作られて公開されています。
 
-#### phina.jsのひな形からゲームを作成
+## phina.jsのひな形からゲームを作成
 これまでも触れていますが、普段私が使っている[phina.jsのひな形](https://runstant.com/alkn203/projects/8f0388a4)から作ることで、簡単に始められます。
 
-#### 今回作ったゲーム
+## 今回作ったゲーム
 サンプルとして、制限時間内にどれだけ円をタッチできるかを競う単純なゲームを作りました。
 
 [Touch The Circle(runstant)](https://runstant.com/alkn203/projects/21370e4b)
 
-### runstantプロジェクトをhtmlファイルとしてダウンロードする
+## runstantプロジェクトをhtmlファイルとしてダウンロードする
 ゲームを作ったら、Webに公開するファイルの準備をする必要がありますが、**runstant**の便利な機能として、プロジェクトのダウンロードがあります。
 ダウンロードされたファイルは**html**形式で**javascript**のコード部分もパッケージ化されているので、このファイル１つあればゲームとして動作します。
 
-#### プロジェクトのダウンロード方法
+## プロジェクトのダウンロード方法
 ![runstantdownload.gif](runstantdownload.gif)
 
 * **runstant**の画面下部にあるボタンをクリックすると、プロジェクトのダウンロードができます。ダウンロード先は任意の場所にして、ファイル名を**index.html**に変更して下さい。
 
-### GitHubにゲーム公開用のリポジトリを作る
+## GitHubにゲーム公開用のリポジトリを作る
 [GitHub](https://github.co.jp/)は、プログラマなら誰もが知るようになりつつある、主にソースコードのバージョン管理を目的としたサービスです。
 今回は、この**GitHub**をゲームの公開用サーバとして利用します。
 
@@ -57,7 +57,7 @@ eyecatch = "runstantdownload.gif"
 1. 「リポジトリをREAD ME で初期化」にチェックを入れます。
 1. 「Create repository」ボタンをクリックします。
 
-### htmlファイルをGitHubのリポジトリにアップロードする
+## htmlファイルをGitHubのリポジトリにアップロードする
 リポジトリの用意が出来たら、**runstant**からダウンロードした**html**ファイルをリポジトリにアップロードします。**GitHub**は、ローカル環境から**git**のコマンドを駆使して使うイメージがありますが、**GitHub**上のGUI操作でもファイルのアップロード程度はできます。
 
 ![uploadfile.gif](uploadfile.gif)
@@ -73,7 +73,7 @@ eyecatch = "runstantdownload.gif"
 
 * ファイルがアップロードされたのを確認します。
 
-### GitHubのリポジトリの設定でGitHub Pagesを有効にする
+## GitHubのリポジトリの設定でGitHub Pagesを有効にする
 
 ![setting.gif](setting.gif)
 
@@ -88,5 +88,5 @@ eyecatch = "runstantdownload.gif"
 * 上部に表示される アドレスが公開先のアドレスになります。
 * 反映されるまでには、少し時間がかかる場合もあるようです。
 
-### 公開先
+## 公開先
 [Touch The Circle](https://alkn203.github.io/touchthecircle/)

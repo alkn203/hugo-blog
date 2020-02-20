@@ -9,10 +9,10 @@ eyecatch = "08-wave.gif"
 
 ![08-wave.gif](08-wave.gif)
 
-### はじめに
+## はじめに
 [前回](/posts/tutorials/phina-shooting-08/)は、敵の波状攻撃を実装しました。今回は、ゲームにサウンドをつけます。
 
-### サウンド素材の読み込み
+## サウンド素材の読み込み
 画像と同じようにアセットとして読み込みます。
 
 ```javascript
@@ -25,7 +25,7 @@ eyecatch = "08-wave.gif"
 ```
 >サウンド素材は[魔王魂]([https://maoudamashii.jokersounds.com/](https://maoudamashii.jokersounds.com/))から拝借しました。
 
-### BGMをつける
+## BGMをつける
 
  - **phina.js**でサウンドを扱うには、**SoundManager**クラスを使用します。
  - BGMのようにループするサウンドの場合は、**playMusic**メソッドを使います。
@@ -37,7 +37,7 @@ eyecatch = "08-wave.gif"
     SoundManager.playMusic('bgm');
 ```
 
-### プレイヤーにショット音をつける
+## プレイヤーにショット音をつける
 
  - ショット音は一回毎に再生する必要がありますので、**play**メソッドを使います。
  - 弾生成と同時に音を再生するように**PlayerBullet**クラスのコンストラクに処理を追加しています。
@@ -67,7 +67,7 @@ phina.define("PlayerBullet", {
   },
 ```
 
-### 爆発音をつける
+## 爆発音をつける
 爆発音もショット音と同じように実装します。
 
 ```javascript
@@ -88,10 +88,10 @@ phina.define("Explosion", {
   },
 ```
 
-### 実行サンプル
+## 実行サンプル
 [実行サンプル(runstant)](https://runstant.com/alkn203/projects/5bef2d2c)
 
-### 参考記事
+## 参考記事
 PCでは特に設定なしに音が出ると思いますが、スマホでの音の再生や他のメソッドの説明など、**phina.js**のサウンドのTipsは、以下の記事が参考になると思いますので、是非チェックしてみて下さい。
 
  - [phina.jsで音ゲーを作ってみる【前編】](https://qiita.com/pentamania/items/399d133e5440c9424bde) by [pentamaNia]([https://twitter.com/ptmnia](https://twitter.com/ptmnia)さん

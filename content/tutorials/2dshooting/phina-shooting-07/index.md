@@ -9,10 +9,10 @@ eyecatch = "07-background.gif"
 
 ![07-background.gif](07-background.gif)
 
-### はじめに
+## はじめに
 [前回](/posts/tutorials/phina-shooting-06/)は、当たり判定を追加しました。今回は、背景を作成します。
 
-### 背景画像を追加する
+## 背景画像を追加する
 <center>下の背景</center>
 ![bg1.png](bg1.png)
 
@@ -52,7 +52,7 @@ eyecatch = "07-background.gif"
   },
 ```
 
-### 背景をループしてスクロールさせる
+## 背景をループしてスクロールさせる
 背景のスクロール管理は、**update**内で行います。
 
 ```javascript
@@ -86,6 +86,6 @@ eyecatch = "07-background.gif"
 - 配列に追加し直すことで、**first**で下の位置の画像、**last**で上の位置の画像を常に参照することができます。
 - 上記の処理を繰り返すと、ループで画面をスクロールさせることができます。
 
-### 実行サンプル
+## 実行サンプル
 
 [実行サンプル(runstant)](https://runstant.com/alkn203/projects/def29ed8)

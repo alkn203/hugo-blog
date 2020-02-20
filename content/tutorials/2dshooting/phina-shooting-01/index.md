@@ -7,12 +7,12 @@ title = "【phina.js】2Dシューティングチュートリアル =第1回 プ
 eyecatch = "runstant.jpeg"
 +++
 
-### プログラミングの準備
+## プログラミングの準備
 今回のチュートリアルでは、**phina.js**の公式オンラインエディタの位置付けである[Runstant](https://runstant.com/)を使用します。
 
 ![runstant.jpeg](runstant.jpeg)
 
-### ひな形
+## ひな形
 私が普段使っている以下の[ひな形](https://qiita.com/alkn203/items/09274a38a0f31ee0c1d5)から作成します。
 
 ```javascript

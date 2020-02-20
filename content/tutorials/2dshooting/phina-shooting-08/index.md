@@ -9,13 +9,13 @@ eyecatch = "08-wave.gif"
 
 ![08-wave.gif](08-wave.gif)
 
-### はじめに
+## はじめに
 [前回](/posts/tutorials/phina-shooting-07/)は、背景を追加しました。今回は、敵の波状攻撃を実装します。
 
-### WaveとEmitter
+## WaveとEmitter
 **Unity**のチュートリアルにある**Wave**型と**Emitter**という仕組み自体は、**phina.js**にはありませんので、似せた処理を作ります。
 
-### Wave機能の実現
+## Wave機能の実現
 **Unity**の**Wave**型を参考にして、以下の仕様にします。
 
 1. 敵をフォーメーションで出現させる。
@@ -23,7 +23,7 @@ eyecatch = "08-wave.gif"
 
 クラスにしても良いのですが、親子関係の複雑化を避けるために、今回は関数を作ります。
 
-#### createWave関数
+## createWave関数
 
 ```javascript
 // Wave作成
@@ -39,7 +39,7 @@ eyecatch = "08-wave.gif"
 * これまで敵は**enemyGroup**に追加してきましたが、新たに**waveGroup**に追加します。
 *  敵のフォーメーション情報を配列に入れて、ループでアクセスして敵を配置しています。
 
-#### checkWave関数
+## checkWave関数
 
 ```javascript
 // Waveの状態チェック
@@ -54,7 +54,7 @@ eyecatch = "08-wave.gif"
 * **update**でこの関数を呼び出し、敵の状態をチェックします。
 * 全ての敵が画面外に出るか、プレイヤーに倒されたら**createWave**を呼び出して敵を出現させます。
 
-### 敵が画面外で弾を撃たないようにする
+## 敵が画面外で弾を撃たないようにする
 敵の波状攻撃は実装できましたが、このままだと画面外にいる時から弾を発射できてしまいますので、画面に現れてから弾の発射を開始するように調整します。
 
 ```javascript
@@ -82,6 +82,6 @@ eyecatch = "08-wave.gif"
 
 * 画面に現れて、かつ**tweener**が再生中でなければ再生します。
 
-### 実行サンプル
+## 実行サンプル
 
 [実行サンプル(runstant)](https://runstant.com/alkn203/projects/96f63f64)

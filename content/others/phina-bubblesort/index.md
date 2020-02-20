@@ -9,16 +9,16 @@ eyecatch = "bubble.gif"
 
 ![bubble.gif](bubble.gif)
 
-### バブルソートとは
+## バブルソートとは
 プログラミングを習うと必ずと言って良いほど、最初に出てくるソートアルゴリズムです。
 今回のコードは、**phina.js**でそれを視覚化してみたものです。
 要素が入れ替わる様子が何となく分かるかと思います。
 
-### 実行サンプル
+## 実行サンプル
 <div class='runstant'><iframe src='https://runstant.com/alkn203/projects/eab92230/full' width='100%' height='640px' style='border:0px;box-shadow:0px 0px 2px 0px #aaa'></iframe></div>
 
-### コード
+## コード
 [バブルソート視覚化(runstant)](https://runstant.com/alkn203/projects/eab92230)
 
-### 参考にしたサイト
+## 参考にしたサイト
 [バブルソート](https://www.codereading.com/algo_and_ds/algo/bubble_sort.html)

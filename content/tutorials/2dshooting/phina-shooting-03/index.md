@@ -9,13 +9,13 @@ eyecatch = "03-moveplayer.gif"
 
 ![03-moveplayer.gif](03-moveplayer.gif)
 
-### はじめに
+## はじめに
 [前回](/posts/tutorials/phina-shooting-02/)は、ゲームで使うアセットの読み込みまで行いました。今回は、プレイヤーをキーボードで操作できるようにします。
 
-### プレイヤーの移動
+## プレイヤーの移動
 **Unity**では、コードを実行する場合、ゲームオブジェクトにスクリプトをアタッチする方法をとりますが、**phina.js**では、オブジェクト専用のクラスを作成する方法が一般的です。
 
-### プレイヤークラス
+## プレイヤークラス
 今回は、プレイヤークラスを以下のとおり実装しました。
 
 ```javascript
@@ -44,7 +44,7 @@ phina.define("Player", {
 });
 ```
 
-### クラス宣言
+## クラス宣言
 
 ```javascript
 phina.define("Player", {
@@ -55,7 +55,7 @@ phina.define("Player", {
 - クラス宣言は、**define**で行います。次の文字列はクラス名です。
 - **superClass**で継承元の親クラスを指定します。自機はスプライト画像を使うので、親クラスに**Sprite**クラスを指定しています。
 
-### init関数
+## init関数
 一般的にコンストラクと呼ばれるもので、**Unity**における**Start**と同じ役割です。
 
 ```javascript
@@ -73,7 +73,7 @@ phina.define("Player", {
 - **FrameAnimation**を作成し、**this**(Player)にアタッチしています。この辺りは、**Unity**のコンポーネントに近いです。
 - **gotoAndPlay**で、先に定義したアニメーションを再生しています。
 
-### Update関数
+## Update関数
 毎フレーム呼ばれるもので、**Unity**における**Update**と同じです。
 
 ```javascript
@@ -100,7 +100,7 @@ phina.define("Player", {
 - 変数**direction**に上記のいずれかが入ってきますので、**direction.x**と**direction.y**でそれぞれの方向に分けてスピードを乗じて、移動量を求めます。
 - 最後に**moveBy**関数に移動量を与えて、プレイヤーの位置を更新しています。
 
-### シーンにプレイヤーを追加する
+## シーンにプレイヤーを追加する
 プレイヤークラスを実装しましたので、プレイヤーをシーンに追加します。
 
 ```javascript
@@ -111,7 +111,7 @@ player.setPosition(this.gridX.center(), this.gridY.center(3));
 
 プレイヤーの位置指定には、**Grid**を使っています。**Grid**については、[【phina.js】Gridクラスを使いこなそう](https://qiita.com/alkn203/items/d176a10d4e38d15e4062)を参考にして下さい。
 
-### 実行サンプル
+## 実行サンプル
 左側の実行画面で方向キーでプレイヤーが操作できます。
 
 [実行サンプル(runstant)](https://runstant.com/alkn203/projects/11b5a132)
