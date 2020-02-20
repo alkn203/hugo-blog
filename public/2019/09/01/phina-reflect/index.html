@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   
   <meta charset="UTF-8">
@@ -18,77 +19,89 @@ Vecter2クラスのreflectメソッド  phina.jsのVector2クラスには、反�
   <meta name="og:image" content="https://alkn203.github.io/blog/2019/09/01/phina-reflect/reflect.gif" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2019/09/01/phina-reflect/" />
   <meta name="twitter:site" content="@alkn203" />
-  <meta name="twitter:creator" content="@alkn203" /> 
+  <meta name="twitter:creator" content="@alkn203" />
   
-  <link rel="canonical" href="https://alkn203.github.io/blog/2019/09/01/phina-reflect/"/>
+  <link rel="canonical" href="https://alkn203.github.io/blog/2019/09/01/phina-reflect/" />
   
-  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">
-  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/responsive.css">
+  
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/theme.css">
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/syntax.css">
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/custom.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-  
-  
-  <link href="https://alkn203.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Keep On Coding" />
-  <link href="https://alkn203.github.io/blog/index.xml" rel="feed" type="application/rss+xml" title="Keep On Coding" />
 </head>
+
 <body>
-<div class="container">
-  
-  <header role="banner">
-    <div class="row gutters">
-      <div id="site-title" class="col span_9">
-        <h1><a href="https://alkn203.github.io/blog/">Keep On Coding</a></h1>
-        <h2>Tips and tutorials about phina.js</h2>
-      </div>
-      <div id="link" class="col span_3" style="text-align: right;">
-        
-      </div>
-    </div>
-  </header>
-
-
-
-  <main id="single" role="main" class="col span_9">
-    <div class="article-header">
-      <h1>【phina.js】反射ベクトルを使った反射処理</h1>
-      <div class="meta">
-        Sep 1, 2019 &nbsp;
-        
-          #<a href="https://alkn203.github.io/blog/tags/vecter2">vecter2</a>&nbsp;
-        
-          #<a href="https://alkn203.github.io/blog/tags/collision">collision</a>&nbsp;
-        
-          #<a href="https://alkn203.github.io/blog/tags/reflect">reflect</a>&nbsp;
-        
-      </div>
-    </div>
+  <div class="container">
     
-    
-
-    <article>
-      
-      
-        <h2>Table of contents</h2>
-        <nav id="TableOfContents">
+    <header role="banner" class="header">
+      <div class="header-title">
+  <h1><a href="https://alkn203.github.io/blog/">Keep On Coding</a></h1>
+</div>
+<div class="header-subtitle">
+  Tips and tutorials about phina.js
+</div>
+<div class="header-menu">
   <ul>
-    <li>
-      <ul>
-        <li><a href="#はじめに">はじめに</a></li>
-        <li><a href="#vecter2クラスのreflectメソッド">Vecter2クラスのreflectメソッド</a></li>
-        <li><a href="#サンプルコード">サンプルコード</a></li>
-      </ul>
-    </li>
+    <li><a href="https://phinajs.com/">phina.js(Offcial)</a></li>
+    <li><a href="https://github.com/phinajs/phina.js">phina.js(GitHub)</a></li>
+    <li><a href="#">About this site</a></li>
   </ul>
-</nav>
+</div>
+<div class="header-profile">
+  <div class="header-profile-image">
+    
+    <img src="https://www.gravatar.com/avatar/ccebfc0792db78ae374d6557d3462ef2">
+  </div>
+  <div class="header-profile-author">
+    <a href="https://twitter.com/alkn203">alkn203</a>
+  </div>
+</div>
+    </header>
+    
+    <nav class="sidebar">
+      <h1>Sections</h1>
+
+
+  <ul>
+      <li><a href="https://alkn203.github.io/blog/tips/">Tips</a>
+  <ul>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a>
+  <ul>
+      <li><a href="https://alkn203.github.io/blog/tutorials/2dshooting/">Shooting</a>
+  <ul>
+  </ul>
+      </li>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/others/">Others</a>
+  <ul>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/works/">Works</a>
+  <ul>
+  </ul>
+      </li>
+  </ul>
+    </nav>
+    
+    <main role="main" class="main">
       
-      <h3 id="はじめに">はじめに</h3>
+  <div class="single-container">
+    <div class="single-title">
+      <h1>【phina.js】反射ベクトルを使った反射処理</h1>
+    </div>
+    <div class="single-modified">
+      September 1, 2019  
+    </div>
+    <div class="single-content">
+      
+      <h2 id="はじめに">はじめに</h2>
 <p>反射処理の代表的なものといえば、ブロック崩しですが、ブロック崩しの場合、縦方向あるいは横方向の速度の向きを反転させるだけなので、比較的簡単です。<br>
 しかし、角度がついた壁に対して正確に反射させるにはそう単純にはいきません。この場合は、反射ベクトルというテクニックを使う必要があります。</p>
 <p><img src="reflect.gif" alt="reflect.gif"></p>
 <p><a href="https://runstant.com/alkn203/projects/a1b7100b">実行サンプル(runstant)</a></p>
-<h3 id="vecter2クラスのreflectメソッド">Vecter2クラスのreflectメソッド</h3>
+<h2 id="vecter2クラスのreflectメソッド">Vecter2クラスのreflectメソッド</h2>
 <ul>
 <li><strong>phina.js</strong>の<strong>Vector2</strong>クラスには、反射ベクトルを求める<strong>reflect</strong>というメソッドが用意されています。</li>
 <li><strong>reflect</strong>メソッドは、入射ベクトルと壁の向きの法線ベクトルから反射ベクトルを求めて返します。</li>
@@ -97,7 +110,7 @@ Vecter2クラスのreflectメソッド  phina.jsのVector2クラスには、反�
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">Vector2</span><span class="p">.</span><span class="nx">normal</span><span class="p">(</span><span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">)</span><span class="p">.</span><span class="nx">normalize</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
 <span class="c1">// 反射ベクトル適用
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">Vector2</span><span class="p">.</span><span class="nx">reflect</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">circle</span><span class="p">.</span><span class="nx">physical</span><span class="p">.</span><span class="nx">velocity</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span><span class="p">;</span>
-</code></pre></div><h3 id="サンプルコード">サンプルコード</h3>
+</code></pre></div><h2 id="サンプルコード">サンプルコード</h2>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">phina</span><span class="p">.</span><span class="nx">globalize</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
 <span class="c1">// メインシーン
 </span><span class="c1"></span><span class="nx">phina</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;MainScene&#39;</span><span class="p">,</span> <span class="p">{</span>
@@ -187,220 +200,65 @@ Vecter2クラスのreflectメソッド  phina.jsのVector2クラスには、反�
   <span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
 <span class="p">}</span><span class="p">)</span><span class="p">;</span>
 </code></pre></div>
-    </article>
-
-    
-    
-    
-
-
-<h3>関連記事</h3>
-<ul>
-	
-	<li><a href="https://alkn203.github.io/blog/2019/08/17/phina-collision/">【phina.js】当たり判定について考える</a></li>
-	
-	<li><a href="https://alkn203.github.io/blog/2019/06/13/phina-up-direction/">【phina.js】上方向だけすり抜ける床を作る</a></li>
-	
-</ul>
-
-
-    
-
-
-  </main>
-
-
-
-<aside role="complementary" class="col span_3">
-  
-  <div class="article-header light-gray"><h1>About Me</h1></div>
-  <div id="profile" style="text-align: center;">
-    <div><img src="https://www.gravatar.com/avatar/ccebfc0792db78ae374d6557d3462ef2"></div>
-    <div>alkn203</div>
-    
-  </div>
-  
-  <div class="article-header light-gray"><h1>Social Accounts</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://twitter.com/alkn203" target="_blank">Twitter(alkn203)</a></li>
-    <li><a href="https://github.com/alkn203" target="_blank">Github(alkn203)</a></li>
-    <li><a href="https://qiita.com/alkn203" target="_blank">Qiita(alkn203)</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>About this Site</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://alkn203.github.io/blog/pages/about/">このブログについて</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Links</h1></div>
-  <ul class="none-ul">
-      <li>
-        <a href="https://qiita.com/alkn203/items/bca3222f6b409382fe20">
-        <div>phina.js Tips集</div>
-        </a>
-      </li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Sections</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a></li>
-    <li><a href="https://alkn203.github.io/blog/tips/">Tips</a></li>
-    <li><a href="https://alkn203.github.io/blog/works/">Works</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Tags</h1></div>
-    <ul class="none-ul">
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/algorithm/">
-          <div>algorithm&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/array/">
-          <div>array&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/canvas/">
-          <div>canvas&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/collision/">
-          <div>collision&nbsp;(3)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/extension/">
-          <div>extension&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/extentions/">
-          <div>extentions&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/flow/">
-          <div>flow&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/game/">
-          <div>game&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/gauge/">
-          <div>gauge&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/github/">
-          <div>github&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/html5/">
-          <div>html5&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/map/">
-          <div>map&nbsp;(2)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/origin/">
-          <div>origin&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/phina.js/">
-          <div>phina.js&nbsp;(4)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/reflect/">
-          <div>reflect&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/runstant/">
-          <div>runstant&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/scroll/">
-          <div>scroll&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/shooting/">
-          <div>shooting&nbsp;(12)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/tweener/">
-          <div>tweener&nbsp;(2)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/vecter2/">
-          <div>vecter2&nbsp;(1)</div>
-          </a>
-        </li>
-      
-    </ul>
-</aside>
-
-
-
-
-
-  
-  <footer role="contentinfo" class="col span_9">
-    <div style="text-align:center;">
-      ©&nbsp2020&nbspalkn203
     </div>
-  </footer>
+  </div>
+
+    </main>
+    
+    <nav class="page">
+      
+  <div class="prevnext-container">
+  
+    <div class="prev-arrow"></div>
+    <div class="prev-text"><a href="https://alkn203.github.io/blog/2019/08/24/phina-stump-enemy/">【phina.js】マリオのような敵を踏みつぶすエフェクト</a></div>
+  
+  
+    <div class="next-text"><a href="https://alkn203.github.io/blog/2019/09/18/phina-break-object/">【phina.js】マリオのようなブロック破壊処理</a></div>
+    <div class="next-arrow"></div>
+  
 </div>
 
-<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+    </nav>
+    
+    <nav class="tocbar">
+      
+  
+  
+    <h1>Table of contents</h1>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#はじめに">はじめに</a></li>
+    <li><a href="#vecter2クラスのreflectメソッド">Vecter2クラスのreflectメソッド</a></li>
+    <li><a href="#サンプルコード">サンプルコード</a></li>
+  </ul>
+</nav>
+  
 
-<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-145323973-1', 'auto');
-	ga('send', 'pageview');
-</script>
+    </nav>
+    
+    <footer role="contentinfo" class="footer">
+      <div class="copyright">
+  ©&nbsp2020&nbsp<a href="https://twitter.com/alkn203">alkn203</a>
+</div>
+    </footer>
+  </div>
+  
+  
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-145323973-1', 'auto');
+    ga('send', 'pageview');
+  </script>
 </body>
+
 </html>

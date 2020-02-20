@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   
   <meta charset="UTF-8">
@@ -22,74 +23,88 @@ hitTestElementを使う  phina.app.Object2dを継承したクラスであれば�
   <meta name="og:image" content="https://alkn203.github.io/blog/2019/08/17/phina-collision/mycollision.gif" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2019/08/17/phina-collision/" />
   <meta name="twitter:site" content="@alkn203" />
-  <meta name="twitter:creator" content="@alkn203" /> 
+  <meta name="twitter:creator" content="@alkn203" />
   
-  <link rel="canonical" href="https://alkn203.github.io/blog/2019/08/17/phina-collision/"/>
+  <link rel="canonical" href="https://alkn203.github.io/blog/2019/08/17/phina-collision/" />
   
-  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">
-  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/responsive.css">
+  
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/theme.css">
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/syntax.css">
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/custom.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-  
-  
-  <link href="https://alkn203.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Keep On Coding" />
-  <link href="https://alkn203.github.io/blog/index.xml" rel="feed" type="application/rss+xml" title="Keep On Coding" />
 </head>
+
 <body>
-<div class="container">
-  
-  <header role="banner">
-    <div class="row gutters">
-      <div id="site-title" class="col span_9">
-        <h1><a href="https://alkn203.github.io/blog/">Keep On Coding</a></h1>
-        <h2>Tips and tutorials about phina.js</h2>
-      </div>
-      <div id="link" class="col span_3" style="text-align: right;">
-        
-      </div>
-    </div>
-  </header>
-
-
-
-  <main id="single" role="main" class="col span_9">
-    <div class="article-header">
-      <h1>【phina.js】当たり判定について考える</h1>
-      <div class="meta">
-        Aug 17, 2019 &nbsp;
-        
-          #<a href="https://alkn203.github.io/blog/tags/collision">collision</a>&nbsp;
-        
-      </div>
-    </div>
+  <div class="container">
     
-    
-
-    <article>
-      
-      
-        <h2>Table of contents</h2>
-        <nav id="TableOfContents">
+    <header role="banner" class="header">
+      <div class="header-title">
+  <h1><a href="https://alkn203.github.io/blog/">Keep On Coding</a></h1>
+</div>
+<div class="header-subtitle">
+  Tips and tutorials about phina.js
+</div>
+<div class="header-menu">
   <ul>
-    <li>
-      <ul>
-        <li><a href="#はじめに">はじめに</a></li>
-        <li><a href="#hittestelementを使う">hitTestElementを使う</a></li>
-        <li><a href="#collisionを自前で用意する">Collisionを自前で用意する</a></li>
-        <li><a href="#当たり判定用のshapeを親にしてスプライトなどを子として追加する">当たり判定用のShapeを親にしてスプライトなどを子として追加する</a></li>
-        <li><a href="#サンプルコード">サンプルコード</a></li>
-      </ul>
-    </li>
+    <li><a href="https://phinajs.com/">phina.js(Offcial)</a></li>
+    <li><a href="https://github.com/phinajs/phina.js">phina.js(GitHub)</a></li>
+    <li><a href="#">About this site</a></li>
   </ul>
-</nav>
+</div>
+<div class="header-profile">
+  <div class="header-profile-image">
+    
+    <img src="https://www.gravatar.com/avatar/ccebfc0792db78ae374d6557d3462ef2">
+  </div>
+  <div class="header-profile-author">
+    <a href="https://twitter.com/alkn203">alkn203</a>
+  </div>
+</div>
+    </header>
+    
+    <nav class="sidebar">
+      <h1>Sections</h1>
+
+
+  <ul>
+      <li><a href="https://alkn203.github.io/blog/tips/">Tips</a>
+  <ul>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a>
+  <ul>
+      <li><a href="https://alkn203.github.io/blog/tutorials/2dshooting/">Shooting</a>
+  <ul>
+  </ul>
+      </li>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/others/">Others</a>
+  <ul>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/works/">Works</a>
+  <ul>
+  </ul>
+      </li>
+  </ul>
+    </nav>
+    
+    <main role="main" class="main">
+      
+  <div class="single-container">
+    <div class="single-title">
+      <h1>【phina.js】当たり判定について考える</h1>
+    </div>
+    <div class="single-modified">
+      August 17, 2019  
+    </div>
+    <div class="single-content">
       
       <p><img src="mycollision.gif" alt="mycollision.gif"></p>
-<h3 id="はじめに">はじめに</h3>
+<h2 id="はじめに">はじめに</h2>
 <p>ゲーム作りにおいて、当たり判定ほど奥深く悩まされるものはないと言ってよいでしょう。<br>
 今回は、<strong>phina.js</strong>における当たり判定のアプローチについての自分なりの考察です。</p>
-<h3 id="hittestelementを使う">hitTestElementを使う</h3>
+<h2 id="hittestelementを使う">hitTestElementを使う</h2>
 <ul>
 <li><strong>phina.app.Object2d</strong>を継承したクラスであれば、<strong>hitTestElement</strong>を使えば手軽に当たり判定ができます。</li>
 <li>矩形同士での判定になりますので、一番手軽です。一方で、グラフィックが矩形より小さいと大雑把な判定になってしまうという欠点があります。</li>
@@ -98,7 +113,7 @@ hitTestElementを使う  phina.app.Object2dを継承したクラスであれば�
 <p>参考記事<br>
 <a href="https://qiita.com/alkn203/items/2e567ee47a4a1a8b8ee4">[phina.js-Tips-41] 当たり判定を行う（矩形判定）</a></p>
 </blockquote>
-<h3 id="collisionを自前で用意する">Collisionを自前で用意する</h3>
+<h2 id="collisionを自前で用意する">Collisionを自前で用意する</h2>
 <ul>
 <li><a href="https://alkn203.github.io/blog/posts/tutorials/phina-shooting-06/">	【phina.js】2Dシューティングチュートリアル =第6回 当たり判定とアニメーションイベントとグループ=</a>で自前で作ったような<strong>Collision</strong>クラスを使う方法です。</li>
 <li>任意の位置やサイズに設定することができるので柔軟性があります。一方で、絶対座標と相対座標の関係に気を付けないと、正しい当たり判定ができないという欠点があります。</li>
@@ -107,13 +122,13 @@ hitTestElementを使う  phina.app.Object2dを継承したクラスであれば�
 <p>参考記事<br>
 <a href="https://qiita.com/alkn203/items/8c24d433e9eb8ea0f4bc">[phina.js]Colliderアクセサリを作ってみた話</a></p>
 </blockquote>
-<h3 id="当たり判定用のshapeを親にしてスプライトなどを子として追加する">当たり判定用のShapeを親にしてスプライトなどを子として追加する</h3>
+<h2 id="当たり判定用のshapeを親にしてスプライトなどを子として追加する">当たり判定用のShapeを親にしてスプライトなどを子として追加する</h2>
 <ul>
 <li><strong>RectangleShape</strong>や<strong>CircleShape</strong>を当たり判定の対象として、スプライトをその子要素として追加する方法です。</li>
 <li>絶対座標で当たり判定ができるというメリットがあります。</li>
 <li><strong>Shape</strong>を<strong>hide</strong>メソッドで隠すと子要素まで隠れてしまいますので、<strong>Shape</strong>のコンストラクタで<strong>fill</strong>と<strong>stroke</strong>を透明にすると見えないようにすることができます。</li>
 </ul>
-<h3 id="サンプルコード">サンプルコード</h3>
+<h2 id="サンプルコード">サンプルコード</h2>
 <p><a href="https://runstant.com/alkn203/projects/e0239f85">当たり判定を行う（当たり判定用矩形にスプライト追加）(runstant)</a></p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript">
 <span class="c1">// グローバルに展開
@@ -193,218 +208,67 @@ hitTestElementを使う  phina.app.Object2dを継承したクラスであれば�
 <span class="p">}</span><span class="p">)</span><span class="p">;</span>
 
 </code></pre></div>
-    </article>
-
-    
-    
-    
-
-
-<h3>関連記事</h3>
-<ul>
-	
-	<li><a href="https://alkn203.github.io/blog/2019/06/13/phina-up-direction/">【phina.js】上方向だけすり抜ける床を作る</a></li>
-	
-</ul>
-
-
-    
-
-
-  </main>
-
-
-
-<aside role="complementary" class="col span_3">
-  
-  <div class="article-header light-gray"><h1>About Me</h1></div>
-  <div id="profile" style="text-align: center;">
-    <div><img src="https://www.gravatar.com/avatar/ccebfc0792db78ae374d6557d3462ef2"></div>
-    <div>alkn203</div>
-    
-  </div>
-  
-  <div class="article-header light-gray"><h1>Social Accounts</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://twitter.com/alkn203" target="_blank">Twitter(alkn203)</a></li>
-    <li><a href="https://github.com/alkn203" target="_blank">Github(alkn203)</a></li>
-    <li><a href="https://qiita.com/alkn203" target="_blank">Qiita(alkn203)</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>About this Site</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://alkn203.github.io/blog/pages/about/">このブログについて</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Links</h1></div>
-  <ul class="none-ul">
-      <li>
-        <a href="https://qiita.com/alkn203/items/bca3222f6b409382fe20">
-        <div>phina.js Tips集</div>
-        </a>
-      </li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Sections</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a></li>
-    <li><a href="https://alkn203.github.io/blog/tips/">Tips</a></li>
-    <li><a href="https://alkn203.github.io/blog/works/">Works</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Tags</h1></div>
-    <ul class="none-ul">
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/algorithm/">
-          <div>algorithm&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/array/">
-          <div>array&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/canvas/">
-          <div>canvas&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/collision/">
-          <div>collision&nbsp;(3)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/extension/">
-          <div>extension&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/extentions/">
-          <div>extentions&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/flow/">
-          <div>flow&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/game/">
-          <div>game&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/gauge/">
-          <div>gauge&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/github/">
-          <div>github&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/html5/">
-          <div>html5&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/map/">
-          <div>map&nbsp;(2)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/origin/">
-          <div>origin&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/phina.js/">
-          <div>phina.js&nbsp;(4)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/reflect/">
-          <div>reflect&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/runstant/">
-          <div>runstant&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/scroll/">
-          <div>scroll&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/shooting/">
-          <div>shooting&nbsp;(12)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/tweener/">
-          <div>tweener&nbsp;(2)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/vecter2/">
-          <div>vecter2&nbsp;(1)</div>
-          </a>
-        </li>
-      
-    </ul>
-</aside>
-
-
-
-
-
-  
-  <footer role="contentinfo" class="col span_9">
-    <div style="text-align:center;">
-      ©&nbsp2020&nbspalkn203
     </div>
-  </footer>
+  </div>
+
+    </main>
+    
+    <nav class="page">
+      
+  <div class="prevnext-container">
+  
+    <div class="prev-arrow"></div>
+    <div class="prev-text"><a href="https://alkn203.github.io/blog/2019/07/02/phina-tweener-color/">【phina.js】Tweenerとupdateを使ってShapeの色を変化させる</a></div>
+  
+  
+    <div class="next-text"><a href="https://alkn203.github.io/blog/2019/08/23/phina-mapdata/">【phina.js】マップデータの読み込みにおける工夫</a></div>
+    <div class="next-arrow"></div>
+  
 </div>
 
-<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+    </nav>
+    
+    <nav class="tocbar">
+      
+  
+  
+    <h1>Table of contents</h1>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#はじめに">はじめに</a></li>
+    <li><a href="#hittestelementを使う">hitTestElementを使う</a></li>
+    <li><a href="#collisionを自前で用意する">Collisionを自前で用意する</a></li>
+    <li><a href="#当たり判定用のshapeを親にしてスプライトなどを子として追加する">当たり判定用のShapeを親にしてスプライトなどを子として追加する</a></li>
+    <li><a href="#サンプルコード">サンプルコード</a></li>
+  </ul>
+</nav>
+  
 
-<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-145323973-1', 'auto');
-	ga('send', 'pageview');
-</script>
+    </nav>
+    
+    <footer role="contentinfo" class="footer">
+      <div class="copyright">
+  ©&nbsp2020&nbsp<a href="https://twitter.com/alkn203">alkn203</a>
+</div>
+    </footer>
+  </div>
+  
+  
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-145323973-1', 'auto');
+    ga('send', 'pageview');
+  </script>
 </body>
+
 </html>

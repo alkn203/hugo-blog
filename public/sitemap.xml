@@ -3,6 +3,25 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://alkn203.github.io/blog/tips/</loc>
+    <lastmod>2020-01-03T20:55:06+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://alkn203.github.io/blog/tutorials/</loc>
+  </url>
+  
+  <url>
+    <loc>https://alkn203.github.io/blog/others/</loc>
+    <lastmod>2019-06-29T20:55:06+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://alkn203.github.io/blog/works/</loc>
+    <lastmod>2019-06-12T20:55:06+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://alkn203.github.io/blog/tags/extension/</loc>
     <lastmod>2020-01-03T20:55:06+09:00</lastmod>
   </url>
@@ -19,11 +38,6 @@
   
   <url>
     <loc>https://alkn203.github.io/blog/tags/</loc>
-    <lastmod>2020-01-03T20:55:06+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://alkn203.github.io/blog/tips/</loc>
     <lastmod>2020-01-03T20:55:06+09:00</lastmod>
   </url>
   
@@ -95,7 +109,6 @@
   <url>
     <loc>https://alkn203.github.io/blog/tutorials/2dshooting/</loc>
     <lastmod>2019-07-03T20:55:06+09:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -145,11 +158,6 @@
   
   <url>
     <loc>https://alkn203.github.io/blog/tags/html5/</loc>
-    <lastmod>2019-06-29T20:55:06+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://alkn203.github.io/blog/others/</loc>
     <lastmod>2019-06-29T20:55:06+09:00</lastmod>
   </url>
   
@@ -269,11 +277,6 @@
   </url>
   
   <url>
-    <loc>https://alkn203.github.io/blog/works/</loc>
-    <lastmod>2019-06-12T20:55:06+09:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://alkn203.github.io/blog/2019/06/12/keywordshot/</loc>
     <lastmod>2019-06-12T20:55:06+09:00</lastmod>
   </url>
@@ -285,10 +288,6 @@
   
   <url>
     <loc>https://alkn203.github.io/blog/categories/</loc>
-  </url>
-  
-  <url>
-    <loc>https://alkn203.github.io/blog/tutorials/</loc>
   </url>
   
 </urlset>

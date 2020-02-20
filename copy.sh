@@ -1,2 +1,2 @@
 #!/bin/sh
-cp -rf .\public\* ..\blog\
+\cp -rf public/* ../blog/

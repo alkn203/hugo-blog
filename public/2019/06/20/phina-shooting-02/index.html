@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   
   <meta charset="UTF-8">
@@ -20,75 +21,82 @@
   <meta name="og:image" content="https://alkn203.github.io/blog/2019/06/20/phina-shooting-02/02-sprite.jpg" />
   <meta name="twitter:url" content="https://alkn203.github.io/blog/2019/06/20/phina-shooting-02/" />
   <meta name="twitter:site" content="@alkn203" />
-  <meta name="twitter:creator" content="@alkn203" /> 
+  <meta name="twitter:creator" content="@alkn203" />
   
-  <link rel="canonical" href="https://alkn203.github.io/blog/2019/06/20/phina-shooting-02/"/>
+  <link rel="canonical" href="https://alkn203.github.io/blog/2019/06/20/phina-shooting-02/" />
   
-  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/sanitize.css">
-  <link rel="stylesheet" href="https://alkn203.github.io/blog/css/responsive.css">
+  
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/theme.css">
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/syntax.css">
   <link rel="stylesheet" href="https://alkn203.github.io/blog/css/custom.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-  
-  
-  <link href="https://alkn203.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Keep On Coding" />
-  <link href="https://alkn203.github.io/blog/index.xml" rel="feed" type="application/rss+xml" title="Keep On Coding" />
 </head>
+
 <body>
-<div class="container">
-  
-  <header role="banner">
-    <div class="row gutters">
-      <div id="site-title" class="col span_9">
-        <h1><a href="https://alkn203.github.io/blog/">Keep On Coding</a></h1>
-        <h2>Tips and tutorials about phina.js</h2>
-      </div>
-      <div id="link" class="col span_3" style="text-align: right;">
-        
-      </div>
-    </div>
-  </header>
-
-
-
-  <main id="single" role="main" class="col span_9">
-    <div class="article-header">
-      <h1>【phina.js】2Dシューティングチュートリアル =第2回 スプライトとフレームアニメーション=</h1>
-      <div class="meta">
-        Jun 20, 2019 &nbsp;
-        
-          #<a href="https://alkn203.github.io/blog/tags/shooting">shooting</a>&nbsp;
-        
-      </div>
-    </div>
+  <div class="container">
     
-    
-
-    <article>
-      
-      
-        <h2>Table of contents</h2>
-        <nav id="TableOfContents">
+    <header role="banner" class="header">
+      <div class="header-title">
+  <h1><a href="https://alkn203.github.io/blog/">Keep On Coding</a></h1>
+</div>
+<div class="header-subtitle">
+  Tips and tutorials about phina.js
+</div>
+<div class="header-menu">
   <ul>
-    <li><a href="#はじめに">はじめに</a></li>
-    <li><a href="#テクスチャからスプライトを作成する">テクスチャからスプライトを作成する</a></li>
-    <li><a href="#用意した画像">用意した画像</a>
-      <ul>
-        <li><a href="#自機と敵のアニメーション">自機と敵のアニメーション</a></li>
-        <li><a href="#フレームアニメーション定義ファイルの作成">フレームアニメーション定義ファイルの作成</a></li>
-        <li><a href="#自機と敵の定義ファイル">自機と敵の定義ファイル</a></li>
-        <li><a href="#爆発アニメーションの定義ファイル">爆発アニメーションの定義ファイル</a></li>
-        <li><a href="#弾の作成">弾の作成</a></li>
-        <li><a href="#画像とアニメーション定義ファイルをアセットとして読み込む">画像とアニメーション定義ファイルをアセットとして読み込む</a></li>
-        <li><a href="#アセットの宣言">アセットの宣言</a></li>
-        <li><a href="#main関数でアセットを指定">main関数でアセットを指定</a></li>
-        <li><a href="#スプライトの表示とフレームアニメーションの実行">スプライトの表示とフレームアニメーションの実行</a></li>
-        <li><a href="#実行サンプル">実行サンプル</a></li>
-      </ul>
-    </li>
+    <li><a href="https://phinajs.com/">phina.js(Offcial)</a></li>
+    <li><a href="https://github.com/phinajs/phina.js">phina.js(GitHub)</a></li>
+    <li><a href="#">About this site</a></li>
   </ul>
-</nav>
+</div>
+<div class="header-profile">
+  <div class="header-profile-image">
+    
+    <img src="https://www.gravatar.com/avatar/ccebfc0792db78ae374d6557d3462ef2">
+  </div>
+  <div class="header-profile-author">
+    <a href="https://twitter.com/alkn203">alkn203</a>
+  </div>
+</div>
+    </header>
+    
+    <nav class="sidebar">
+      <h1>Sections</h1>
+
+
+  <ul>
+      <li><a href="https://alkn203.github.io/blog/tips/">Tips</a>
+  <ul>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a>
+  <ul>
+      <li><a href="https://alkn203.github.io/blog/tutorials/2dshooting/">Shooting</a>
+  <ul>
+  </ul>
+      </li>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/others/">Others</a>
+  <ul>
+  </ul>
+      </li>
+      <li><a href="https://alkn203.github.io/blog/works/">Works</a>
+  <ul>
+  </ul>
+      </li>
+  </ul>
+    </nav>
+    
+    <main role="main" class="main">
+      
+  <div class="single-container">
+    <div class="single-title">
+      <h1>【phina.js】2Dシューティングチュートリアル =第2回 スプライトとフレームアニメーション=</h1>
+    </div>
+    <div class="single-modified">
+      June 20, 2019  
+    </div>
+    <div class="single-content">
       
       <p><img src="02-sprite.jpg" alt="02-sprite.jpg"></p>
 <h2 id="はじめに">はじめに</h2>
@@ -106,15 +114,15 @@
 <li>これらの画像は、一般的に<strong>スプライトシート</strong>と呼ばれており同じサイズの画像を複数枚タイル状に並べたものです。</li>
 <li>一枚当たりのサイズを指定して切り出すことで、好きなコマ画像を表示したり、<strong>フレームアニメーション</strong>と言われるコマ送りの動画を表現することができます。</li>
 </ul>
-<h3 id="自機と敵のアニメーション">自機と敵のアニメーション</h3>
+<h2 id="自機と敵のアニメーション">自機と敵のアニメーション</h2>
 <p>以下ようなアニメーションを作成します。</p>
 <p><img src="spaceshipanim.gif" alt="spaceshipanim.gif"></p>
-<h3 id="フレームアニメーション定義ファイルの作成">フレームアニメーション定義ファイルの作成</h3>
+<h2 id="フレームアニメーション定義ファイルの作成">フレームアニメーション定義ファイルの作成</h2>
 <ul>
 <li>フレームアニメーションは、少ないコマ数であればコード中でフレームインデックスを指定して表現することもできますが、アニメーションの種類が増えると複雑になりがちです</li>
 <li><strong>phina.js</strong>ではフレームアニメーション定義ファイルを作成してアセットとして読み込むことで、簡単にアニメーションを行うことができます。</li>
 </ul>
-<h3 id="自機と敵の定義ファイル">自機と敵の定義ファイル</h3>
+<h2 id="自機と敵の定義ファイル">自機と敵の定義ファイル</h2>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
   <span class="s2">&#34;frame&#34;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&#34;width&#34;</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
@@ -145,7 +153,7 @@
 <li><strong>next</strong>で次のアニメーションを指定します。同じアニメーション名を指定すると、ループします。</li>
 <li><strong>frequency</strong>はアニメーションの間隔で、小さければ速くなり、大きければ遅くなります。</li>
 </ul>
-<h3 id="爆発アニメーションの定義ファイル">爆発アニメーションの定義ファイル</h3>
+<h2 id="爆発アニメーションの定義ファイル">爆発アニメーションの定義ファイル</h2>
 <p>以下のようなアニメーションを作成します。</p>
 <p><img src="explosionanim.gif" alt="explosionanim.gif"></p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
@@ -163,11 +171,11 @@
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>自機と敵の場合と違う点は、<strong>animations</strong>の<strong>next</strong>を指定していないところです。理由は、爆発アニメーションは1回限りで良いからです。</p>
-<h3 id="弾の作成">弾の作成</h3>
+<h2 id="弾の作成">弾の作成</h2>
 <p>自機と敵の弾は特にアニメーションをしないので、画像をアセットとして読み込み、プログラム内からフレームインデックスを指定する方法をとります。</p>
-<h3 id="画像とアニメーション定義ファイルをアセットとして読み込む">画像とアニメーション定義ファイルをアセットとして読み込む</h3>
+<h2 id="画像とアニメーション定義ファイルをアセットとして読み込む">画像とアニメーション定義ファイルをアセットとして読み込む</h2>
 <p>アセットをプログラムで使用するためには、ソース内で以下のように記述します。</p>
-<h3 id="アセットの宣言">アセットの宣言</h3>
+<h2 id="アセットの宣言">アセットの宣言</h2>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// アセット
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">ASSETS</span> <span class="o">=</span> <span class="p">{</span>
   <span class="c1">// 画像
@@ -187,7 +195,7 @@
 <li>フレームアニメーション定義ファイルは、<strong>spritesheet</strong>以下に同じよう並べていきます。</li>
 <li>サイトにアップされた素材を指定していますが、ローカルのファイルを指定することも可能です。</li>
 </ul>
-<h3 id="main関数でアセットを指定">main関数でアセットを指定</h3>
+<h2 id="main関数でアセットを指定">main関数でアセットを指定</h2>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="cm">/*
 </span><span class="cm"> * メイン処理
 </span><span class="cm"> */</span>
@@ -203,227 +211,84 @@
 </span><span class="c1"></span>  <span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
 <span class="p">}</span><span class="p">)</span><span class="p">;</span>
 </code></pre></div><p><strong>GameApp</strong>関数のパラメーターとして、先に定義したアセットを指定します。</p>
-<h3 id="スプライトの表示とフレームアニメーションの実行">スプライトの表示とフレームアニメーションの実行</h3>
+<h2 id="スプライトの表示とフレームアニメーションの実行">スプライトの表示とフレームアニメーションの実行</h2>
 <p>アセットとして読み込んだ後は、コード内で以下のように使用します。</p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">// プレイヤー
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="nx">Sprite</span><span class="p">(</span><span class="s1">&#39;spaceship&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span><span class="p">.</span><span class="nx">addChildTo</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="p">;</span>
 <span class="nx">player</span><span class="p">.</span><span class="nx">setPosition</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">gridX</span><span class="p">.</span><span class="nx">center</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">gridY</span><span class="p">.</span><span class="nx">center</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
 <span class="nx">FrameAnimation</span><span class="p">(</span><span class="s1">&#39;spaceship&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">attachTo</span><span class="p">(</span><span class="nx">player</span><span class="p">)</span><span class="p">.</span><span class="nx">gotoAndPlay</span><span class="p">(</span><span class="s1">&#39;player&#39;</span><span class="p">)</span><span class="p">;</span>
-</code></pre></div><h3 id="実行サンプル">実行サンプル</h3>
+</code></pre></div><h2 id="実行サンプル">実行サンプル</h2>
 <p><a href="https://runstant.com/alkn203/projects/2078b429">ここまでのサンプル(runstant)</a></p>
 
-    </article>
-
-    
-    
-    
-
-
-<h3>関連記事</h3>
-<ul>
-	
-	<li><a href="https://alkn203.github.io/blog/2019/06/19/phina-shooting-01/">【phina.js】2Dシューティングチュートリアル =第1回 プログラミングの準備=</a></li>
-	
-</ul>
-
-
-    
-
-
-  </main>
-
-
-
-<aside role="complementary" class="col span_3">
-  
-  <div class="article-header light-gray"><h1>About Me</h1></div>
-  <div id="profile" style="text-align: center;">
-    <div><img src="https://www.gravatar.com/avatar/ccebfc0792db78ae374d6557d3462ef2"></div>
-    <div>alkn203</div>
-    
-  </div>
-  
-  <div class="article-header light-gray"><h1>Social Accounts</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://twitter.com/alkn203" target="_blank">Twitter(alkn203)</a></li>
-    <li><a href="https://github.com/alkn203" target="_blank">Github(alkn203)</a></li>
-    <li><a href="https://qiita.com/alkn203" target="_blank">Qiita(alkn203)</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>About this Site</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://alkn203.github.io/blog/pages/about/">このブログについて</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Links</h1></div>
-  <ul class="none-ul">
-      <li>
-        <a href="https://qiita.com/alkn203/items/bca3222f6b409382fe20">
-        <div>phina.js Tips集</div>
-        </a>
-      </li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Sections</h1></div>
-  <ul class="none-ul">
-    <li><a href="https://alkn203.github.io/blog/tutorials/">Tutorials</a></li>
-    <li><a href="https://alkn203.github.io/blog/tips/">Tips</a></li>
-    <li><a href="https://alkn203.github.io/blog/works/">Works</a></li>
-  </ul>
-  
-  <div class="article-header light-gray"><h1>Tags</h1></div>
-    <ul class="none-ul">
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/algorithm/">
-          <div>algorithm&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/array/">
-          <div>array&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/canvas/">
-          <div>canvas&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/collision/">
-          <div>collision&nbsp;(3)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/extension/">
-          <div>extension&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/extentions/">
-          <div>extentions&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/flow/">
-          <div>flow&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/game/">
-          <div>game&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/gauge/">
-          <div>gauge&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/github/">
-          <div>github&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/html5/">
-          <div>html5&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/map/">
-          <div>map&nbsp;(2)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/origin/">
-          <div>origin&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/phina.js/">
-          <div>phina.js&nbsp;(4)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/reflect/">
-          <div>reflect&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/runstant/">
-          <div>runstant&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/scroll/">
-          <div>scroll&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/shape/">
-          <div>shape&nbsp;(1)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/shooting/">
-          <div>shooting&nbsp;(12)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/tweener/">
-          <div>tweener&nbsp;(2)</div>
-          </a>
-        </li>
-      
-        <li>
-          <a href="https://alkn203.github.io/blog//tags/vecter2/">
-          <div>vecter2&nbsp;(1)</div>
-          </a>
-        </li>
-      
-    </ul>
-</aside>
-
-
-
-
-
-  
-  <footer role="contentinfo" class="col span_9">
-    <div style="text-align:center;">
-      ©&nbsp2020&nbspalkn203
     </div>
-  </footer>
+  </div>
+
+    </main>
+    
+    <nav class="page">
+      
+  <div class="prevnext-container">
+  
+    <div class="prev-arrow"></div>
+    <div class="prev-text"><a href="https://alkn203.github.io/blog/2019/06/19/phina-shooting-01/">【phina.js】2Dシューティングチュートリアル =第1回 プログラミングの準備=</a></div>
+  
+  
+    <div class="next-text"><a href="https://alkn203.github.io/blog/2019/06/21/phina-shooting-03/">【phina.js】2Dシューティングチュートリアル =第3回 プレイヤーの移動=</a></div>
+    <div class="next-arrow"></div>
+  
 </div>
 
-<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+    </nav>
+    
+    <nav class="tocbar">
+      
+  
+  
+    <h1>Table of contents</h1>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#はじめに">はじめに</a></li>
+    <li><a href="#テクスチャからスプライトを作成する">テクスチャからスプライトを作成する</a></li>
+    <li><a href="#用意した画像">用意した画像</a></li>
+    <li><a href="#自機と敵のアニメーション">自機と敵のアニメーション</a></li>
+    <li><a href="#フレームアニメーション定義ファイルの作成">フレームアニメーション定義ファイルの作成</a></li>
+    <li><a href="#自機と敵の定義ファイル">自機と敵の定義ファイル</a></li>
+    <li><a href="#爆発アニメーションの定義ファイル">爆発アニメーションの定義ファイル</a></li>
+    <li><a href="#弾の作成">弾の作成</a></li>
+    <li><a href="#画像とアニメーション定義ファイルをアセットとして読み込む">画像とアニメーション定義ファイルをアセットとして読み込む</a></li>
+    <li><a href="#アセットの宣言">アセットの宣言</a></li>
+    <li><a href="#main関数でアセットを指定">main関数でアセットを指定</a></li>
+    <li><a href="#スプライトの表示とフレームアニメーションの実行">スプライトの表示とフレームアニメーションの実行</a></li>
+    <li><a href="#実行サンプル">実行サンプル</a></li>
+  </ul>
+</nav>
+  
 
-<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-145323973-1', 'auto');
-	ga('send', 'pageview');
-</script>
+    </nav>
+    
+    <footer role="contentinfo" class="footer">
+      <div class="copyright">
+  ©&nbsp2020&nbsp<a href="https://twitter.com/alkn203">alkn203</a>
+</div>
+    </footer>
+  </div>
+  
+  
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-145323973-1', 'auto');
+    ga('send', 'pageview');
+  </script>
 </body>
+
 </html>
