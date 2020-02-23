@@ -4,6 +4,7 @@ title = "Keep On Coding"
 canonifyurls = true
 pygmentsCodefences = true
 pygmentsUseClasses = true
+enableGitInfo = true
 
 [permalinks]
 others = ":year/:month/:day/:filename"
@@ -18,8 +19,5 @@ author = "alkn203"
 authorsite = "https://twitter.com/alkn203"
 gravatar = "alkn203@gmail.com"
 copyrightYear = "2020"
-twitter = "alkn203"
-github = "alkn203"
-qiita = "alkn203"
 analytics = "UA-145323973-1"
 showsToc = true
