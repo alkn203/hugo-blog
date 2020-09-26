@@ -210,7 +210,6 @@ th {
 /* Pagenation Section */
 .page {
   text-align: center;
-  background-color: #99cc00;
   grid-column: 3 / 11;
   grid-row: 3 / 4;
 }
