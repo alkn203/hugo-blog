@@ -1,10 +1,13 @@
-<div class="prevnext-container">
+<!-- Single Pagination -->
+<div class="prevnext">
+  <ul>
   {{ with .PrevInSection }}
-    <div class="prev-arrow"></div>
-    <div class="prev-text"><a href="{{ .Permalink }}">前の記事</a></div>
+    <li><<</li>
+    <li><a href="{{ .Permalink }}">前の記事</a></li>
   {{ end }}
   {{ with .NextInSection }}
-    <div class="next-text"><a href="{{ .Permalink }}">次の記事</a></div>
-    <div class="next-arrow"></div>
+    <li><a href="{{ .Permalink }}">次の記事</a></li>
+    <li>>></li>
   {{ end }}
+  </ul>
 </div>
