@@ -1,0 +1,10 @@
+<!-- List Pagination -->
+<div class="pagination">
+  <ul>
+    <li>{{ if .Paginator.HasPrev }}<<{{ end }}</li>
+    <li>{{ if .Paginator.HasPrev }}<a href="{{.Paginator.Prev.URL}}">前のページ</a>{{ end }}</li>
+    <li>{{.Paginator.PageNumber}}/{{.Paginator.TotalPages}}</li>
+    <li>{{ if .Paginator.HasNext }}<a href="{{.Paginator.Next.URL}}">次のページ</a>{{ end }}</li>
+    <li>{{ if .Paginator.HasNext }}>>{{ end }}</li>
+  </ul>
+</div>
