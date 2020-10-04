@@ -1,198 +1,33 @@
 +++
-date = "2020-09-20T20:55:06+09:00"
-draft = true
+date = "2020-09-30T20:55:06+09:00"
+draft = false
 slug = ""
 tags = ["breakout"]
-title = "【phina.js】ゲーム作成チュートリアル（ブロック崩し）=第3回 ボールの作成="
-eyecatch = "breakout03.png"
+title = "【phina.js】ゲーム作成チュートリアル（ブロック崩し）=第4回 ボールとブロックの反射="
+eyecatch = "breakout04.png"
 +++
 
 ## はじめに
-前回は、プレイヤーが操作する**パドル**を作成しました。今回は、ブロック崩しの肝とも言える**ボール**を作成したいと思います。
 
-![breakout03.png](breakout03.png)
+前回は、ボールと画面端、ボールとパドルの反射処理を実装しました。今回は、ボールとブロックの反射処理、そしてブロックの消去処理を追加したいと思います。
 
-[runstantで確認](http://runstant.com/alkn203/projects/0d1fb8d6)
+![breakout04.png](breakout04.png)
+
+[runstantで確認](http://runstant.com/alkn203/projects/c686fe25)
+
+## ボールとブロックの反射処理
+
+ボールがブロックに当たると反射するようにします。まず、反射のパターンを整理したいと思います。
+そこで、ボールとブロックとの当たり判定を以下のパターンに分けてみました。
+
+* **ブロックの左上角** ・・・左上に跳ね返す
+* **ブロックの右上角** ・・・右上に跳ね返す
+* **ブロックの左下角** ・・・左下に跳ね返す
+* **ブロックの右下角** ・・・右下に跳ね返す
+* **ブロックの上面と下面** ・・・縦移動を反転させる
+* **ブロックの左側面と右側面** ・・・横移動を反転させる
 
 コードは以下のとおりです。
-
-```js
-// グローバルに展開
-phina.globalize();
-/*
- * 定数
- */
-var BLOCK_WIDTH = 40 * 2;
-var BLOCK_HEIGHT = 60 / 2;
-var PADDLE_WIDTH = BLOCK_WIDTH * 1.5;
-var PADDLE_HEIGHT = BLOCK_HEIGHT;
-var BALL_RADIUS = BLOCK_WIDTH / 8;
-/*
- * メインシーン
- */
-phina.define("MainScene", {
-  // 継承
-  superClass: 'DisplayScene',
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit();
-    // 背景色
-    this.backgroundColor = 'black';
-    // ブロックグループ
-    this.blockGroup = DisplayElement().addChildTo(this);
-    // 位置判定用のRect
-    var screenRect = Rect(0, 0, 640, 960);
-
-    var self = this;
-    // Gridを利用してブロック設置
-    Array.range(2, 16, 2).each(function(spanX) {
-      Array.range(1, 4, 0.5).each(function(spanY) {
-        Block().addChildTo(self.blockGroup)
-               .setPosition(self.gridX.span(spanX), self.gridY.span(spanY));
-      });
-    });
-    // パドル移動ライン
-    var paddleY = this.gridY.span(14.5);
-    // パドル設置
-    var paddle = Paddle().addChildTo(this)
-                         .setPosition(this.gridX.center(), paddleY);
-    // 画面上でのタッチ移動時
-    this.onpointmove = function(e) {
-      // タッチ位置に移動
-      paddle.setPosition(e.pointer.x | 0, paddleY);
-      // 画面はみ出し防止
-      if (paddle.left < screenRect.left) { paddle.left = screenRect.left; }
-      if (paddle.right > screenRect.right) { paddle.right = screenRect.right; }
-    };
-    // ボール作成
-    this.ball = Ball().addChildTo(this);
-    // シーン全体から参照可能にする
-    this.paddle = paddle;
-  },
-  // 毎フレーム更新
-  update: function() {
-    var ball = this.ball;
-    var paddle = this.paddle;
-    // ボールはパドルの真上
-    ball.x = paddle.x;
-    ball.bottom = paddle.top;
-  },
-});
-/*
- * ブロッククラス
- */
-phina.define('Block', {
-  // 親クラス指定
-  superClass: 'RectangleShape',
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit({
-      width: BLOCK_WIDTH,
-      height: BLOCK_HEIGHT,
-    });
-  },
-});
-/*
- * パドルクラス
- */
-phina.define('Paddle', {
-  // 親クラス指定
-  superClass: 'RectangleShape',
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit({
-      width: PADDLE_WIDTH,
-      height: PADDLE_HEIGHT,
-      fill: 'silver',
-    });
-  },
-});
-/*
- * ボールクラス
- */
-phina.define('Ball', {
-  // 親クラス指定
-  superClass: 'CircleShape',
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit({
-      radius: BALL_RADIUS,
-      fill: 'silver',
-    });
-  },
-});
-/*
- * メイン処理
- */
-phina.main(function() {
-  // アプリケーションを生成
-  var app = GameApp({
-    title: 'Break Out',
-  });
-  // 実行
-  app.run();
-});
-```
-
-## 定数
-```js
-var BALL_RADIUS = BLOCK_WIDTH / 8;
-```
-* ボールの半径をブロックの幅の1/8のサイズにしています。つまり、直径がブロックの幅の1/4の円とします。
-
-## ボールクラス
-```js
-phina.define('Ball', {
-  // 親クラス指定
-  superClass: 'CircleShape',
-  // コンストラクタ
-  init: function() {
-    // 親クラス初期化
-    this.superInit({
-      radius: BALL_RADIUS,
-      fill: 'silver',
-    });
-  },
-});
-```
-
-* **phina.define**で**Ball**クラスを定義しています。
-* ボールは円なので**CircleShape**クラスを継承し、**superInit**で親クラスへパラメータを渡しています。**radius**は円の半径サイズです。
-
-## ボールの追加
-```js
-    // ボール作成
-    this.ball = Ball().addChildTo(this);
-    // シーン全体から参照可能にする
-    this.paddle = paddle;
-```
-
-* ボールを作成して**MainScene**に追加しています。位置は別で設定するので、今回はシーンへの追加のみです。
-* 現在の**paddle**変数は、**init**関数内だけのスコープとなっているので、**MainScene**全体から参照できるように**this.paddle**に代入しています。
-
-## フレーム処理
-```js
-  // 毎フレーム更新
-  update: function() {
-    var ball = this.ball;
-    var paddle = this.paddle;
-    // ボールはパドルの真上
-    ball.x = paddle.x;
-    ball.bottom = paddle.top;
-  },
-```
-
-* **update**関数には、毎フレーム行う処理を記載します。
-* ボールをパドルの真上になるように設置します。
-* 毎フレーム呼ばれるので、パドルを移動してもボールが追従するようになります。
-
-## ボールの発射、パドルおよび壁との反射処理
-
-このままだと、ボールがパドルについたままですので、ボールの発射と反射処理を追加します。コードは以下のとおりです。
 
 ```js
 // グローバルに展開
@@ -304,6 +139,70 @@ phina.define("MainScene", {
         var dx = paddle.x - ball.x;
         ball.vx = -dx / 5;
       }
+            // ブロックとの反射
+      this.blockGroup.children.some(function(block) {
+        // ヒットなら
+        if (ball.hitTestElement(block)) {
+          // 左上かど
+          if (ball.top < block.top && ball.left < block.left) {
+            // 位置補正
+            ball.right = block.left;
+            ball.bottom = block.top;
+            // 移動方向設定
+            ball.vx = -ball.speed;
+            ball.vy = -ball.speed;
+            return true;
+          }
+          // 右上かど
+          if (block.top < ball.top && block.right < ball.right) {
+            ball.left = block.right;
+            ball.bottom = block.top;
+            ball.vx = ball.speed;
+            ball.vy = -ball.speed;
+            return true;
+          }
+          // 左下かど
+          if (block.bottom < ball.bottom && ball.left < block.left) {
+            ball.right = block.left;
+            ball.top = block.bottom;
+            ball.vx = -ball.speed;
+            ball.vy = ball.speed;
+            return true;
+          }
+          // 右下かど
+          if (block.bottom < ball.bottom && block.right < ball.right) {
+            ball.left = block.right;
+            ball.top = block.bottom;
+            ball.vx = ball.speed;
+            ball.vy = ball.speed;
+            return true;
+          }
+          // 左側
+          if (ball.left < block.left) {
+            ball.right = block.left;
+            ball.vx = -ball.vx;
+            return true;
+          }
+          // 右側
+          if (block.right < ball.right) {
+            ball.left = block.right;
+            ball.vx = -ball.vx;
+            return true;
+          }
+          // 上側
+          if (ball.top < block.top) {
+            ball.bottom = block.top;
+            ball.vy = -ball.vy;
+            return true;
+          }
+          // 下側
+          if (block.bottom < ball.bottom) {
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+            return true;
+          }
+        }
+      });
     }
   },
 });
@@ -369,104 +268,178 @@ phina.main(function() {
   app.run();
 });
 ```
-<a href="http://runstant.com/alkn203/projects/9bf709b3" target="_blank">[runstantで確認]</a>
 
-## ボールのスピード
+## コード説明
+当たり判定はボールの移動中常時行う必要があるので、**update**関数内に追加します。
+
+## ブロックとの反射
+
 ```js
-    // スピード
-    this.speed = 6;
+// ブロックとの反射
+this.blockGroup.children.some(function(block) {
+  // ヒットなら
+  if (ball.hitTestElement(block)) {
 ```
 
-* **Ball**クラスにボールのスピードのプロパティを追加します。
+**blockGroup**の子要素配列をループして、ボールとの当たり判定を行います。
+**each**を使いたいところですが、現状**forEach**には**break**に当たる処理がないとのことですので、打開策として**some**関数を使って、当たりと判定されたらループを抜けるようにしています。
+この手法については、[本記事](http://qiita.com/phi/items/f998763d2d52bdd57a7c)を参考にしています。
 
-## ゲームステータス
+## 角のあたり判定
+
+角の当たり判定については、左上角を例に説明します。
+
 ```js
-    // ゲーム状態
-    this.status = 'ready';
+// 左上かど
+if (ball.top < block.top && ball.left < block.left) {
+  // 位置補正
+  ball.right = block.left;
+  ball.bottom = block.top;
+  // 移動方向設定
+  ball.vx = -ball.speed;
+  ball.vy = -ball.speed;
+  return true;
+}
 ```
 
-* ボールの状態管理のための変数を追加します。**ready**は、パドルの上で待機中の状態とします。
+左上角の場合は、ボールがブロックに当たっていて、**ボールの左側がブロックの左側より左、かつボールの上側がブロックの上側より上**という位置関係にある時です。
+画面上で**vx**は負、**vy**も負の方向、つまり左斜め上45度方向に返します。
 
-## ボールの発射
+## 側面との当たり判定
+
 ```js
-    // 画面上でタッチが離れた時
-    this.onpointend = function() {
-      if (self.status === 'ready') {
-        // ボール発射
-        self.ball.vy = -self.ball.speed;
-        self.status = 'move';
-      }
-    };
+// 左側
+if (ball.left < block.left) {
+  ball.right = block.left;
+  ball.vx = -ball.vx;
+  return true;
+}
+// 右側
+if (block.right < ball.right) {
+  ball.left = block.right;
+  ball.vx = -ball.vx;
+  return true;
+}
 ```
-* ボールはタッチを離した時に発射させたいので、**pointend**イベントを拾う**this.onpointend**関数内に処理を書きます。
-* ボールの状態が**ready**の場合に、**ball.vy**として、スピードを元にした画面上方向の移動量を設定します。
-* ボール発射後は、状態を**move**としています。
+側面の場合は、**vy**はそのままで**vx**を反転させます。
 
-## ボールの状態で処理を分ける
+## 上下面との当たり判定
+
 ```js
-    // ボール待機中
-    if (this.status === 'ready') {
-      // ボールはパドルの真上
-      ball.vx = ball.vy = 0;
-      ball.x = paddle.x;
-      ball.bottom = paddle.top;
-    }
-    // ボール移動中
-    if (this.status === 'move') {
-      // ボール移動
-      ball.moveBy(ball.vx, ball.vy);
-```
-
-* **update**関数内の処理をボールの状態で分けます。
-* 移動中の場合は、**moveBy**関数でx方向、y方向の移動量を元に移動処理を行います。ゲーム作りにおいてよく使われる手法です。
-
-## 壁との発射処理
-```js
-      // 画面端反射
-      // 上
-      if (ball.top < screenRect.top) {
-        ball.top = screenRect.top;
-        ball.vy = -ball.vy;
-      }
-      // 左
-      if (ball.left < screenRect.left) {
-        ball.left = screenRect.left;
-        ball.vx = -ball.vx;
-      }
-      // 右
-      if (ball.right > screenRect.right) {
-        ball.right = screenRect.right;
-        ball.vx = -ball.vx;
-      }
-      // 落下
-      if (ball.top > screenRect.bottom) {
-        // 準備状態へ
-        this.status = 'ready';
-      }
+// 上側
+if (ball.top < block.top) {
+  ball.bottom = block.top;
+  ball.vy = -ball.vy;
+  return true;
+}
+// 下側
+if (block.bottom < ball.bottom) {
+  ball.top = block.bottom;
+  ball.vy = -ball.vy;
+  return true;
+}
 ```
 
-* 画面上と左右を壁とみなして、反射処理を行います。
-* 上の場合は**vy**を反転、左右の場合は、**vx**を反転させています。
-* 反射をきれいに見せるために、ボール位置の補正をしています。
-* 画面下の場合は落下とみなして、ボールを初期状態に戻しています。
+上下面の場合は、**vx**はそのままで**vy**を反転させます。
 
-## パドルとの発射処理
+## ボールが当たったブロックを消去する
+
+次はブロックの消去処理を追加します。
+**update**関数内のボールとブロックの衝突処理部分を以下のとおり変更します。
+
 ```js
-      // パドルとの反射
-      if (ball.hitTestElement(paddle) && ball.vy > 0) {
-        ball.bottom = paddle.top;
-        ball.vy = -ball.vy;
-        // 当たった位置で角度を変化させる
-        var dx = paddle.x - ball.x;
-        ball.vx = -dx / 5;
-      }
-    }
+// ブロックとの反射
+ this.blockGroup.children.some(function(block) {
+   // ヒットなら
+   if (ball.hitTestElement(block)) {
+     // 左上かど
+     if (ball.top < block.top && ball.left < block.left) {
+       // 位置補正
+       ball.right = block.left;
+       ball.bottom = block.top;
+       // 移動方向設定
+       ball.vx = -ball.speed;
+       ball.vy = -ball.speed;
+       // ブロック消去
+       block.remove();
+       return true;
+     }
+     // 右上かど
+     if (block.top < ball.top && block.right < ball.right) {
+       ball.left = block.right;
+       ball.bottom = block.top;
+       ball.vx = ball.speed;
+       ball.vy = -ball.speed;
+       block.remove();
+       return true;
+     }
+     // 左下かど
+     if (block.bottom < ball.bottom && ball.left < block.left) {
+       ball.right = block.left;
+       ball.top = block.bottom;
+       ball.vx = -ball.speed;
+       ball.vy = ball.speed;
+       block.remove();
+       return true;
+     }
+     // 右下かど
+     if (block.bottom < ball.bottom && block.right < ball.right) {
+       ball.left = block.right;
+       ball.top = block.bottom;
+       ball.vx = ball.speed;
+       ball.vy = ball.speed;
+       block.remove();
+       return true;
+     }
+     // 左側
+     if (ball.left < block.left) {
+       ball.right = block.left;
+       ball.vx = -ball.vx;
+       block.remove();
+       return true;
+     }
+     // 右側
+     if (block.right < ball.right) {
+       ball.left = block.right;
+       ball.vx = -ball.vx;
+       block.remove();
+       return true;
+     }
+     // 上側
+     if (ball.top < block.top) {
+       ball.bottom = block.top;
+       ball.vy = -ball.vy;
+       block.remove();
+       return true;
+     }
+     // 下側
+     if (block.bottom < ball.bottom) {
+       ball.top = block.bottom;
+       ball.vy = -ball.vy;
+       block.remove();
+       return true;
+     }
+   }
+ });
+ ```
+[runstantで確認](http://runstant.com/alkn203/projects/efc751d8)
+ 
+## 消去処理
+
+```js
+// ブロック消去
+block.remove();
 ```
 
-* **hitTestElement**でボールとパドルの当たり判定を行っています。
-* 想定外の反射を防ぐために、ボールの移動方向が下向きであるかを併せてチェックしています。
-* 初期設定のままだとボールが縦方向へ行ったり来たりしかしないので、パドルに当たった位置に応じて、角度を変化させています。
+当たり判定で当たったブロックについて、**block.remove**として自身を消去しています。
+この処理を各判定毎に行います。
+
+## 補足
+お気づきの方もいらっしゃるかもしれませんが、このままの処理だと当たり具合によって内部のブロックまで消去されることがあります。
+これを防ぐためには、当たったブロックが一番外側にあるかどうかの判定を追加する必要があるかと思いますが、今回は割愛したいと思います。
 
 ## 今回はここまで
-ここまでで、ボールを発射してパドルで跳ね返すことができるようになりました。
-次回は、ボールとブロックの反射を追加したいと思います。
+
+ここまでで、ボールを跳ね返してブロックが消去できるようになりました。
+少しはブロック崩しらしくなってきたのではないかと思います。
+次回は、**phina.js**の目玉機能の１つとも言える**Tweener**を使って、ブロックの消去アニメーションを行いと思います。
