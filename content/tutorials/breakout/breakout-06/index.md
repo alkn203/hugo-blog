@@ -10,7 +10,9 @@ eyecatch = "breakout05.png"
 ## はじめに
 前回は、**Tweener**を使ったアニメーション処理を追加しました。今回は最終回として、ゲームオーバーとクリア処理を追加したいと思います。
 
-![breakout-tut-05.png](https://qiita-image-store.s3.amazonaws.com/0/67114/28ad65d5-514c-9f92-1fe8-2fea9ca011b8.png)
+![breakout05.png](breakout05.png)
+
+[runstantで確認](http://runstant.com/alkn203/projects/211ed4f6)
 
 ## ゲームオーバー処理
 
@@ -297,11 +299,8 @@ phina.main(function() {
   app.run();
 });
 ```
-<a href="http://runstant.com/alkn203/projects/211ed4f6" target="_blank">[runstantで確認]</a>
 
-## コード説明
-
-### ゲームオーバー処理
+## ゲームオーバー判定
 
 ```js
       // 落下
@@ -642,11 +641,10 @@ phina.main(function() {
   app.run();
 });
 ```
-<a href="http://runstant.com/alkn203/projects/5873b593" target="_blank">[runstantで確認]</a>
 
-## コード説明
+[runstantで確認](http://runstant.com/alkn203/projects/5873b593)
 
-### スコア表示
+## スコア表示
 
 ```js
 // スコア
@@ -667,7 +665,7 @@ this.hitNumber = 0;
 * **alpha**は透明度で、0に近づくほど透明になります。
 * **this.hitNumber**ブロックを連続で崩した回数を記録します。
 
-### スコア加算
+## スコア加算
 
 ```js
   // スコア加算
@@ -685,7 +683,7 @@ addScore: function() {
 * **addScore**関数内では、連続ヒット数の場合、スコアを上乗せしています。
 * スコア表示用ラベルの**text**プロパティに現在のスコアを反映させれば、ラベルが更新されます。
 
-### クリア判定
+## クリア判定
 
 ```js
 // クリアチェック
@@ -710,5 +708,3 @@ if (this.blockGroup.children.length === 0) {
 
 今回のチュートリアルが、**phina.js**を使ったゲーム作成の際に少しでも参考になれば幸いです。
 最後までお付き合い頂きありがとうございました。
-
-[最終回＝ゲームオーバーとクリア＝](https://qiita.com/alkn203/items/254655c8f3955ac5ba59)←
