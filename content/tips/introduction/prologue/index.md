@@ -8,7 +8,8 @@ title = "はじめに"
 
 ## phina.jsについて
 自分なりに**phina.js**について書いたエントリーです。
-https://zenn.dev/alkn203/articles/phina-start-guide
+
+[phina.js事始め【改】](https://alkn203.github.io/blog/2021/06/11/start-guide/)
 
 ## phina.jsの開発環境を構築する
 * このTips集では、Webブラウザ上でコーディング・実行が可能な[runstant](https://runstant.com)を使用してますので、基本的に開発環境として必要なものはWebブラウザだけです。
