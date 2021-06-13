@@ -30,7 +30,6 @@ h1 {
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   border-left: solid 5px #29abe2;
-  border-bottom: solid 1px #29abe2;
 }
 
 h2 {
@@ -43,7 +42,7 @@ h3, h4, h5, h6 {
 
 h2, h3, h4, h5, h6 {
   padding-left: 0.2em;
-  border-left: solid 3px #29abe2;
+  border-left: solid 5px #29abe2;
 }
 
 table {
@@ -70,70 +69,26 @@ th {
 
 /* Header Section */
 .header {
-  grid-column: 1 / 13;
-  grid-row: 1 / 2;
-  /* Header Grid Layout */
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 1fr 1fr;
-}
-
-.header-title {
-  grid-column: 1 / 4;
+  text-align: center;
+  grid-column: 2 / 12;
   grid-row: 1 / 2;
 }
-
 /* Site title h1 */
 .header-title h1 {
   border-left-style: none;
   border-bottom-style: none;
 }
 
-.header-subtitle {
-  grid-column: 1 / 4;
-  grid-row: 2 / 3;
-  padding-left: 1em;
-}
-
 .header-menu {
-  grid-column: 4 / 11;
-  grid-row: 1 / 3;
-  font-size: 16px;
-  padding-top: 10px;
-}
-
-.header-menu ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.header-menu ul li {
-  display: inline;
-  padding-left: 10px;
+  display: none;
 }
 /* Sidebar Section */
 .sidebar {
-  grid-column: 1 / 3;
-  grid-row: 2 / 4;
+  display: none;
 }
-
-.sidebar {
-  font-size: 18px;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding-left: 1em;
-  margin-top: 5px;
-}
-
-.sidebar ul li {
-  padding-left: 0;
-}
-
 /* Main Section */
 .main {
-  grid-column: 3 / 11;
+  grid-column: 2 / 12;
   grid-row: 2 / 3;
 }
 /* Single Section */
@@ -141,34 +96,13 @@ th {
   line-height: 1.6em;
 }
 
-.single-content a {
-  color: #29abe2;
-}
-
 .tocbar {
-  grid-column: 11 / 13;
-  grid-row: 2 / 4;
-  height: 400px;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
+  display: none;
 }
-
-#TableOfContents ul {
-  list-style: none;
-  padding-left: 10px;
-}
-
-#TableOfContents ul li {
-  margin-left: 0;
-  padding-left: 0;
-  margin-top: 0.5em;
-}
-
-/* Pagenation Section */
+/* Pagenator Section */
 .page {
   text-align: center;
-  grid-column: 3 / 11;
+  grid-column: 2 / 12;
   grid-row: 3 / 4;
 }
 /* List Pagination */
@@ -181,7 +115,7 @@ th {
   display: inline;
   padding-left: 10px;
 }
-/* Single Pagination */
+/* Single Pasination */
 .prevnext ul {
   list-style: none;
   padding-left: 0;
@@ -191,10 +125,10 @@ th {
   display: inline;
   padding-left: 10px;
 }
-/* Footer Section */
+
 .footer {
   text-align: center;
-  grid-column: 1 / 13;
+  grid-column: 2 / 12;
   grid-row: 4 / 5;
 }
 

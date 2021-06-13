@@ -1,6 +1,6 @@
 <div class="summary-container">
   <div class="summary-eyecatch">
-    <img src="{{ .Permalink }}{{ .Params.eyecatch }}">
+    <img src="{{ if .Params.eyecatch }}{{ .Permalink }}{{ .Params.eyecatch }}{{ else }}https://www.gravatar.com/avatar/{{ md5 .Site.Params.gravatar }}{{ end }}">
   </div>
   <div class="summary-title">
     <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
