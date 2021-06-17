@@ -18,6 +18,9 @@ description = "Tips and tutorial about phina.js"
 author = "alkn203"
 authorsite = "https://twitter.com/alkn203"
 gravatar = "alkn203@gmail.com"
-copyrightYear = "2020"
+copyrightYear = "2021"
 analytics = "UA-145323973-1"
 showsToc = true
+
+[markup.goldmark.renderer]
+unsafe = true

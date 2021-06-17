@@ -33,6 +33,9 @@ shape.backgroundColor = `hsl(300, 75%, 50%)`;
 ```
 
 ## サンプルコード
+<details>
+<summary>コードを見る</summary>
+
 ```js
 /// グローバルに展開
 phina.globalize();
@@ -74,6 +77,8 @@ phina.main(function() {
   app.run();
 });
 ```
+
+</details>
 
 ## runstantプロジェクト
 https://runstant.com/alkn203/projects/017932f4
