@@ -1,2 +1,2 @@
 #!/bin/bash
-cp -rf public/* ../blog/
+/usr/bin/cp -rf public/* ../blog/
