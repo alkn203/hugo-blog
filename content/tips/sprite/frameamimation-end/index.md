@@ -1,47 +1,28 @@
 +++
-date = "2021-06-19T13:59:06+09:00"
+date = "2021-06-19T14:59:06+09:00"
 draft = false
 slug = ""
 tags = ["sprite"]
-title = "スプライトのサイズがスプライトシートに定義されたサイズにフィットしないようにする"
-eyecatch = "no-fit-ss-size.gif"
+title = "フレームアニメーションの終了を検知する"
+eyecatch = "frameanimation-end.gif"
 +++
 
-![no-fit-ss-size](no-fit-ss-size.gif)
+![frameanimation-end](frameanimation-end.gif)
 
-## スプライトのサイズがスプライトシートに定義されたサイズにフィットしないようにする
-フレームアニメーションを使うためには、**SpriteSheet** を定義する必要がありますが、デフォルトだと実際のコード中でスプライトのサイズを変えてもスプライトシート(json)に書かれた**width**と**height**に戻ってしまい、スプライトを拡大して表示したい時に意図した結果になりません。
+## フレームアニメーションの終了を検知する
+* ゲーム作成において、フレームアニメーションが終了した後に何か処理をしたい時があるかと思いまます。
+* この場合、**FrameAnimation** クラスの**finished**プロパティの値が**true**かどうかを調べると便利です。
+* サンプルでは爆発アニメーションが終了したら、自身を消去するようにしています。（consoleに結果表示）
 
 ```js
-// スプライトシート
-spritesheet: {
-  'explosion_ss':
-  {
-    "frame": {
-      "width": 20, // ←この値にフィットされる
-      "height": 20,// ←この値にフィットされる
-      "cols": 16,
-      "rows": 1,
-    },
+// 毎フレーム処理
+update: function() {
+  // アニメーションが終わったら自身を消去
+  if (this.anim.finished) { // ←ここで判定
+    this.remove();
+    console.log('removed');
   }
-}
-```
-
-* 回避するためには、**FrameAnimation** クラスのプロパティ**fit**を**false**にします。
-* これで実際に変更したサイズで正しく表示されるようになります。
-* サンプルでは**20X20**で切り出した画像を**5倍**で表示しています。
-
-```js
-// 親クラスの初期化
-this.superInit('explosion', 20, 20); // ←実際の画像の切り取りサイズ
-// SpriteSheetをスプライトにアタッチ
-var anim = FrameAnimation('explosion_ss').attachTo(this);
-// スプライトシートのサイズにフィットさせない
-anim.fit = false; // ←ここ
-//アニメーションを再生する
-anim.gotoAndPlay('start');
-// サイズ変更
-this.setSize(20*5, 20*5); // ←サイズ変更
+},
 ```
 
 ## サンプルコード
@@ -121,6 +102,14 @@ phina.define(`Explosion`, {
     // 参照用
     this.anim = anim;
   },
+  // 毎フレーム処理
+  update: function() {
+    // アニメーションが終わったら自身を消去
+    if (this.anim.finished) {
+      this.remove();
+      console.log('removed');
+    }
+  },
 });
 // メイン処理
 phina.main(function() {
@@ -137,4 +126,4 @@ phina.main(function() {
 </details>
 
 ## runstantプロジェクト
-https://runstant.com/alkn203/projects/6c71743a
+https://runstant.com/alkn203/projects/4256f208
