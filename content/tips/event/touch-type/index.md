@@ -9,6 +9,8 @@ eyecatch = "touch-type.gif"
 
 ![touch-type](touch-type.gif)
 
+**phina.js**には、以下のタッチイベントが用意されています。
+
 ## onpointstart
 タッチされたタイミングで発動します。
 
