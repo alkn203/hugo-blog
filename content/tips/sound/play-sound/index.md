@@ -101,4 +101,4 @@ phina.main(function() {
 音楽：魔王魂
 
 ## runstantプロジェクト
-<a href="https://runstant.com/alkn203/projects/d1c1ce56" target="_blank" rel="noopener">音を再生する</a> 
+{{< targetblank "https://runstant.com/alkn203/projects/d1c1ce56" >}}
