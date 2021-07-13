@@ -113,3 +113,6 @@ phina.main(function() {
 
 ## runstantプロジェクト
 {{< targetblank "https://runstant.com/alkn203/projects/8ba7cc91" >}}
+
+* 赤い矩形タッチで音楽再生
+* 青い矩形タッチで音楽再生停止
