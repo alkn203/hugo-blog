@@ -104,4 +104,4 @@ phina.main(function() {
 ```
 
 ## runstantプロジェクト
-https://runstant.com/alkn203/projects/0b1aea5e
+{{< targetblank "https://runstant.com/alkn203/projects/0b1aea5e" >}}
